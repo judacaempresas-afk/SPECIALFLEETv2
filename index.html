@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/Judaca/Downloads/index_2.html -->
-<html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<html lang="es">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>FleetCO — Gestión Integral de Flota</title>
-<link href="./FleetCO — Gestión Integral de Flota_files/css2" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
@@ -311,7 +311,7 @@ tr:hover td{background:#FAFBFC;}
 <body>
 
 <!-- ══ LOGIN SCREEN ══ -->
-<div id="login-screen" style="display: none;">
+<div id="login-screen">
   <div class="login-box">
     <div>
       <div class="login-logo">
@@ -328,14 +328,14 @@ tr:hover td{background:#FAFBFC;}
       <label>Contraseña</label>
       <input type="password" id="l-pass" placeholder="••••••••" autocomplete="current-password">
     </div>
-    <div class="login-err" id="l-err" style="display: none;"></div>
+    <div class="login-err" id="l-err"></div>
     <button class="login-btn" id="l-btn" onclick="doLogin()">Ingresar</button>
     <div style="font-size:11px;color:#484F58;text-align:center;">FleetCO v2.0 — Acceso restringido</div>
   </div>
 </div>
 
 <!-- ══ APP ══ -->
-<div id="app" class="visible">
+<div id="app">
 
 <!-- ══ SIDEBAR ══ -->
 <aside>
@@ -345,30 +345,30 @@ tr:hover td{background:#FAFBFC;}
   </div>
 
   <div class="sb-sec">Principal</div>
-  <button class="sb-item active" id="nav-dashboard" onclick="goTo(&#39;dashboard&#39;,this)"><span class="sb-icon">▦</span>Dashboard</button>
+  <button class="sb-item active" id="nav-dashboard" onclick="goTo('dashboard',this)"><span class="sb-icon">▦</span>Dashboard</button>
 
   <div class="sb-sec sb-sec-gestion">Gestión</div>
-  <button class="sb-item" id="nav-vehiculos" onclick="goTo(&#39;vehiculos&#39;,this)"><span class="sb-icon">🚗</span>Vehículos<span class="sb-badge" id="sb-veh">72</span></button>
-  <button class="sb-item" id="nav-conductores" onclick="goTo(&#39;conductores&#39;,this)"><span class="sb-icon">👤</span>Conductores<span class="sb-badge" id="sb-con">149</span></button>
+  <button class="sb-item" id="nav-vehiculos" onclick="goTo('vehiculos',this)"><span class="sb-icon">🚗</span>Vehículos<span class="sb-badge" id="sb-veh">0</span></button>
+  <button class="sb-item" id="nav-conductores" onclick="goTo('conductores',this)"><span class="sb-icon">👤</span>Conductores<span class="sb-badge" id="sb-con">0</span></button>
 
   <div class="sb-sec sb-sec-ops">Operaciones</div>
-  <button class="sb-item" id="nav-mantenimiento" onclick="goTo(&#39;mantenimiento&#39;,this)"><span class="sb-icon">🔧</span>Mantenimiento<span class="sb-badge" id="sb-mant">7</span></button>
-  <button class="sb-item" id="nav-combustible" onclick="goTo(&#39;combustible&#39;,this)"><span class="sb-icon">⛽</span>Combustible</button>
-  <button class="sb-item" id="nav-neumaticos" onclick="goTo(&#39;neumaticos&#39;,this)"><span class="sb-icon">🛞</span>Neumáticos</button>
-  <button class="sb-item" id="nav-checklist" onclick="goTo(&#39;checklist&#39;,this)"><span class="sb-icon">✅</span>Checklist</button>
-  <button class="sb-item" id="nav-viajes" onclick="goTo(&#39;viajes&#39;,this)"><span class="sb-icon">🚚</span>Viajes<span class="sb-badge amber" id="sb-vj">3</span></button>
+  <button class="sb-item" id="nav-mantenimiento" onclick="goTo('mantenimiento',this)"><span class="sb-icon">🔧</span>Mantenimiento<span class="sb-badge" id="sb-mant">0</span></button>
+  <button class="sb-item" id="nav-combustible" onclick="goTo('combustible',this)"><span class="sb-icon">⛽</span>Combustible</button>
+  <button class="sb-item" id="nav-neumaticos" onclick="goTo('neumaticos',this)"><span class="sb-icon">🛞</span>Neumáticos</button>
+  <button class="sb-item" id="nav-checklist" onclick="goTo('checklist',this)"><span class="sb-icon">✅</span>Checklist</button>
+  <button class="sb-item" id="nav-viajes" onclick="goTo('viajes',this)"><span class="sb-icon">🚚</span>Viajes<span class="sb-badge amber" id="sb-vj">0</span></button>
 
   <div class="sb-divider sb-div-recursos"></div>
   <div class="sb-sec sb-sec-recursos">Recursos</div>
-  <button class="sb-item" id="nav-inventario" onclick="goTo(&#39;inventario&#39;,this)"><span class="sb-icon">📦</span>Inventario<span class="sb-badge amber" id="sb-inv">0</span></button>
-  <button class="sb-item" id="nav-compras" onclick="goTo(&#39;compras&#39;,this)"><span class="sb-icon">🛒</span>Compras</button>
-  <button class="sb-item" id="nav-proveedores" onclick="goTo(&#39;proveedores&#39;,this)"><span class="sb-icon">🏢</span>Proveedores</button>
+  <button class="sb-item" id="nav-inventario" onclick="goTo('inventario',this)"><span class="sb-icon">📦</span>Inventario<span class="sb-badge amber" id="sb-inv">0</span></button>
+  <button class="sb-item" id="nav-compras" onclick="goTo('compras',this)"><span class="sb-icon">🛒</span>Compras</button>
+  <button class="sb-item" id="nav-proveedores" onclick="goTo('proveedores',this)"><span class="sb-icon">🏢</span>Proveedores</button>
 
   <div class="sb-user">
-    <div class="sb-avatar" id="sb-ava">JD</div>
+    <div class="sb-avatar" id="sb-ava">?</div>
     <div>
-      <div class="sb-un" id="sb-nombre">juan david calle</div>
-      <div class="sb-ur" id="sb-rol-lbl">Admin</div>
+      <div class="sb-un" id="sb-nombre">—</div>
+      <div class="sb-ur" id="sb-rol-lbl">—</div>
     </div>
     <button class="sb-logout" onclick="doLogout()" title="Cerrar sesión">⏻</button>
   </div>
@@ -389,78 +389,22 @@ tr:hover td{background:#FAFBFC;}
 
   <!-- ══ DASHBOARD ══ -->
   <div class="page active" id="pg-dashboard">
-    <div class="kpi-row" id="d-kpis">
-    <div class="kpi"><div class="kpi-head"><div class="kpi-icon blue">🚗</div></div><div class="kpi-val">72</div><div class="kpi-lbl">Total vehículos</div><div class="kpi-sub">72 activos · 0 en mant.</div></div>
-    <div class="kpi"><div class="kpi-head"><div class="kpi-icon green">✓</div><span class="kpi-delta up">100%</span></div><div class="kpi-val">72</div><div class="kpi-lbl">Vehículos activos</div><div class="kpi-sub">Disponibles para operación</div></div>
-    <div class="kpi"><div class="kpi-head"><div class="kpi-icon red">🔧</div><span class="kpi-delta dn">7</span></div><div class="kpi-val">7</div><div class="kpi-lbl">OT abiertas</div><div class="kpi-sub">Pendientes + En proceso</div></div>
-    <div class="kpi"><div class="kpi-head"><div class="kpi-icon amber">💰</div></div><div class="kpi-val" style="font-size:18px;">$8M</div><div class="kpi-lbl">Costo mantenimiento</div><div class="kpi-sub">Acumulado total</div></div>
-    <div class="kpi"><div class="kpi-head"><div class="kpi-icon amber">⛽</div></div><div class="kpi-val" style="font-size:18px;">$5M</div><div class="kpi-lbl">Costo combustible</div><div class="kpi-sub">1115 litros registrados</div></div>
-    <div class="kpi"><div class="kpi-head"><div class="kpi-icon teal">🚚</div></div><div class="kpi-val">3</div><div class="kpi-lbl">Viajes en curso</div><div class="kpi-sub">Utilidad acum.: $10M</div></div>
-    <div class="kpi"><div class="kpi-head"><div class="kpi-icon purple">📦</div></div><div class="kpi-val">50</div><div class="kpi-lbl">Ítems inventario</div><div class="kpi-sub">0 con stock bajo</div></div>
-  </div>
+    <div class="kpi-row" id="d-kpis"><div class="loader"><span class="spin"></span>Cargando métricas...</div></div>
     <div class="dash-body">
       <div class="dash-left">
         <div class="card">
           <div class="card-hd"><div><div class="card-title">Alertas del sistema</div><div class="card-sub">Requieren atención inmediata</div></div><button class="btn btn-sm btn-ghost" onclick="loadDash()">Actualizar</button></div>
-          <div style="padding:12px;" id="d-alerts"><div class="alert-list"><div class="ali ali-red"><span class="ali-icon">🚨</span><div><strong>2 OT vencidas</strong> — superaron su fecha estimada</div></div><div class="ali ali-amber"><span class="ali-icon">⏰</span><div><strong>5 OT vencen en ≤5 días</strong></div></div><div class="ali ali-amber"><span class="ali-icon">👤</span><div><strong>72 vehículo(s) activos sin conductor</strong></div></div></div></div>
+          <div style="padding:12px;" id="d-alerts"><div class="loader"><span class="spin"></span></div></div>
         </div>
         <div class="card">
-          <div class="card-hd"><div class="card-title">Últimas órdenes de trabajo</div><button class="btn btn-sm" onclick="goTo(&#39;mantenimiento&#39;,document.getElementById(&#39;nav-mantenimiento&#39;))">Ver todas →</button></div>
-          <div class="tw"><table><thead><tr><th>OT</th><th>Placa</th><th>Tipo</th><th>Descripción</th><th>Taller</th><th>Costo</th><th>Estado</th></tr></thead><tbody id="d-ot"><tr>
-    <td class="tmono" style="font-size:11px;">OT020</td>
-    <td class="tmono" style="font-weight:700;">KIGGEN 15 M</td>
-    <td><span class="badge bgr">CORRECTIVO</span></td>
-    <td style="max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Falla motor</td>
-    <td class="tdim">PR007</td>
-    <td style="font-family:var(--mono);font-size:11px;">$0</td>
-    <td><span class="badge bw">Abierta</span></td>
-  </tr><tr>
-    <td class="tmono" style="font-size:11px;">OT019</td>
-    <td class="tmono" style="font-weight:700;">KDL13F</td>
-    <td><span class="badge bgr">PROG-INSPECCION</span></td>
-    <td style="max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Inspección mensual</td>
-    <td class="tdim">PR003</td>
-    <td style="font-family:var(--mono);font-size:11px;">$90K</td>
-    <td><span class="badge bg">Cerrada</span></td>
-  </tr><tr>
-    <td class="tmono" style="font-size:11px;">OT018</td>
-    <td class="tmono" style="font-weight:700;">ITALEV 20 M</td>
-    <td><span class="badge bgr">CORRECTIVO</span></td>
-    <td style="max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Reparación estructura</td>
-    <td class="tdim">PR007</td>
-    <td style="font-family:var(--mono);font-size:11px;">$900K</td>
-    <td><span class="badge bg">Cerrada</span></td>
-  </tr><tr>
-    <td class="tmono" style="font-size:11px;">OT017</td>
-    <td class="tmono" style="font-weight:700;">ITALEV 16 M</td>
-    <td><span class="badge bgr">PROG-LUBRICACION</span></td>
-    <td style="max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Mantenimiento hidráulico</td>
-    <td class="tdim">PR009</td>
-    <td style="font-family:var(--mono);font-size:11px;">$0</td>
-    <td><span class="badge bw">Abierta</span></td>
-  </tr><tr>
-    <td class="tmono" style="font-size:11px;">OT016</td>
-    <td class="tmono" style="font-weight:700;">FKP10D</td>
-    <td><span class="badge bgr">CORRECTIVO</span></td>
-    <td style="max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Cambio frenos</td>
-    <td class="tdim">PR002</td>
-    <td style="font-family:var(--mono);font-size:11px;">$780K</td>
-    <td><span class="badge bg">Cerrada</span></td>
-  </tr></tbody></table></div>
+          <div class="card-hd"><div class="card-title">Últimas órdenes de trabajo</div><button class="btn btn-sm" onclick="goTo('mantenimiento',document.getElementById('nav-mantenimiento'))">Ver todas →</button></div>
+          <div class="tw"><table><thead><tr><th>OT</th><th>Placa</th><th>Tipo</th><th>Descripción</th><th>Taller</th><th>Costo</th><th>Estado</th></tr></thead><tbody id="d-ot"></tbody></table></div>
         </div>
       </div>
       <div class="dash-right">
-        <div class="card"><div class="card-hd"><div class="card-title">Estado de la flota</div></div><div style="padding:12px;display:flex;flex-direction:column;gap:10px;" id="d-fleet">
-    <div><div style="display:flex;justify-content:space-between;font-size:11.5px;font-weight:600;margin-bottom:3px;"><span style="color:var(--green);">Activos</span><span style="font-family:var(--mono);">72/72</span></div><div class="pbar"><div class="pfill g" style="width:100%"></div></div></div>
-    <div><div style="display:flex;justify-content:space-between;font-size:11.5px;font-weight:600;margin-bottom:3px;"><span style="color:var(--amber);">En mantenimiento</span><span style="font-family:var(--mono);">0/72</span></div><div class="pbar"><div class="pfill a" style="width:0%"></div></div></div>
-    <div><div style="display:flex;justify-content:space-between;font-size:11.5px;font-weight:600;margin-bottom:3px;"><span style="color:var(--t3);">Inactivos</span><span style="font-family:var(--mono);">0/72</span></div><div class="pbar"><div class="pfill" style="width:0%;background:var(--t3);"></div></div></div>
-    <div style="border-top:1px solid var(--bd);padding-top:8px;margin-top:4px;display:grid;grid-template-columns:1fr 1fr;gap:6px;">
-      <div style="font-size:11px;color:var(--t2);">Conductores activos</div><div style="font-size:11px;font-weight:700;text-align:right;">149 / 149</div>
-      <div style="font-size:11px;color:var(--t2);">Viajes registrados</div><div style="font-size:11px;font-weight:700;text-align:right;">20</div>
-      <div style="font-size:11px;color:var(--t2);">Checklists totales</div><div style="font-size:11px;font-weight:700;text-align:right;">20</div>
-    </div></div></div>
-        <div class="card"><div class="card-hd"><div class="card-title">Costos por módulo</div></div><div class="mchart" id="d-chart" style="height:100px;"><div class="mbar-wrap"><div class="mbar-val">$8M</div><div class="mbar" style="height:4px;background:var(--blue);"></div><div class="mbar-lbl">Mantenimiento</div></div><div class="mbar-wrap"><div class="mbar-val">$5M</div><div class="mbar" style="height:4px;background:var(--amber);"></div><div class="mbar-lbl">Combustible</div></div><div class="mbar-wrap"><div class="mbar-val">$144M</div><div class="mbar" style="height:60px;background:var(--purple);"></div><div class="mbar-lbl">Inventario</div></div></div></div>
-        <div class="card"><div class="card-hd"><div class="card-title">Actividad reciente</div></div><div style="padding:10px 14px;" id="d-activity"><div class="tl"><div class="tl-item"><div class="tl-dot a">⏱</div><div class="tl-content"><div class="tl-title">OT020 — KIGGEN 15 M · Falla motor...</div><div class="tl-meta">PR007 · <span class="badge bw">Abierta</span></div></div></div><div class="tl-item"><div class="tl-dot g">✓</div><div class="tl-content"><div class="tl-title">OT019 — KDL13F · Inspección mensual...</div><div class="tl-meta">PR003 · <span class="badge bg">Cerrada</span></div></div></div><div class="tl-item"><div class="tl-dot g">✓</div><div class="tl-content"><div class="tl-title">OT018 — ITALEV 20 M · Reparación estructura...</div><div class="tl-meta">PR007 · <span class="badge bg">Cerrada</span></div></div></div><div class="tl-item"><div class="tl-dot a">⏱</div><div class="tl-content"><div class="tl-title">OT017 — ITALEV 16 M · Mantenimiento hidráulico...</div><div class="tl-meta">PR009 · <span class="badge bw">Abierta</span></div></div></div><div class="tl-item"><div class="tl-dot g">✓</div><div class="tl-content"><div class="tl-title">OT016 — FKP10D · Cambio frenos...</div><div class="tl-meta">PR002 · <span class="badge bg">Cerrada</span></div></div></div></div></div></div>
+        <div class="card"><div class="card-hd"><div class="card-title">Estado de la flota</div></div><div style="padding:12px;display:flex;flex-direction:column;gap:10px;" id="d-fleet"></div></div>
+        <div class="card"><div class="card-hd"><div class="card-title">Costos por módulo</div></div><div class="mchart" id="d-chart" style="height:100px;"></div></div>
+        <div class="card"><div class="card-hd"><div class="card-title">Actividad reciente</div></div><div style="padding:10px 14px;" id="d-activity"><div class="loader"><span class="spin"></span></div></div></div>
       </div>
     </div>
   </div>
@@ -472,11 +416,11 @@ tr:hover td{background:#FAFBFC;}
         <div><div class="card-title">Vehículos</div><div class="card-sub">Gestión y documentación de la flota</div></div>
         <div class="card-actions">
           <input class="sbox" placeholder="Buscar placa, marca..." id="sv" oninput="renderV()">
-          <button class="ftab active" onclick="sfV(&#39;todos&#39;,this)">Todos</button>
-          <button class="ftab" onclick="sfV(&#39;Activo&#39;,this)">Activos</button>
-          <button class="ftab" onclick="sfV(&#39;Mantenimiento&#39;,this)">En mant.</button>
-          <button class="ftab" onclick="sfV(&#39;Inactivo&#39;,this)">Inactivos</button>
-          <button class="btn btn-pri btn-sm perm-write" id="btn-new-v" onclick="tp(&#39;fv&#39;)">+ Nuevo</button>
+          <button class="ftab active" onclick="sfV('todos',this)">Todos</button>
+          <button class="ftab" onclick="sfV('Activo',this)">Activos</button>
+          <button class="ftab" onclick="sfV('Mantenimiento',this)">En mant.</button>
+          <button class="ftab" onclick="sfV('Inactivo',this)">Inactivos</button>
+          <button class="btn btn-pri btn-sm perm-write" id="btn-new-v" onclick="tp('fv')">+ Nuevo</button>
         </div>
       </div>
       <div id="fv" style="display:none;">
@@ -501,7 +445,7 @@ tr:hover td{background:#FAFBFC;}
             <div class="fl"><label>Vencimiento Tarjeta Operación</label><input id="vv-tarjeta" type="date"></div>
           </div>
         </div>
-        <div class="ffoot"><div id="al-v" style="flex:1;"></div><button class="btn btn-sm" onclick="tp(&#39;fv&#39;)">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearV()">Registrar vehículo</button></div>
+        <div class="ffoot"><div id="al-v" style="flex:1;"></div><button class="btn btn-sm" onclick="tp('fv')">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearV()">Registrar vehículo</button></div>
       </div>
       <div class="tw"><table><thead><tr><th>Placa</th><th>Marca/Modelo</th><th>Año</th><th>Tipo</th><th>Conductor</th><th>KM</th><th>SOAT</th><th>Estado</th><th></th></tr></thead><tbody id="tbl-v"><tr><td colspan="9" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
     </div>
@@ -514,10 +458,10 @@ tr:hover td{background:#FAFBFC;}
         <div><div class="card-title">Conductores y personal</div><div class="card-sub">Gestión del equipo de conducción</div></div>
         <div class="card-actions">
           <input class="sbox" placeholder="Buscar nombre, cédula..." id="sc" oninput="renderC()">
-          <button class="ftab active" onclick="sfC(&#39;todos&#39;,this)">Todos</button>
-          <button class="ftab" onclick="sfC(&#39;Activo&#39;,this)">Activos</button>
-          <button class="ftab" onclick="sfC(&#39;Inactivo&#39;,this)">Inactivos</button>
-          <button class="btn btn-pri btn-sm perm-admin" onclick="tp(&#39;fc&#39;)">+ Nuevo</button>
+          <button class="ftab active" onclick="sfC('todos',this)">Todos</button>
+          <button class="ftab" onclick="sfC('Activo',this)">Activos</button>
+          <button class="ftab" onclick="sfC('Inactivo',this)">Inactivos</button>
+          <button class="btn btn-pri btn-sm perm-admin" onclick="tp('fc')">+ Nuevo</button>
         </div>
       </div>
       <div id="fc" style="display:none;">
@@ -534,7 +478,7 @@ tr:hover td{background:#FAFBFC;}
           <div class="fl"><label>Clave acceso</label><input id="vc-clave" type="password" placeholder="Contraseña de acceso"></div>
           <div class="fl"><label>Estado</label><select id="vc-estado"><option>Activo</option><option>Inactivo</option><option>Vacaciones</option><option>Incapacidad</option></select></div>
         </div></div>
-        <div class="ffoot"><div id="al-c" style="flex:1;"></div><button class="btn btn-sm" onclick="tp(&#39;fc&#39;)">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearC()">Registrar conductor</button></div>
+        <div class="ffoot"><div id="al-c" style="flex:1;"></div><button class="btn btn-sm" onclick="tp('fc')">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearC()">Registrar conductor</button></div>
       </div>
       <div class="tw"><table><thead><tr><th>Nombre</th><th>Cédula</th><th>Licencia</th><th>Cat.</th><th>Teléfono</th><th>Email</th><th>Rol</th><th>Venc. Licencia</th><th>Estado</th><th></th></tr></thead><tbody id="tbl-c"><tr><td colspan="10" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
     </div>
@@ -547,11 +491,11 @@ tr:hover td{background:#FAFBFC;}
         <div><div class="card-title">Órdenes de Trabajo (OT)</div><div class="card-sub">Control de mantenimiento preventivo y correctivo</div></div>
         <div class="card-actions">
           <input class="sbox" placeholder="Buscar placa, taller..." id="sm" oninput="renderM()">
-          <button class="ftab active" onclick="sfM(&#39;todos&#39;,this)">Todas</button>
-          <button class="ftab" onclick="sfM(&#39;Abierta&#39;,this)">Abiertas</button>
-          <button class="ftab" onclick="sfM(&#39;En proceso&#39;,this)">En proceso</button>
-          <button class="ftab" onclick="sfM(&#39;Cerrada&#39;,this)">Cerradas</button>
-          <button class="btn btn-pri btn-sm perm-write" onclick="tp(&#39;fm&#39;)">+ Nueva OT</button>
+          <button class="ftab active" onclick="sfM('todos',this)">Todas</button>
+          <button class="ftab" onclick="sfM('Abierta',this)">Abiertas</button>
+          <button class="ftab" onclick="sfM('En proceso',this)">En proceso</button>
+          <button class="ftab" onclick="sfM('Cerrada',this)">Cerradas</button>
+          <button class="btn btn-pri btn-sm perm-write" onclick="tp('fm')">+ Nueva OT</button>
         </div>
       </div>
       <div id="fm" style="display:none;">
@@ -576,7 +520,7 @@ tr:hover td{background:#FAFBFC;}
             <label style="display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;cursor:pointer;"><input type="checkbox" class="tgl" id="vm-falla"> Es una falla</label>
           </div>
         </div>
-        <div class="ffoot"><div id="al-m" style="flex:1;"></div><button class="btn btn-sm" onclick="tp(&#39;fm&#39;)">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearM()">Crear OT</button></div>
+        <div class="ffoot"><div id="al-m" style="flex:1;"></div><button class="btn btn-sm" onclick="tp('fm')">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearM()">Crear OT</button></div>
       </div>
       <div class="tw"><table><thead><tr><th>OT ID</th><th>Placa</th><th>Tipo</th><th>Descripción</th><th>Taller</th><th>Odómetro</th><th>Costo</th><th>Estado</th><th></th></tr></thead><tbody id="tbl-m"><tr><td colspan="9" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
     </div>
@@ -590,7 +534,7 @@ tr:hover td{background:#FAFBFC;}
         <div><div class="card-title">Registros de combustible</div><div class="card-sub">Control de consumo y eficiencia</div></div>
         <div class="card-actions">
           <input class="sbox" placeholder="Buscar placa..." id="scb" oninput="renderCB()">
-          <button class="btn btn-pri btn-sm perm-write" onclick="tp(&#39;fcb&#39;)">+ Registrar carga</button>
+          <button class="btn btn-pri btn-sm perm-write" onclick="tp('fcb')">+ Registrar carga</button>
         </div>
       </div>
       <div id="fcb" style="display:none;">
@@ -605,7 +549,7 @@ tr:hover td{background:#FAFBFC;}
           <div class="fl"><label>Tipo combustible</label><select id="vcb-tipo"><option>Diesel</option><option>Corriente</option><option>Extra</option><option>Gas</option></select></div>
           <div class="fl"><label>No. Factura</label><input id="vcb-factura" placeholder="FAC-XXXXX" style="font-family:var(--mono);"></div>
         </div></div>
-        <div class="ffoot"><div id="al-cb" style="flex:1;"></div><button class="btn btn-sm" onclick="tp(&#39;fcb&#39;)">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearCB()">Registrar</button></div>
+        <div class="ffoot"><div id="al-cb" style="flex:1;"></div><button class="btn btn-sm" onclick="tp('fcb')">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearCB()">Registrar</button></div>
       </div>
       <div class="tw"><table><thead><tr><th>Placa</th><th>Fecha</th><th>Litros</th><th>Costo</th><th>$/Litro</th><th>KM</th><th>Rendimiento</th><th>Estación</th><th>Tipo</th></tr></thead><tbody id="tbl-cb"><tr><td colspan="9" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
     </div>
@@ -618,11 +562,11 @@ tr:hover td{background:#FAFBFC;}
         <div><div class="card-title">Control de neumáticos</div><div class="card-sub">Gestión de vida útil y rotación</div></div>
         <div class="card-actions">
           <input class="sbox" placeholder="Buscar placa, marca..." id="sn" oninput="renderN()">
-          <button class="ftab active" onclick="sfN(&#39;todos&#39;,this)">Todos</button>
-          <button class="ftab" onclick="sfN(&#39;Activo&#39;,this)">Activos</button>
-          <button class="ftab" onclick="sfN(&#39;Reencauche&#39;,this)">Reencauche</button>
-          <button class="ftab" onclick="sfN(&#39;Baja&#39;,this)">Baja</button>
-          <button class="btn btn-pri btn-sm perm-write" onclick="tp(&#39;fn&#39;)">+ Nueva llanta</button>
+          <button class="ftab active" onclick="sfN('todos',this)">Todos</button>
+          <button class="ftab" onclick="sfN('Activo',this)">Activos</button>
+          <button class="ftab" onclick="sfN('Reencauche',this)">Reencauche</button>
+          <button class="ftab" onclick="sfN('Baja',this)">Baja</button>
+          <button class="btn btn-pri btn-sm perm-write" onclick="tp('fn')">+ Nueva llanta</button>
         </div>
       </div>
       <div id="fn" style="display:none;">
@@ -641,7 +585,7 @@ tr:hover td{background:#FAFBFC;}
           <div class="fl"><label>Estado</label><select id="vn-est"><option>Activo</option><option>Reencauche</option><option>Reparación</option><option>Baja</option></select></div>
           <div class="fl s2"><label>Observaciones</label><input id="vn-obs" placeholder="Notas..."></div>
         </div></div>
-        <div class="ffoot"><div id="al-n" style="flex:1;"></div><button class="btn btn-sm" onclick="tp(&#39;fn&#39;)">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearN()">Registrar llanta</button></div>
+        <div class="ffoot"><div id="al-n" style="flex:1;"></div><button class="btn btn-sm" onclick="tp('fn')">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearN()">Registrar llanta</button></div>
       </div>
       <div class="tw"><table><thead><tr><th>ID</th><th>Placa</th><th>Posición</th><th>Marca</th><th>Referencia</th><th>F. Instalación</th><th>KM Inst.</th><th>Presión</th><th>Profundidad</th><th>Estado</th></tr></thead><tbody id="tbl-n"><tr><td colspan="10" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
     </div>
@@ -654,10 +598,10 @@ tr:hover td{background:#FAFBFC;}
         <div><div class="card-title">Checklist de inspección</div><div class="card-sub">Revisiones pre-viaje, post-viaje y periódicas</div></div>
         <div class="card-actions">
           <input class="sbox" placeholder="Buscar placa..." id="sch" oninput="renderCH()">
-          <button class="ftab active" onclick="sfCH(&#39;todos&#39;,this)">Todos</button>
-          <button class="ftab" onclick="sfCH(&#39;Aprobado&#39;,this)">Aprobados</button>
-          <button class="ftab" onclick="sfCH(&#39;Rechazado&#39;,this)">Rechazados</button>
-          <button class="btn btn-pri btn-sm" onclick="tp(&#39;fch&#39;)">+ Nueva inspección</button>
+          <button class="ftab active" onclick="sfCH('todos',this)">Todos</button>
+          <button class="ftab" onclick="sfCH('Aprobado',this)">Aprobados</button>
+          <button class="ftab" onclick="sfCH('Rechazado',this)">Rechazados</button>
+          <button class="btn btn-pri btn-sm" onclick="tp('fch')">+ Nueva inspección</button>
         </div>
       </div>
       <div id="fch" style="display:none;">
@@ -684,7 +628,7 @@ tr:hover td{background:#FAFBFC;}
             <div class="fl" style="margin-top:10px;"><label>Observaciones</label><textarea id="vch-obs" placeholder="Notas del inspector..."></textarea></div>
           </div>
         </div>
-        <div class="ffoot"><div id="al-ch" style="flex:1;"></div><button class="btn btn-sm" onclick="tp(&#39;fch&#39;)">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearCH()">Guardar inspección</button></div>
+        <div class="ffoot"><div id="al-ch" style="flex:1;"></div><button class="btn btn-sm" onclick="tp('fch')">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearCH()">Guardar inspección</button></div>
       </div>
       <div class="tw"><table><thead><tr><th>ID</th><th>Placa</th><th>Conductor</th><th>Tipo</th><th>Fecha</th><th>Motor</th><th>Frenos</th><th>Llantas</th><th>Estado</th><th></th></tr></thead><tbody id="tbl-ch"><tr><td colspan="10" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
     </div>
@@ -698,10 +642,10 @@ tr:hover td{background:#FAFBFC;}
         <div><div class="card-title">Viajes y anticipos</div><div class="card-sub">Control de rutas, gastos y rentabilidad</div></div>
         <div class="card-actions">
           <input class="sbox" placeholder="Buscar placa, conductor..." id="svj" oninput="renderVJ()">
-          <button class="ftab active" onclick="sfVJ(&#39;todos&#39;,this)">Todos</button>
-          <button class="ftab" onclick="sfVJ(&#39;En curso&#39;,this)">En curso</button>
-          <button class="ftab" onclick="sfVJ(&#39;Completado&#39;,this)">Completados</button>
-          <button class="btn btn-pri btn-sm perm-write" onclick="tp(&#39;fvj&#39;)">+ Nuevo viaje</button>
+          <button class="ftab active" onclick="sfVJ('todos',this)">Todos</button>
+          <button class="ftab" onclick="sfVJ('En curso',this)">En curso</button>
+          <button class="ftab" onclick="sfVJ('Completado',this)">Completados</button>
+          <button class="btn btn-pri btn-sm perm-write" onclick="tp('fvj')">+ Nuevo viaje</button>
         </div>
       </div>
       <div id="fvj" style="display:none;">
@@ -720,7 +664,7 @@ tr:hover td{background:#FAFBFC;}
           <div class="fl"><label>Estado</label><select id="vvj-estado"><option>Programado</option><option>En curso</option><option>Completado</option><option>Cancelado</option></select></div>
           <div class="fl s2"><label>Observaciones</label><input id="vvj-obs" placeholder="Notas del viaje..."></div>
         </div></div>
-        <div class="ffoot"><div id="al-vj" style="flex:1;"></div><button class="btn btn-sm" onclick="tp(&#39;fvj&#39;)">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearVJ()">Registrar viaje</button></div>
+        <div class="ffoot"><div id="al-vj" style="flex:1;"></div><button class="btn btn-sm" onclick="tp('fvj')">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearVJ()">Registrar viaje</button></div>
       </div>
       <div class="tw"><table><thead><tr><th>ID</th><th>Placa</th><th>Conductor</th><th>Origen → Destino</th><th>F. Salida</th><th>Cliente</th><th>Anticipo</th><th>Ingreso</th><th>Utilidad</th><th>Estado</th></tr></thead><tbody id="tbl-vj"><tr><td colspan="10" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
     </div>
@@ -733,9 +677,9 @@ tr:hover td{background:#FAFBFC;}
         <div><div class="card-title">Inventario de repuestos</div><div class="card-sub">Control de stock y almacén</div></div>
         <div class="card-actions">
           <input class="sbox" placeholder="Buscar ref, nombre..." id="sinv" oninput="renderINV()">
-          <button class="ftab active" onclick="sfINV(&#39;todos&#39;,this)">Todos</button>
-          <button class="ftab" onclick="sfINV(&#39;bajo&#39;,this)">Stock bajo</button>
-          <button class="btn btn-pri btn-sm perm-write" onclick="tp(&#39;finv&#39;)">+ Agregar ítem</button>
+          <button class="ftab active" onclick="sfINV('todos',this)">Todos</button>
+          <button class="ftab" onclick="sfINV('bajo',this)">Stock bajo</button>
+          <button class="btn btn-pri btn-sm perm-write" onclick="tp('finv')">+ Agregar ítem</button>
         </div>
       </div>
       <div id="finv" style="display:none;">
@@ -750,7 +694,7 @@ tr:hover td{background:#FAFBFC;}
           <div class="fl"><label>Ubicación en almacén</label><input id="vi-ubic" placeholder="Estante A-3..."></div>
           <div class="fl"><label>Unidad</label><select id="vi-unidad"><option>Unidad</option><option>Litro</option><option>Galón</option><option>Metro</option><option>Juego</option><option>Par</option><option>Caja</option></select></div>
         </div></div>
-        <div class="ffoot"><div id="al-inv" style="flex:1;"></div><button class="btn btn-sm" onclick="tp(&#39;finv&#39;)">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearINV()">Agregar al inventario</button></div>
+        <div class="ffoot"><div id="al-inv" style="flex:1;"></div><button class="btn btn-sm" onclick="tp('finv')">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearINV()">Agregar al inventario</button></div>
       </div>
       <div class="tw"><table><thead><tr><th>Referencia</th><th>Nombre</th><th>Categoría</th><th>Stock</th><th>Mínimo</th><th>Costo unit.</th><th>Proveedor</th><th>Ubicación</th><th>Stock</th></tr></thead><tbody id="tbl-inv"><tr><td colspan="9" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
     </div>
@@ -763,10 +707,10 @@ tr:hover td{background:#FAFBFC;}
         <div><div class="card-title">Compras</div><div class="card-sub">Órdenes de compra y proveedores</div></div>
         <div class="card-actions">
           <input class="sbox" placeholder="Buscar referencia..." id="scp" oninput="renderCP()">
-          <button class="ftab active" onclick="sfCP(&#39;todos&#39;,this)">Todos</button>
-          <button class="ftab" onclick="sfCP(&#39;Pendiente&#39;,this)">Pendientes</button>
-          <button class="ftab" onclick="sfCP(&#39;Recibido&#39;,this)">Recibidos</button>
-          <button class="btn btn-pri btn-sm perm-write" onclick="tp(&#39;fcp&#39;)">+ Nueva compra</button>
+          <button class="ftab active" onclick="sfCP('todos',this)">Todos</button>
+          <button class="ftab" onclick="sfCP('Pendiente',this)">Pendientes</button>
+          <button class="ftab" onclick="sfCP('Recibido',this)">Recibidos</button>
+          <button class="btn btn-pri btn-sm perm-write" onclick="tp('fcp')">+ Nueva compra</button>
         </div>
       </div>
       <div id="fcp" style="display:none;">
@@ -782,7 +726,7 @@ tr:hover td{background:#FAFBFC;}
           <div class="fl"><label>No. Factura</label><input id="vcp-factura" placeholder="FAC-XXXXX" style="font-family:var(--mono);"></div>
           <div class="fl"><label>Estado</label><select id="vcp-estado"><option>Pendiente</option><option>Aprobada</option><option>Recibido</option><option>Cancelada</option></select></div>
         </div></div>
-        <div class="ffoot"><div id="al-cp" style="flex:1;"></div><button class="btn btn-sm" onclick="tp(&#39;fcp&#39;)">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearCP()">Registrar compra</button></div>
+        <div class="ffoot"><div id="al-cp" style="flex:1;"></div><button class="btn btn-sm" onclick="tp('fcp')">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearCP()">Registrar compra</button></div>
       </div>
       <div class="tw"><table><thead><tr><th>ID</th><th>Descripción</th><th>Cantidad</th><th>Costo unit.</th><th>Total</th><th>Proveedor</th><th>Fecha</th><th>OT</th><th>Factura</th><th>Estado</th></tr></thead><tbody id="tbl-cp"><tr><td colspan="10" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
     </div>
@@ -795,10 +739,10 @@ tr:hover td{background:#FAFBFC;}
         <div><div class="card-title">Proveedores</div><div class="card-sub">Talleres, suministros y servicios</div></div>
         <div class="card-actions">
           <input class="sbox" placeholder="Buscar nombre, NIT..." id="sprov" oninput="renderPROV()">
-          <button class="ftab active" onclick="sfPROV(&#39;todos&#39;,this)">Todos</button>
-          <button class="ftab" onclick="sfPROV(&#39;Activo&#39;,this)">Activos</button>
-          <button class="ftab" onclick="sfPROV(&#39;Inactivo&#39;,this)">Inactivos</button>
-          <button class="btn btn-pri btn-sm perm-admin" onclick="tp(&#39;fprov&#39;)">+ Nuevo</button>
+          <button class="ftab active" onclick="sfPROV('todos',this)">Todos</button>
+          <button class="ftab" onclick="sfPROV('Activo',this)">Activos</button>
+          <button class="ftab" onclick="sfPROV('Inactivo',this)">Inactivos</button>
+          <button class="btn btn-pri btn-sm perm-admin" onclick="tp('fprov')">+ Nuevo</button>
         </div>
       </div>
       <div id="fprov" style="display:none;">
@@ -817,7 +761,7 @@ tr:hover td{background:#FAFBFC;}
             <div class="fl s2"><label>Observaciones</label><input id="vp-obs" placeholder="Notas adicionales..."></div>
           </div>
         </div>
-        <div class="ffoot"><div id="al-prov" style="flex:1;"></div><button class="btn btn-sm" onclick="tp(&#39;fprov&#39;)">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearPROV()">Guardar proveedor</button></div>
+        <div class="ffoot"><div id="al-prov" style="flex:1;"></div><button class="btn btn-sm" onclick="tp('fprov')">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearPROV()">Guardar proveedor</button></div>
       </div>
       <div class="tw"><table><thead><tr><th>ID</th><th>Nombre</th><th>NIT</th><th>Categoría</th><th>Ciudad</th><th>Teléfono</th><th>Email</th><th>Contacto</th><th>Estado</th><th></th></tr></thead><tbody id="tbl-prov"><tr><td colspan="10" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
     </div>
@@ -829,10 +773,10 @@ tr:hover td{background:#FAFBFC;}
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <div class="bnav-main">
-    <button class="bnav-btn active" id="bn-dashboard" onclick="mGoTo(&#39;dashboard&#39;,this)"><span class="bnav-icon">▦</span><span>Inicio</span></button>
-    <button class="bnav-btn" id="bn-vehiculos" onclick="mGoTo(&#39;vehiculos&#39;,this)"><span class="bnav-icon">🚗</span><span>Flota</span></button>
-    <button class="bnav-btn" id="bn-mantenimiento" onclick="mGoTo(&#39;mantenimiento&#39;,this)"><span class="bnav-icon">🔧</span><span>OT</span></button>
-    <button class="bnav-btn" id="bn-checklist" onclick="mGoTo(&#39;checklist&#39;,this)"><span class="bnav-icon">✅</span><span>Checklist</span></button>
+    <button class="bnav-btn active" id="bn-dashboard" onclick="mGoTo('dashboard',this)"><span class="bnav-icon">▦</span><span>Inicio</span></button>
+    <button class="bnav-btn" id="bn-vehiculos" onclick="mGoTo('vehiculos',this)"><span class="bnav-icon">🚗</span><span>Flota</span></button>
+    <button class="bnav-btn" id="bn-mantenimiento" onclick="mGoTo('mantenimiento',this)"><span class="bnav-icon">🔧</span><span>OT</span></button>
+    <button class="bnav-btn" id="bn-checklist" onclick="mGoTo('checklist',this)"><span class="bnav-icon">✅</span><span>Checklist</span></button>
     <button class="bnav-btn" id="bn-more" onclick="openDrawer()"><span class="bnav-icon">⋯</span><span>Más</span></button>
   </div>
 </nav>
@@ -840,21 +784,21 @@ tr:hover td{background:#FAFBFC;}
 <div class="drawer" id="drawer">
   <div class="drawer-handle"></div>
   <div class="drawer-grid" id="drawer-grid">
-    <button class="dg-item" onclick="mGoTo(&#39;conductores&#39;);closeDrawer()"><span class="dg-icon">👤</span>Conductores</button>
-    <button class="dg-item" onclick="mGoTo(&#39;viajes&#39;);closeDrawer()"><span class="dg-icon">🚚</span>Viajes</button>
-    <button class="dg-item" onclick="mGoTo(&#39;neumaticos&#39;);closeDrawer()"><span class="dg-icon">🛞</span>Neumáticos</button>
-    <button class="dg-item" onclick="mGoTo(&#39;combustible&#39;);closeDrawer()"><span class="dg-icon">⛽</span>Combustible</button>
-    <button class="dg-item perm-write" onclick="mGoTo(&#39;inventario&#39;);closeDrawer()"><span class="dg-icon">📦</span>Inventario</button>
-    <button class="dg-item perm-write" onclick="mGoTo(&#39;compras&#39;);closeDrawer()"><span class="dg-icon">🛒</span>Compras</button>
-    <button class="dg-item perm-admin" onclick="mGoTo(&#39;proveedores&#39;);closeDrawer()"><span class="dg-icon">🏢</span>Proveedores</button>
+    <button class="dg-item" onclick="mGoTo('conductores');closeDrawer()"><span class="dg-icon">👤</span>Conductores</button>
+    <button class="dg-item" onclick="mGoTo('viajes');closeDrawer()"><span class="dg-icon">🚚</span>Viajes</button>
+    <button class="dg-item" onclick="mGoTo('neumaticos');closeDrawer()"><span class="dg-icon">🛞</span>Neumáticos</button>
+    <button class="dg-item" onclick="mGoTo('combustible');closeDrawer()"><span class="dg-icon">⛽</span>Combustible</button>
+    <button class="dg-item perm-write" onclick="mGoTo('inventario');closeDrawer()"><span class="dg-icon">📦</span>Inventario</button>
+    <button class="dg-item perm-write" onclick="mGoTo('compras');closeDrawer()"><span class="dg-icon">🛒</span>Compras</button>
+    <button class="dg-item perm-admin" onclick="mGoTo('proveedores');closeDrawer()"><span class="dg-icon">🏢</span>Proveedores</button>
   </div>
   <div style="padding:0 12px 4px;display:flex;gap:8px;">
     <button class="btn btn-sm perm-admin" style="flex:1;" onclick="initSheets();closeDrawer()">⚙ Init Sheet</button>
     <button class="btn btn-sm" style="flex:1;" onclick="recargar();closeDrawer()">↻ Actualizar</button>
   </div>
   <div style="display:flex;align-items:center;gap:9px;padding:12px 16px;border-top:1px solid var(--bd-sb);margin-top:8px;">
-    <div class="sb-avatar" id="drawer-ava">JD</div>
-    <div><div class="sb-un" id="drawer-nombre">juan david calle</div><div class="sb-ur" id="drawer-rol">admin</div></div>
+    <div class="sb-avatar" id="drawer-ava">?</div>
+    <div><div class="sb-un" id="drawer-nombre">—</div><div class="sb-ur" id="drawer-rol">—</div></div>
     <button class="btn btn-sm btn-red" style="margin-left:auto;" onclick="doLogout()">Salir</button>
   </div>
 </div>
@@ -1867,6 +1811,5 @@ goTo = function(pg, btn){
   else document.getElementById('bn-more').classList.add('active');
 };
 </script>
-
-
-</body></html>
+</body>
+</html>
