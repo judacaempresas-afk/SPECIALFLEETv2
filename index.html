@@ -292,6 +292,7 @@ tr:hover td{background:#FAFBFC;}
   <div class="sb-sec">Recursos</div>
   <button class="sb-item" onclick="goTo('inventario',this)"><span class="sb-icon">📦</span>Inventario<span class="sb-badge amber" id="sb-inv">0</span></button>
   <button class="sb-item" onclick="goTo('compras',this)"><span class="sb-icon">🛒</span>Compras</button>
+  <button class="sb-item" onclick="goTo('proveedores',this)"><span class="sb-icon">🏢</span>Proveedores</button>
 
   <div class="sb-user">
     <div class="sb-avatar">AD</div>
@@ -668,6 +669,53 @@ tr:hover td{background:#FAFBFC;}
     </div>
   </div>
 
+  <!-- ══════════════ PROVEEDORES ══════════════ -->
+  <div class="page" id="pg-proveedores">
+    <div class="card">
+      <div class="card-hd">
+        <div><div class="card-title">Proveedores</div><div class="card-sub">Talleres, suministros y servicios asociados</div></div>
+        <div class="card-actions">
+          <input class="sbox" placeholder="Buscar nombre, NIT..." id="sprov" oninput="renderPROV()">
+          <button class="ftab active" onclick="sfPROV('todos',this)">Todos</button>
+          <button class="ftab" onclick="sfPROV('Activo',this)">Activos</button>
+          <button class="ftab" onclick="sfPROV('Inactivo',this)">Inactivos</button>
+          <button class="btn btn-pri btn-sm" onclick="tp('fprov')">+ Nuevo</button>
+        </div>
+      </div>
+      <div id="fprov" style="display:none;">
+        <div class="fpanel">
+          <div class="fg">
+            <div class="fl"><label>ID Proveedor <span class="req">*</span></label><input id="vp-id" placeholder="PROV-001" style="font-family:var(--mono);font-weight:700;"></div>
+            <div class="fl"><label>Nombre / Razón social <span class="req">*</span></label><input id="vp-nombre" placeholder="Taller El Rápido..."></div>
+            <div class="fl"><label>NIT</label><input id="vp-nit" placeholder="900123456-1" style="font-family:var(--mono);"></div>
+            <div class="fl"><label>Teléfono</label><input id="vp-tel" placeholder="3001234567"></div>
+            <div class="fl"><label>Email</label><input id="vp-email" type="email" placeholder="contacto@proveedor.com"></div>
+            <div class="fl"><label>Ciudad</label><input id="vp-ciudad" placeholder="Bogotá, Medellín..."></div>
+            <div class="fl"><label>Dirección</label><input id="vp-dir" placeholder="Calle 10 #5-20"></div>
+            <div class="fl"><label>Categoría</label>
+              <select id="vp-cat">
+                <option>Taller</option><option>Lubricantes</option><option>Llantas</option>
+                <option>Combustible</option><option>Repuestos</option><option>Otros</option>
+              </select>
+            </div>
+            <div class="fl"><label>Contacto</label><input id="vp-contacto" placeholder="Nombre de la persona de contacto"></div>
+            <div class="fl"><label>Estado</label><select id="vp-estado"><option>Activo</option><option>Inactivo</option></select></div>
+            <div class="fl s2"><label>Observaciones</label><input id="vp-obs" placeholder="Notas adicionales..."></div>
+          </div>
+        </div>
+        <div class="ffoot">
+          <div id="al-prov" style="flex:1;"></div>
+          <button class="btn btn-sm" onclick="tp('fprov')">Cancelar</button>
+          <button class="btn btn-pri btn-sm" onclick="crearPROV()">Guardar proveedor</button>
+        </div>
+      </div>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Nombre</th><th>NIT</th><th>Categoría</th><th>Ciudad</th><th>Teléfono</th><th>Email</th><th>Contacto</th><th>Estado</th><th></th></tr></thead>
+        <tbody id="tbl-prov"><tr><td colspan="10" class="loader"><span class="spin"></span></td></tr></tbody>
+      </table></div>
+    </div>
+  </div>
+
   </div><!-- /content -->
 </div><!-- /main -->
 
@@ -692,6 +740,7 @@ tr:hover td{background:#FAFBFC;}
     <button class="dg-item" onclick="mGoTo('checklist');closeDrawer()"><span class="dg-icon">✅</span>Checklist</button>
     <button class="dg-item" onclick="mGoTo('inventario');closeDrawer()"><span class="dg-icon">📦</span>Inventario</button>
     <button class="dg-item" onclick="mGoTo('compras');closeDrawer()"><span class="dg-icon">🛒</span>Compras</button>
+    <button class="dg-item" onclick="mGoTo('proveedores');closeDrawer()"><span class="dg-icon">🏢</span>Proveedores</button>
   </div>
   <div style="padding:0 12px 4px;display:flex;gap:8px;">
     <button class="btn btn-sm" style="flex:1;" onclick="initSheets();closeDrawer()">⚙ Init Sheet</button>
@@ -718,8 +767,8 @@ tr:hover td{background:#FAFBFC;}
 const API = 'https://script.google.com/macros/s/AKfycbyTBx0onyXsVXYgKa7PorHOjrkk6Z3w4PNsWJcS83wn65YNZ8le70JaKC-0GkNp05M5/exec';
 
 // Estado global
-const DB = { v:[], c:[], m:[], cb:[], n:[], ch:[], vj:[], inv:[], cp:[] };
-const F  = { v:'todos', c:'todos', m:'todos', cb:'', n:'todos', ch:'todos', vj:'todos', inv:'todos', cp:'todos' };
+const DB = { v:[], c:[], m:[], cb:[], n:[], ch:[], vj:[], inv:[], cp:[], prov:[] };
+const F  = { v:'todos', c:'todos', m:'todos', cb:'', n:'todos', ch:'todos', vj:'todos', inv:'todos', cp:'todos', prov:'todos' };
 
 // ══════════════════════════════════════════════
 //  UTILIDADES
@@ -803,6 +852,7 @@ const PAGE_META = {
   viajes:       {title:'Viajes y anticipos', sub:'Rutas, gastos y rentabilidad por viaje', load:loadVJ},
   inventario:   {title:'Inventario de repuestos', sub:'Stock y almacén de piezas', load:loadINV},
   compras:      {title:'Compras', sub:'Órdenes de compra y proveedores', load:loadCP},
+  proveedores:  {title:'Proveedores', sub:'Talleres, suministros y servicios', load:loadPROV},
 };
 
 function goTo(pg, btn){
@@ -1463,6 +1513,70 @@ async function crearCP(){
   btn.disabled=false;btn.textContent='Registrar compra';
   if(r.ok){showAlert('al-cp','✅ Compra '+cpId+' registrada','ok');setTimeout(()=>{tp('fcp');loadCP();},1500);}
   else showAlert('al-cp','❌ '+(r.error||'Error'),'err');
+}
+
+// ══════════════════════════════════════════════
+//  PROVEEDORES
+// ══════════════════════════════════════════════
+async function loadPROV(){
+  document.getElementById('tbl-prov').innerHTML='<tr><td colspan="10" class="loader"><span class="spin"></span></td></tr>';
+  const d=await apig({accion:'listar',modulo:'proveedores'});
+  DB.prov=d.data||[];
+  renderPROV();
+}
+function renderPROV(){
+  const q=(document.getElementById('sprov')||{}).value||'';
+  const rows=DB.prov.filter(r=>(F.prov==='todos'||r.Estado===F.prov)&&(!q||String(r.Nombre||'').toLowerCase().includes(q.toLowerCase())||String(r.NIT||'').toLowerCase().includes(q.toLowerCase())||String(r.Ciudad||'').toLowerCase().includes(q.toLowerCase())));
+  const tb=document.getElementById('tbl-prov');
+  if(!rows.length){tb.innerHTML='<tr><td colspan="10"><div class="empty"><div class="ei">🏢</div><p>Sin proveedores registrados</p></div></td></tr>';return;}
+  tb.innerHTML=rows.map(r=>`<tr>
+    <td class="tmono" style="color:var(--brand);font-weight:700;">${r.ID_Proveedor||'—'}</td>
+    <td style="font-weight:600;">${r.Nombre||''}</td>
+    <td class="tmono tdim">${r.NIT||'—'}</td>
+    <td><span class="badge bgr">${r.Categoria||''}</span></td>
+    <td class="tdim">${r.Ciudad||'—'}</td>
+    <td class="tdim">${r.Telefono||'—'}</td>
+    <td class="tdim" style="font-size:11px;">${r.Email||'—'}</td>
+    <td class="tdim">${r.Contacto||'—'}</td>
+    <td>${r.Estado==='Activo'?'<span class="badge bg">Activo</span>':'<span class="badge br">Inactivo</span>'}</td>
+    <td><button class="btn btn-xs" onclick="editarPROV(${DB.prov.indexOf(r)})">✏</button></td>
+  </tr>`).join('');
+}
+function sfPROV(f,b){F.prov=f;document.querySelectorAll('#pg-proveedores .ftab').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderPROV();}
+
+function editarPROV(idx){
+  const r=DB.prov[idx];
+  openModal('Editar: '+r.Nombre,`
+    <div class="fg2" style="gap:11px;">
+      <div class="fl"><label>Teléfono</label><input id="ep-tel" value="${r.Telefono||''}"></div>
+      <div class="fl"><label>Email</label><input id="ep-email" value="${r.Email||''}"></div>
+      <div class="fl"><label>Ciudad</label><input id="ep-ciudad" value="${r.Ciudad||''}"></div>
+      <div class="fl"><label>Dirección</label><input id="ep-dir" value="${r.Direccion||''}"></div>
+      <div class="fl"><label>Categoría</label><select id="ep-cat">${['Taller','Lubricantes','Llantas','Combustible','Repuestos','Otros'].map(o=>`<option ${r.Categoria===o?'selected':''}>${o}</option>`).join('')}</select></div>
+      <div class="fl"><label>Contacto</label><input id="ep-contacto" value="${r.Contacto||''}"></div>
+      <div class="fl"><label>Estado</label><select id="ep-estado"><option ${r.Estado==='Activo'?'selected':''}>Activo</option><option ${r.Estado==='Inactivo'?'selected':''}>Inactivo</option></select></div>
+      <div class="fl s2"><label>Observaciones</label><input id="ep-obs" value="${r.Observaciones||''}"></div>
+    </div>
+    <div id="al-ep" style="margin-top:10px;"></div>`,
+    `<button class="btn" onclick="closeModal()">Cancelar</button><button class="btn btn-pri" onclick="guardarPROV('${r.ID_Proveedor}')">Guardar</button>`);
+}
+async function guardarPROV(id){
+  const btn=event.target;btn.disabled=true;btn.textContent='Guardando...';
+  const r=await apip({accion:'actualizar',modulo:'proveedores',buscarCampo:'ID_Proveedor',buscarValor:id,datos:{Telefono:document.getElementById('ep-tel').value,Email:document.getElementById('ep-email').value,Ciudad:document.getElementById('ep-ciudad').value,Direccion:document.getElementById('ep-dir').value,Categoria:document.getElementById('ep-cat').value,Contacto:document.getElementById('ep-contacto').value,Estado:document.getElementById('ep-estado').value,Observaciones:document.getElementById('ep-obs').value}});
+  btn.disabled=false;btn.textContent='Guardar';
+  if(r.ok){closeModal();await loadPROV();}
+  else document.getElementById('al-ep').innerHTML='<div class="alert a-err">Error al guardar</div>';
+}
+async function crearPROV(){
+  const id=document.getElementById('vp-id').value.trim();
+  const nombre=document.getElementById('vp-nombre').value.trim();
+  if(!id||!nombre){showAlert('al-prov','ID y nombre son obligatorios','err');return;}
+  if(DB.prov.some(x=>String(x.ID_Proveedor)===id)){showAlert('al-prov','Ya existe ese ID de proveedor','warn');return;}
+  const btn=event.target;btn.disabled=true;btn.textContent='Guardando...';
+  const r=await apip({accion:'crear',modulo:'proveedores',ID_Proveedor:id,Nombre:nombre,NIT:document.getElementById('vp-nit').value,Telefono:document.getElementById('vp-tel').value,Email:document.getElementById('vp-email').value,Ciudad:document.getElementById('vp-ciudad').value,Direccion:document.getElementById('vp-dir').value,Categoria:document.getElementById('vp-cat').value,Contacto:document.getElementById('vp-contacto').value,Estado:document.getElementById('vp-estado').value,Observaciones:document.getElementById('vp-obs').value});
+  btn.disabled=false;btn.textContent='Guardar proveedor';
+  if(r.ok){showAlert('al-prov','✅ Proveedor '+id+' registrado','ok');setTimeout(()=>{tp('fprov');loadPROV();},1500);}
+  else showAlert('al-prov','❌ '+(r.error||'Error'),'err');
 }
 
 // ══════════════════════════════════════════════
