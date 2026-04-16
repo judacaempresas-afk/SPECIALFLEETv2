@@ -26,7 +26,6 @@
   --top-h:48px;
 }
 body{font-family:var(--font);background:var(--bg);color:var(--t);display:flex;height:100vh;overflow:hidden;font-size:13px;}
-@media(max-width:768px){body{height:auto;min-height:100vh;overflow:auto;}}
 
 /* ══ SIDEBAR ══ */
 aside{width:var(--sb-w);min-width:var(--sb-w);background:var(--sb);display:flex;flex-direction:column;border-right:1px solid var(--bd-sb);overflow-y:auto;overflow-x:hidden;flex-shrink:0;}
@@ -49,7 +48,6 @@ aside{width:var(--sb-w);min-width:var(--sb-w);background:var(--sb);display:flex;
 
 /* ══ MAIN ══ */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
-@media(max-width:768px){.main{overflow:visible;flex:none;width:100%;}}
 .topbar{background:var(--bg2);border-bottom:1px solid var(--bd);padding:0 20px;height:var(--top-h);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 .topbar-title{font-size:14px;font-weight:700;color:var(--t);}
 .topbar-sub{font-size:11px;color:var(--t3);margin-top:1px;}
@@ -59,7 +57,6 @@ aside{width:var(--sb-w);min-width:var(--sb-w);background:var(--sb);display:flex;
 
 /* ══ PAGES ══ */
 .content{flex:1;overflow-y:auto;}
-@media(max-width:768px){.content{overflow:visible;flex:none;}}
 .page{display:none;flex-direction:column;gap:14px;padding:16px 20px;}
 .page.active{display:flex;}
 
@@ -224,57 +221,47 @@ tr:hover td{background:#FAFBFC;}
 .dash-left{display:flex;flex-direction:column;gap:14px;}
 .dash-right{display:flex;flex-direction:column;gap:14px;}
 
-/* ══ BOTTOM NAV (móvil) ══ */
-.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--sb);border-top:1px solid var(--bd-sb);z-index:500;padding:0;safe-area-inset-bottom:env(safe-area-inset-bottom);}
+/* ══ BOTTOM NAV ══ */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--sb);border-top:1px solid var(--bd-sb);z-index:500;}
 .bnav-main{display:flex;align-items:stretch;}
 .bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 2px 10px;gap:2px;background:none;border:none;cursor:pointer;color:#8B949E;font-size:9px;font-weight:600;font-family:var(--font);transition:color .12s;position:relative;min-height:56px;}
-.bnav-btn:hover,.bnav-btn.active{color:#E6EDF3;}
+.bnav-btn.active{color:#E6EDF3;}
 .bnav-btn.active::after{content:'';position:absolute;top:0;left:20%;right:20%;height:2px;background:var(--brand);border-radius:0 0 2px 2px;}
 .bnav-icon{font-size:18px;line-height:1;}
 .bnav-badge{position:absolute;top:6px;right:calc(50% - 14px);background:#DA3633;color:#fff;font-size:8px;font-weight:700;padding:1px 4px;border-radius:6px;min-width:14px;text-align:center;}
-
-/* ══ DRAWER (menú completo) ══ */
+/* ══ DRAWER ══ */
 .drawer-overlay{display:none;position:fixed;inset:0;background:rgba(1,4,9,.6);z-index:600;}
 .drawer-overlay.open{display:block;}
-.drawer{position:fixed;bottom:0;left:0;right:0;background:var(--sb);border-radius:16px 16px 0 0;z-index:700;transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);max-height:82vh;overflow-y:auto;padding-bottom:env(safe-area-inset-bottom);}
+.drawer{position:fixed;bottom:0;left:0;right:0;background:var(--sb);border-radius:16px 16px 0 0;z-index:700;transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);max-height:82vh;overflow-y:auto;padding-bottom:16px;}
 .drawer.open{transform:translateY(0);}
 .drawer-handle{width:36px;height:4px;background:var(--bd-sb);border-radius:2px;margin:10px auto 8px;}
-.drawer-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:8px 12px 16px;}
-.dg-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:12px 8px;border-radius:10px;background:var(--sb2);border:1px solid var(--bd-sb);cursor:pointer;color:#8B949E;font-size:10px;font-weight:600;font-family:var(--font);text-align:center;border:none;transition:all .12s;}
-.dg-item:hover,.dg-item.active{background:var(--brand);color:#fff;}
+.drawer-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:8px 12px 12px;}
+.dg-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:12px 8px;border-radius:10px;background:var(--sb2);cursor:pointer;color:#8B949E;font-size:10px;font-weight:600;font-family:var(--font);text-align:center;border:1px solid var(--bd-sb);transition:all .12s;}
+.dg-item:hover,.dg-item.active{background:var(--brand);color:#fff;border-color:var(--brand);}
 .dg-icon{font-size:20px;}
-.dg-badge{background:#DA3633;color:#fff;font-size:8px;font-weight:700;padding:1px 5px;border-radius:6px;}
-.dg-badge.amber{background:var(--amber);}
-.drawer-user{display:flex;align-items:center;gap:10px;padding:12px 16px;border-top:1px solid var(--bd-sb);margin-top:4px;}
-
 /* ══ RESPONSIVE ══ */
 @media(max-width:768px){
   body{flex-direction:column;height:auto;min-height:100vh;overflow:auto;}
   aside{display:none;}
-  .main{overflow:visible;}
+  .main{overflow:visible;flex:none;width:100%;}
+  .content{overflow:visible;flex:none;padding-bottom:72px;}
   .topbar{padding:0 12px;height:52px;position:sticky;top:0;z-index:400;box-shadow:0 1px 4px rgba(0,0,0,.08);}
-  .topbar-title{font-size:15px;}
   .topbar-sub{display:none;}
-  .topbar-actions .t-search{display:none;}
-  .topbar-actions .btn:not(.btn-bnav-only){display:none;}
-  .content{overflow:visible;padding-bottom:72px;}
+  .topbar-actions .t-search,.topbar-actions .btn{display:none;}
   .page{padding:12px;}
   .kpi-row{grid-template-columns:1fr 1fr;gap:8px;}
-  .kpi-val{font-size:20px;}
   .dash-body{grid-template-columns:1fr;}
   .dash-right{order:-1;}
   .bottom-nav{display:block;}
-  .card-actions{flex-wrap:wrap;gap:5px;}
-  .sbox{width:100%;}
   .fg{grid-template-columns:1fr!important;}
   .fg2,.fg3,.fg4{grid-template-columns:1fr 1fr!important;}
   .s2,.s3,.s4{grid-column:span 1!important;}
   .tw{overflow-x:auto;-webkit-overflow-scrolling:touch;}
   table{min-width:500px;}
-  .modal{max-width:100%;margin:0;border-radius:var(--rxl) var(--rxl) 0 0;position:fixed;bottom:0;left:0;right:0;max-height:90vh;}
+  .modal{max-width:100%;border-radius:var(--rxl) var(--rxl) 0 0;position:fixed;bottom:0;left:0;right:0;max-height:90vh;}
   .overlay{align-items:flex-end;padding:0;}
-  .btn{padding:8px 14px;font-size:13px;}
-  .btn-sm{padding:7px 12px;font-size:12px;}
+  .card-actions{flex-wrap:wrap;}
+  .sbox{width:100%;}
 }
 </style>
 </head>
@@ -687,10 +674,10 @@ tr:hover td{background:#FAFBFC;}
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <div class="bnav-main">
-    <button class="bnav-btn active" id="bn-dashboard" onclick="goToMobile('dashboard',this)"><span class="bnav-icon">▦</span><span>Inicio</span></button>
-    <button class="bnav-btn" id="bn-vehiculos" onclick="goToMobile('vehiculos',this)"><span class="bnav-icon">🚗</span><span>Flota</span><span class="bnav-badge" id="bn-sb-veh" style="display:none;">0</span></button>
-    <button class="bnav-btn" id="bn-mantenimiento" onclick="goToMobile('mantenimiento',this)"><span class="bnav-icon">🔧</span><span>OT</span><span class="bnav-badge" id="bn-sb-mant" style="display:none;">0</span></button>
-    <button class="bnav-btn" id="bn-combustible" onclick="goToMobile('combustible',this)"><span class="bnav-icon">⛽</span><span>Comb.</span></button>
+    <button class="bnav-btn active" id="bn-dashboard" onclick="mGoTo('dashboard',this)"><span class="bnav-icon">▦</span><span>Inicio</span></button>
+    <button class="bnav-btn" id="bn-vehiculos" onclick="mGoTo('vehiculos',this)"><span class="bnav-icon">🚗</span><span>Flota</span><span class="bnav-badge" id="bn-veh" style="display:none">0</span></button>
+    <button class="bnav-btn" id="bn-mantenimiento" onclick="mGoTo('mantenimiento',this)"><span class="bnav-icon">🔧</span><span>OT</span><span class="bnav-badge" id="bn-mant" style="display:none">0</span></button>
+    <button class="bnav-btn" id="bn-combustible" onclick="mGoTo('combustible',this)"><span class="bnav-icon">⛽</span><span>Comb.</span></button>
     <button class="bnav-btn" id="bn-more" onclick="openDrawer()"><span class="bnav-icon">⋯</span><span>Más</span></button>
   </div>
 </nav>
@@ -699,18 +686,21 @@ tr:hover td{background:#FAFBFC;}
 <div class="drawer" id="drawer">
   <div class="drawer-handle"></div>
   <div class="drawer-grid">
-    <button class="dg-item" onclick="goToMobile('conductores');closeDrawer()"><span class="dg-icon">👤</span><span>Conductores</span></button>
-    <button class="dg-item" onclick="goToMobile('viajes');closeDrawer()"><span class="dg-icon">🚚</span><span>Viajes</span></button>
-    <button class="dg-item" onclick="goToMobile('neumaticos');closeDrawer()"><span class="dg-icon">🛞</span><span>Neumáticos</span></button>
-    <button class="dg-item" onclick="goToMobile('checklist');closeDrawer()"><span class="dg-icon">✅</span><span>Checklist</span></button>
-    <button class="dg-item" onclick="goToMobile('inventario');closeDrawer()"><span class="dg-icon">📦</span><span>Inventario</span></button>
-    <button class="dg-item" onclick="goToMobile('compras');closeDrawer()"><span class="dg-icon">🛒</span><span>Compras</span></button>
+    <button class="dg-item" onclick="mGoTo('conductores');closeDrawer()"><span class="dg-icon">👤</span>Conductores</button>
+    <button class="dg-item" onclick="mGoTo('viajes');closeDrawer()"><span class="dg-icon">🚚</span>Viajes</button>
+    <button class="dg-item" onclick="mGoTo('neumaticos');closeDrawer()"><span class="dg-icon">🛞</span>Neumáticos</button>
+    <button class="dg-item" onclick="mGoTo('checklist');closeDrawer()"><span class="dg-icon">✅</span>Checklist</button>
+    <button class="dg-item" onclick="mGoTo('inventario');closeDrawer()"><span class="dg-icon">📦</span>Inventario</button>
+    <button class="dg-item" onclick="mGoTo('compras');closeDrawer()"><span class="dg-icon">🛒</span>Compras</button>
   </div>
-  <div style="padding:0 12px 8px;display:flex;gap:8px;">
+  <div style="padding:0 12px 4px;display:flex;gap:8px;">
     <button class="btn btn-sm" style="flex:1;" onclick="initSheets();closeDrawer()">⚙ Init Sheet</button>
     <button class="btn btn-sm" style="flex:1;" onclick="recargar();closeDrawer()">↻ Actualizar</button>
   </div>
-  <div class="drawer-user"><div class="sb-avatar">AD</div><div><div class="sb-un">Administrador</div><div class="sb-ur">Gestor de flota</div></div></div>
+  <div style="display:flex;align-items:center;gap:9px;padding:12px 16px;border-top:1px solid var(--bd-sb);margin-top:8px;">
+    <div class="sb-avatar">AD</div>
+    <div><div class="sb-un">Administrador</div><div class="sb-ur">Gestor de flota</div></div>
+  </div>
 </div>
 <!-- MODAL -->
 <div id="modal" class="overlay" style="display:none;" onclick="if(event.target===this)closeModal()">
@@ -1476,75 +1466,48 @@ async function crearCP(){
 }
 
 // ══════════════════════════════════════════════
-//  NAVEGACIÓN MÓVIL
+//  NAVEGACIÓN MÓVIL (sin sobreescribir updateSB)
 // ══════════════════════════════════════════════
-const BNAV_MAP = {
-  dashboard:'bn-dashboard',
-  vehiculos:'bn-vehiculos',
-  mantenimiento:'bn-mantenimiento',
-  combustible:'bn-combustible',
-};
+const BNAV = {dashboard:'bn-dashboard',vehiculos:'bn-vehiculos',mantenimiento:'bn-mantenimiento',combustible:'bn-combustible'};
 
-function goToMobile(pg, btn){
-  // Navegar a la página
+function mGoTo(pg, btn){
+  // Páginas
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('pg-'+pg).classList.add('active');
-
-  // Sincronizar sidebar desktop
-  document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
+  // Sidebar desktop sync
   document.querySelectorAll('.sb-item').forEach(b=>{
-    if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+pg+"'")){b.classList.add('active');}
+    b.classList.remove('active');
+    if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+pg+"'"))b.classList.add('active');
   });
-
   // Topbar
   const meta=PAGE_META[pg];
   if(meta){document.getElementById('tb-title').textContent=meta.title;document.getElementById('tb-sub').textContent=meta.sub;meta.load();}
-
-  // Bottom nav activo
+  // Bottom nav
   document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('active'));
-  const bnId=BNAV_MAP[pg];
-  if(bnId)document.getElementById(bnId).classList.add('active');
+  const bid=BNAV[pg];
+  if(bid)document.getElementById(bid).classList.add('active');
   else document.getElementById('bn-more').classList.add('active');
-
-  // Drawer items
-  document.querySelectorAll('.dg-item').forEach(b=>b.classList.remove('active'));
   window.scrollTo({top:0,behavior:'smooth'});
-}
-
-function updateSBMobile(){
-  const veh=DB.v.length;
-  const mant=DB.m.filter(x=>x.Estado!=='Cerrada'&&x.Estado!=='Anulada').length;
-  const vj=DB.vj.filter(x=>x.Estado==='En curso').length;
-  const inv=DB.inv.filter(x=>Number(x.Stock)<=Number(x.Stock_Minimo)).length;
-  const showBadge=(id,val)=>{const el=document.getElementById(id);if(el){el.textContent=val;el.style.display=val>0?'':'none';}};
-  showBadge('bn-sb-veh',veh);
-  showBadge('bn-sb-mant',mant);
 }
 
 function openDrawer(){
   document.getElementById('drawer').classList.add('open');
   document.getElementById('drawer-overlay').classList.add('open');
-  document.body.style.overflow='hidden';
 }
 function closeDrawer(){
   document.getElementById('drawer').classList.remove('open');
   document.getElementById('drawer-overlay').classList.remove('open');
-  document.body.style.overflow='';
 }
 
-// Parchear goTo para sincronizar también el bottom nav
-const _origGoTo=goTo;
-function goTo(pg,btn){
-  _origGoTo(pg,btn);
+// Sincronizar bottom nav cuando se usa el sidebar desktop
+const _goTo=goTo;
+goTo=function(pg,btn){
+  _goTo(pg,btn);
   document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('active'));
-  const bnId=BNAV_MAP[pg];
-  if(bnId)document.getElementById(bnId).classList.add('active');
+  const bid=BNAV[pg];
+  if(bid)document.getElementById(bid).classList.add('active');
   else document.getElementById('bn-more').classList.add('active');
-}
-
-// Parchear updateSB para también actualizar móvil
-const _origUpdateSB=updateSB;
-function updateSB(){_origUpdateSB();updateSBMobile();}
+};
 
 // ══════════════════════════════════════════════
 //  INIT
