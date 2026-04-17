@@ -828,21 +828,20 @@ let SESSION = null;
 // Permisos por rol: qué módulos puede ver y qué puede hacer
 const ROL_CONFIG = {
   admin: {
-    modulos: ['dashboard','vehiculos','conductores','mantenimiento','combustible','neumaticos','checklist','viajes','inventario','compras','proveedores'],
+    modulos: ['dashboard','vehiculos','conductores','mantenimiento','combustible',
+              'neumaticos','checklist','viajes','inventario','compras','proveedores'],
     puedeEscribir: true,
     esAdmin: true,
   },
   tecnico: {
-    modulos: ['dashboard','vehiculos','mantenimiento','neumaticos','inventario','compras','combustible','checklist','conductores','viajes','proveedores'],
+    modulos: ['dashboard','vehiculos','mantenimiento','neumaticos','inventario',
+              'compras','combustible','checklist','conductores','viajes','proveedores'],
     puedeEscribir: true,
     esAdmin: false,
   },
   conductor: {
-    modulos: ['dashboard','checklist','viajes','combustible','vehiculos'],
-    puedeEscribir: true,
-    esAdmin: false,
-  },
-};
+  checklist: ['leer','crear'],
+}
 
 // ══════════════════════════════════════════════
 //  LOGIN
@@ -939,20 +938,20 @@ function iniciarApp(){
   });
 
   // Para conductor: ocultar sección de recursos en sidebar
-  if(SESSION.rol === 'conductor'){
-    document.querySelector('.sb-sec-recursos') && (document.querySelector('.sb-sec-recursos').style.display = 'none');
-    document.querySelector('.sb-div-recursos') && (document.querySelector('.sb-div-recursos').style.display = 'none');
-    document.getElementById('nav-inventario') && (document.getElementById('nav-inventario').style.display = 'none');
-    document.getElementById('nav-compras')    && (document.getElementById('nav-compras').style.display = 'none');
-    document.getElementById('nav-proveedores')&& (document.getElementById('nav-proveedores').style.display = 'none');
-    // En el drawer, ocultar los que no puede ver
-    document.querySelectorAll('.drawer-grid .perm-write, .drawer-grid .perm-admin').forEach(el => {
-      if(el.textContent.includes('Inventario') || el.textContent.includes('Compras') || el.textContent.includes('Proveedores'))
-        el.style.display = 'none';
-    });
-  }
+// Para conductor: ir directo a checklist y ocultar todo lo demás
+if (SESSION.rol === 'conductor') {
+  // Ocultar sidebar y topbar completamente
+  document.querySelector('aside').style.display = 'none';
+  document.querySelector('.topbar-actions').style.display = 'none';
+  document.querySelector('.bottom-nav').style.display = 'none';
 
-  loadDash();
+  // Cambiar título
+  document.getElementById('tb-title').textContent = 'Inspección de vehículo';
+  document.getElementById('tb-sub').textContent = 'Diligencia tu checklist diario';
+
+  // Ir directo a checklist
+  goTo('checklist', null);
+  return; // no ejecutar nada más de iniciarApp
 }
 
 function doLogout(){
