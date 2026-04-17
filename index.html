@@ -1470,7 +1470,7 @@ function detalleM(idx){
       <div class="dcell"><div class="dk">Taller</div><div class="dv">${r.Proveedor||'—'}</div></div>
       <div class="dcell"><div class="dk">Conductor</div><div class="dv">${r.Conductor||'—'}</div></div>
       <div class="dcell"><div class="dk">Odómetro</div><div class="dv tmono">${fmt(r.Odometro||0)} km</div></div>
-      <div class="dcell"><div class="dk">Fecha orden</div><div class="dv">${r.Fecha_Orden||'—'}</div></div>
+      <div class="dcell"><div class="dk">Fecha orden</div><div class="dv">${String(r.Fecha_Orden||'—').split('T')[0]}</div></div>
       <div class="dcell"><div class="dk">Costo total</div><div class="dv tmono" style="color:var(--red);">${fmtK(r.Costo_Total||0)}</div></div>
     </div>
    ${r.Descripcion?`<div><div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;margin-bottom:4px;">Trabajo</div><div style="font-size:12px;line-height:1.6;color:var(--t2);">${r.Descripcion}</div></div>`:''}
