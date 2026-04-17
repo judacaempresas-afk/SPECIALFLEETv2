@@ -866,51 +866,36 @@ async function doLogin(){
   btn.innerHTML = '<span class="login-spin"></span>Verificando...';
   err.style.display = 'none';
 
-  // Validamos leyendo conductores directamente
   const rc = await apig({ accion:'listar', modulo:'conductores', email, clave });
 
   btn.disabled = false;
   btn.textContent = 'Ingresar';
 
-  // Si la API rechazó las credenciales
   if(rc.ok !== true){
     const msg = rc.error || 'Credenciales incorrectas';
     showLoginErr(
-      msg === 'Clave incorrecta'       ? 'Contraseña incorrecta' :
-      msg === 'Usuario no encontrado'  ? 'Usuario no encontrado' :
-      msg === 'Usuario inactivo'       ? 'Tu cuenta está inactiva. Contacta al administrador.' :
-      msg === 'Sin permiso'            ? 'Sin acceso al sistema' : msg
+      msg === 'Clave incorrecta'      ? 'Contraseña incorrecta' :
+      msg === 'Usuario no encontrado' ? 'Usuario no encontrado' :
+      msg === 'Usuario inactivo'      ? 'Tu cuenta está inactiva. Contacta al administrador.' :
+      msg === 'Sin permiso'           ? 'Sin acceso al sistema' : msg
     );
     return;
   }
 
-  // La API aceptó las creds — ahora buscar el usuario en los datos
   const usuario = (rc.data || []).find(
     u => String(u.Email || '').toLowerCase() === email.toLowerCase()
   );
 
-  // Doble verificación en frontend: el usuario debe existir y estar Activo
-  if(!usuario){
-    showLoginErr('Usuario no encontrado');
-    return;
-  }
-  if(usuario.Estado !== 'Activo'){
-    showLoginErr('Tu cuenta está inactiva. Contacta al administrador.');
-    return;
-  }
+  if(!usuario){ showLoginErr('Usuario no encontrado'); return; }
+  if(usuario.Estado !== 'Activo'){ showLoginErr('Tu cuenta está inactiva. Contacta al administrador.'); return; }
 
   const rol    = String(usuario.Rol || 'conductor').trim().toLowerCase();
   const nombre = usuario.Nombre || email.split('@')[0];
 
   SESSION = { email, clave, rol, nombre };
   iniciarApp();
-} else {
-    const msg = r.error || 'Credenciales incorrectas';
-    showLoginErr(msg === 'Clave incorrecta' ? 'Contraseña incorrecta' :
-                 msg === 'Usuario no encontrado' ? 'Usuario no encontrado' :
-                 msg === 'Usuario inactivo' ? 'Tu cuenta está inactiva. Contacta al administrador.' : msg);
-  }
 }
+
 
 function showLoginErr(msg){
   const el = document.getElementById('l-err');
