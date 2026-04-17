@@ -65,7 +65,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);display:flex;he
 }
 .login-spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;margin-right:6px;vertical-align:middle;}
 
-/* ══ APP (oculto hasta login) ══ */
+/* ══ APP ══ */
 #app{display:none;width:100%;height:100%;overflow:hidden;}
 #app.visible{display:flex;}
 
@@ -281,6 +281,23 @@ tr:hover td{background:#FAFBFC;}
 .dg-item:hover,.dg-item.active{background:var(--brand);color:#fff;border-color:var(--brand);}
 .dg-icon{font-size:20px;}
 
+/* ══ CONDUCTOR: vista exclusiva ══ */
+.conductor-wrap{
+  display:flex;flex-direction:column;align-items:center;
+  min-height:100vh;background:var(--bg);
+}
+.conductor-header{
+  width:100%;background:var(--sb);padding:14px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.conductor-logo{display:flex;align-items:center;gap:9px;}
+.conductor-logo-icon{width:30px;height:30px;border-radius:7px;background:var(--brand);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;font-family:var(--mono);}
+.conductor-logo-text{font-size:14px;font-weight:700;color:#E6EDF3;}
+.conductor-logo-text span{color:#58A6FF;}
+.conductor-user{display:flex;align-items:center;gap:8px;}
+.conductor-ava{width:28px;height:28px;border-radius:50%;background:var(--brand);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;}
+.conductor-name{font-size:12px;font-weight:600;color:#E6EDF3;}
+
 /* ══ RESPONSIVE ══ */
 @media(max-width:768px){
   body{flex-direction:column;height:auto;min-height:100vh;overflow:auto;}
@@ -378,7 +395,7 @@ tr:hover td{background:#FAFBFC;}
 <div class="main">
   <div class="topbar">
     <div><div class="topbar-title" id="tb-title">Dashboard</div><div class="topbar-sub" id="tb-sub">Resumen general de la operación</div></div>
-    <div class="topbar-actions">
+    <div class="topbar-actions" id="topbar-actions-wrap">
       <input class="t-search" placeholder="Buscar en la plataforma..." id="gsearch">
       <button class="btn btn-sm" id="btn-init" onclick="initSheets()" title="Inicializar hojas">⚙ Init Sheet</button>
       <button class="btn btn-sm" onclick="recargar()">↻ Actualizar</button>
@@ -430,7 +447,7 @@ tr:hover td{background:#FAFBFC;}
             <div class="fl"><label>Marca <span class="req">*</span></label><input id="vv-marca" placeholder="Chevrolet, Toyota..."></div>
             <div class="fl"><label>Modelo</label><input id="vv-modelo" placeholder="NHR, Hilux..."></div>
             <div class="fl"><label>Año</label><input id="vv-año" type="number" placeholder="2024" min="1990" max="2030"></div>
-            <div class="fl"><label>Tipo</label><select id="vv-tipo"><option>Camioneta</option><option>Sedan</option><option>Bus</option><option>Camión</option><option>Moto</option><option>Van</option><option>Volqueta</option><option>Maquinaria</option><option>Compactador doble troque</option><option>Compactador sencillo</option><option>Cargador</option><option>Moto carro</option><option>Barredora</option><option>Ampli roll sencillo</option><option>Ampli roll doble troque</option><option>Caja autocompactadora</option><option>Carro canasta</option><option>Furgon RH.</option><option>Volqueta</option><option>Caja estacionaria y contenedor</option><option>Otro</option></select></div>
+            <div class="fl"><label>Tipo</label><select id="vv-tipo"><option>Camioneta</option><option>Sedan</option><option>Bus</option><option>Camión</option><option>Moto</option><option>Van</option><option>Volqueta</option><option>Maquinaria</option><option>Compactador doble troque</option><option>Compactador sencillo</option><option>Cargador</option><option>Moto carro</option><option>Barredora</option><option>Ampli roll sencillo</option><option>Ampli roll doble troque</option><option>Caja autocompactadora</option><option>Carro canasta</option><option>Furgon RH.</option><option>Caja estacionaria y contenedor</option><option>Otro</option></select></div>
             <div class="fl"><label>Conductor asignado</label><select id="vv-conductor"><option value="">Sin asignar</option></select></div>
             <div class="fl"><label>Estado</label><select id="vv-estado"><option>Activo</option><option>Inactivo</option><option>Mantenimiento</option></select></div>
             <div class="fl"><label>KM actuales</label><input id="vv-km" type="number" placeholder="0" min="0" style="font-family:var(--mono);"></div>
@@ -825,7 +842,6 @@ const API = 'https://script.google.com/macros/s/AKfycbyTBx0onyXsVXYgKa7PorHOjrkk
 // ══════════════════════════════════════════════
 let SESSION = null;
 
-// Permisos por rol: qué módulos puede ver y qué puede hacer
 const ROL_CONFIG = {
   admin: {
     modulos: ['dashboard','vehiculos','conductores','mantenimiento','combustible',
@@ -840,8 +856,11 @@ const ROL_CONFIG = {
     esAdmin: false,
   },
   conductor: {
-  checklist: ['leer','crear'],
-}
+    modulos: ['checklist'],
+    puedeEscribir: true,
+    esAdmin: false,
+  },
+};
 
 // ══════════════════════════════════════════════
 //  LOGIN
@@ -895,41 +914,73 @@ async function doLogin(){
   iniciarApp();
 }
 
-
 function showLoginErr(msg){
   const el = document.getElementById('l-err');
   el.textContent = '⚠ ' + msg;
   el.style.display = 'block';
 }
 
+// ══════════════════════════════════════════════
+//  INICIAR APP  ← FUNCIÓN CORREGIDA
+// ══════════════════════════════════════════════
 function iniciarApp(){
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app').classList.add('visible');
 
   const cfg = ROL_CONFIG[SESSION.rol] || ROL_CONFIG.conductor;
 
-  // Actualizar info de usuario en sidebar
+  // Info de usuario en sidebar y drawer
   const iniciales = SESSION.nombre.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
-  document.getElementById('sb-ava').textContent     = iniciales;
-  document.getElementById('sb-nombre').textContent  = SESSION.nombre;
-  document.getElementById('sb-rol-lbl').textContent = SESSION.rol.charAt(0).toUpperCase() + SESSION.rol.slice(1);
+  document.getElementById('sb-ava').textContent      = iniciales;
+  document.getElementById('sb-nombre').textContent   = SESSION.nombre;
+  document.getElementById('sb-rol-lbl').textContent  = SESSION.rol.charAt(0).toUpperCase() + SESSION.rol.slice(1);
   document.getElementById('drawer-ava').textContent  = iniciales;
   document.getElementById('drawer-nombre').textContent = SESSION.nombre;
-  document.getElementById('drawer-rol').textContent = SESSION.rol;
+  document.getElementById('drawer-rol').textContent  = SESSION.rol;
 
-  // Ocultar botones init para no-admin
-  if(!cfg.esAdmin){
-    document.querySelectorAll('.perm-admin').forEach(el => el.style.display = 'none');
-    document.getElementById('btn-init') && (document.getElementById('btn-init').style.display = 'none');
+  // ── ROL CONDUCTOR: vista exclusiva checklist ──
+  if(SESSION.rol === 'conductor'){
+    // Ocultar sidebar, bottom-nav y acciones del topbar
+    document.querySelector('aside').style.display          = 'none';
+    document.querySelector('.bottom-nav').style.display    = 'none';
+    document.getElementById('topbar-actions-wrap').style.display = 'none';
+
+    // Ajustar título del topbar
+    document.getElementById('tb-title').textContent = 'Inspección de vehículo';
+    document.getElementById('tb-sub').textContent   = 'Diligencia tu checklist diario';
+
+    // Añadir botón "Salir" en el topbar
+    document.querySelector('.topbar').insertAdjacentHTML('beforeend',
+      '<button class="btn btn-sm btn-red" onclick="doLogout()" style="margin-left:auto;">⏻ Salir</button>'
+    );
+
+    // Ocultar todas las páginas y mostrar solo checklist
+    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+    const pgCheck = document.getElementById('pg-checklist');
+    pgCheck.style.display = 'flex';
+    pgCheck.classList.add('active');
+
+    loadCH();
+    return; // ← termina aquí para conductores
   }
 
-  // Ocultar botones de escritura para solo-lectura (ningún rol es solo lectura por ahora, pero queda listo)
+  // ── ADMIN / TÉCNICO ──
+
+  // Ocultar elementos de solo-admin
+  if(!cfg.esAdmin){
+    document.querySelectorAll('.perm-admin').forEach(el => el.style.display = 'none');
+    const btnInit = document.getElementById('btn-init');
+    if(btnInit) btnInit.style.display = 'none';
+  }
+
+  // Ocultar elementos de escritura si el rol es solo lectura
   if(!cfg.puedeEscribir){
     document.querySelectorAll('.perm-write').forEach(el => el.style.display = 'none');
   }
 
   // Ocultar módulos no permitidos en sidebar
-  const todosModulos = ['vehiculos','conductores','mantenimiento','combustible','neumaticos','checklist','viajes','inventario','compras','proveedores'];
+  const todosModulos = ['vehiculos','conductores','mantenimiento','combustible',
+                        'neumaticos','checklist','viajes','inventario','compras','proveedores'];
   todosModulos.forEach(m => {
     if(!cfg.modulos.includes(m)){
       const navBtn = document.getElementById('nav-'+m);
@@ -937,29 +988,23 @@ function iniciarApp(){
     }
   });
 
-  // Para conductor: ocultar sección de recursos en sidebar
-// Para conductor: ir directo a checklist y ocultar todo lo demás
-if (SESSION.rol === 'conductor') {
-  // Ocultar sidebar y topbar completamente
-  document.querySelector('aside').style.display = 'none';
-  document.querySelector('.topbar-actions').style.display = 'none';
-  document.querySelector('.bottom-nav').style.display = 'none';
+  loadDash();
+} // ← cierre correcto de iniciarApp()
 
-  // Cambiar título
-  document.getElementById('tb-title').textContent = 'Inspección de vehículo';
-  document.getElementById('tb-sub').textContent = 'Diligencia tu checklist diario';
-
-  // Ir directo a checklist
-  goTo('checklist', null);
-  return; // no ejecutar nada más de iniciarApp
-}
-
+// ══════════════════════════════════════════════
+//  LOGOUT
+// ══════════════════════════════════════════════
 function doLogout(){
   SESSION = null;
   document.getElementById('app').classList.remove('visible');
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('l-pass').value = '';
   document.getElementById('l-err').style.display = 'none';
+  // Limpiar el botón de salir que se pudo haber inyectado para conductores
+  const extraBtn = document.querySelector('.topbar .btn-red');
+  if(extraBtn) extraBtn.remove();
+  // Restaurar acciones del topbar
+  document.getElementById('topbar-actions-wrap').style.display = '';
 }
 
 // ══════════════════════════════════════════════
@@ -1051,12 +1096,9 @@ const PAGE_META = {
 };
 
 function goTo(pg, btn){
-  // Verificar permiso de módulo
   if(SESSION){
     const cfg = ROL_CONFIG[SESSION.rol] || ROL_CONFIG.conductor;
-    if(!cfg.modulos.includes(pg)){
-      return;
-    }
+    if(!cfg.modulos.includes(pg)) return;
   }
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
@@ -1507,8 +1549,7 @@ async function loadCH(){
   const[d,dv,dc]=await Promise.all([apig({accion:'listar',modulo:'checklist'}),apig({accion:'listar',modulo:'vehiculos'}),apig({accion:'listar',modulo:'conductores'})]);
   DB.ch=d.data||[];DB.v=dv.data||[];DB.c=dc.data||[];
   document.getElementById('vch-placa').innerHTML='<option value="">Seleccionar...</option>'+DB.v.map(v=>`<option>${v.Placa}</option>`).join('');
-  // Conductor: pre-seleccionar el propio
-  const conductorOpts = SESSION.rol==='conductor'
+  const conductorOpts = SESSION && SESSION.rol==='conductor'
     ? DB.c.filter(x=>x.Email===SESSION.email).map(x=>`<option selected>${x.Nombre}</option>`).join('') + DB.c.filter(x=>x.Email!==SESSION.email&&x.Estado==='Activo').map(x=>`<option>${x.Nombre}</option>`).join('')
     : DB.c.filter(x=>x.Estado==='Activo').map(x=>`<option>${x.Nombre}</option>`).join('');
   document.getElementById('vch-conductor').innerHTML='<option value="">Seleccionar...</option>'+conductorOpts;
@@ -1804,6 +1845,7 @@ function closeDrawer(){
   document.getElementById('drawer-overlay').classList.remove('open');
 }
 
+// Extender goTo para sincronizar bottom-nav
 const _goTo = goTo;
 goTo = function(pg, btn){
   _goTo(pg, btn);
