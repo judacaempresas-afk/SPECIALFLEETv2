@@ -1265,6 +1265,7 @@ function renderV(){
     <td style="white-space:nowrap;">
       <button class="btn btn-xs" onclick="detalleV(${DB.v.indexOf(r)})">🔍</button>
       <button class="btn btn-xs" onclick="editarV(${DB.v.indexOf(r)})">✏</button>
+      <button class="btn btn-xs btn-ghost" onclick="reporteV('${r.Placa}')">📊</button>
     </td>`).join('');
 }
 function sfV(f,b){F.v=f;document.querySelectorAll('#pg-vehiculos .ftab').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderV();}
@@ -2104,6 +2105,119 @@ function detalleVJ(idx){
     ${r.Carga?`<div style="font-size:12px;color:var(--t2);margin-top:4px;"><strong>Carga:</strong> ${r.Carga}</div>`:''}
     ${r.Observaciones?`<div style="font-size:12px;color:var(--t2);margin-top:6px;"><strong>Obs:</strong> ${r.Observaciones}</div>`:''}
   `);
+}
+  // ══════════════════════════════════════════════
+//  REPORTE POR VEHÍCULO
+// ══════════════════════════════════════════════
+async function reporteV(placa){
+  openModal('Cargando reporte...', '<div class="loader"><span class="spin"></span>Consultando datos...</div>', '', true);
+
+  const [dm, dcb, dvj] = await Promise.all([
+    apig({accion:'buscar', modulo:'mantenimiento', campo:'Placa', valor:placa}),
+    apig({accion:'buscar', modulo:'combustible',   campo:'Placa', valor:placa}),
+    apig({accion:'buscar', modulo:'viajes',        campo:'Placa', valor:placa}),
+  ]);
+
+  const veh   = DB.v.find(x => x.Placa === placa) || {};
+  const mants = (dm.data  || []).filter(x => String(x.Placa||'').toUpperCase() === placa.toUpperCase());
+  const comb  = (dcb.data || []).filter(x => String(x.Placa||'').toUpperCase() === placa.toUpperCase());
+  const viajs = (dvj.data || []).filter(x => String(x.Placa||'').toUpperCase() === placa.toUpperCase());
+
+  const costoMant  = mants.reduce((s,x) => s + (Number(x.Costo_Total)||0), 0);
+  const costoComb  = comb.reduce((s,x)  => s + (Number(x.Costo_Total)||0), 0);
+  const galonesTot = comb.reduce((s,x)  => s + (Number(x.Galones)||0), 0);
+  const ingresos   = viajs.reduce((s,x) => s + (Number(x.Ingreso)||0), 0);
+  const gastos     = viajs.reduce((s,x) => s + (Number(x.Gastos)||0), 0);
+  const utilidad   = viajs.reduce((s,x) => s + (Number(x.Utilidad)||0), 0);
+  const costoTotal = costoMant + costoComb;
+
+  const otAbiertas  = mants.filter(x => x.Estado !== 'Cerrada' && x.Estado !== 'Anulada').length;
+  const vjActivos   = viajs.filter(x => x.Estado === 'En curso').length;
+
+  document.getElementById('modal-title').textContent = '📊 Reporte: ' + placa;
+  document.getElementById('modal-body').innerHTML = `
+
+    <!-- KPIs resumen -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;">
+      <div style="background:var(--bg);border-radius:var(--r);padding:10px 12px;border:1px solid var(--bd);">
+        <div style="font-size:10px;color:var(--t3);font-weight:600;text-transform:uppercase;margin-bottom:3px;">Costo mantenimiento</div>
+        <div style="font-size:16px;font-weight:700;font-family:var(--mono);color:var(--red);">${fmtK(costoMant)}</div>
+        <div style="font-size:10px;color:var(--t3);">${mants.length} OT · ${otAbiertas} abiertas</div>
+      </div>
+      <div style="background:var(--bg);border-radius:var(--r);padding:10px 12px;border:1px solid var(--bd);">
+        <div style="font-size:10px;color:var(--t3);font-weight:600;text-transform:uppercase;margin-bottom:3px;">Costo combustible</div>
+        <div style="font-size:16px;font-weight:700;font-family:var(--mono);color:var(--amber);">${fmtK(costoComb)}</div>
+        <div style="font-size:10px;color:var(--t3);">${galonesTot.toFixed(1)} gal · ${comb.length} cargas</div>
+      </div>
+      <div style="background:var(--bg);border-radius:var(--r);padding:10px 12px;border:1px solid var(--bd);">
+        <div style="font-size:10px;color:var(--t3);font-weight:600;text-transform:uppercase;margin-bottom:3px;">Utilidad viajes</div>
+        <div style="font-size:16px;font-weight:700;font-family:var(--mono);color:${utilidad>=0?'var(--green)':'var(--red)'};">${fmtK(utilidad)}</div>
+        <div style="font-size:10px;color:var(--t3);">${viajs.length} viajes · ${vjActivos} en curso</div>
+      </div>
+    </div>
+
+    <!-- Barra costo total -->
+    <div style="background:var(--bg);border-radius:var(--r);padding:10px 14px;border:1px solid var(--bd);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:12px;font-weight:600;color:var(--t2);">Costo operativo total (mant. + combustible)</span>
+      <span style="font-size:18px;font-weight:700;font-family:var(--mono);color:var(--red);">${fmtK(costoTotal)}</span>
+    </div>
+
+    <!-- Documentos -->
+    <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Documentos</div>
+    <div class="dgrid" style="margin-bottom:14px;">
+      <div class="dcell"><div class="dk">SOAT</div><div class="dv">${veh.Fecha_SOAT||'—'} ${docBadge(veh.Fecha_SOAT)}</div></div>
+      <div class="dcell"><div class="dk">Tecnomecánica</div><div class="dv">${veh.Fecha_Tecno||'—'} ${docBadge(veh.Fecha_Tecno)}</div></div>
+      <div class="dcell"><div class="dk">Tarjeta operación</div><div class="dv">${veh.Fecha_Tarjeta_Op||'—'} ${docBadge(veh.Fecha_Tarjeta_Op)}</div></div>
+      <div class="dcell"><div class="dk">KM actuales</div><div class="dv tmono">${fmt(veh.KM||0)} km</div></div>
+    </div>
+
+    <!-- Últimas OT -->
+    <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Últimas órdenes de trabajo</div>
+    ${mants.length ? `
+    <div style="border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;margin-bottom:14px;">
+      ${mants.slice(-5).reverse().map(m=>`
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 11px;border-bottom:1px solid var(--bg3);">
+          <div>
+            <span style="font-size:11px;font-family:var(--mono);color:var(--brand);">${m.OT_ID}</span>
+            <span style="font-size:11px;color:var(--t2);margin-left:8px;">${m.Tipo} — ${(m.Descripcion||'').slice(0,35)}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:11px;font-family:var(--mono);font-weight:600;">${fmtK(m.Costo_Total||0)}</span>
+            ${badge(m.Estado)}
+          </div>
+        </div>`).join('')}
+    </div>` : '<div style="font-size:12px;color:var(--t3);margin-bottom:14px;">Sin órdenes registradas</div>'}
+
+    <!-- Últimos viajes -->
+    <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Últimos viajes</div>
+    ${viajs.length ? `
+    <div style="border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;margin-bottom:14px;">
+      ${viajs.slice(-5).reverse().map(v=>{
+        const u=Number(v.Utilidad||0);
+        return`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 11px;border-bottom:1px solid var(--bg3);">
+          <div>
+            <span style="font-size:11px;font-family:var(--mono);color:var(--brand);">${v.ID_Viaje}</span>
+            <span style="font-size:11px;color:var(--t2);margin-left:8px;">${v.Origen||'—'} → ${v.Destino||'—'}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:11px;font-family:var(--mono);font-weight:600;color:${u>=0?'var(--green)':'var(--red)'};">${fmtK(u)}</span>
+            ${badge(v.Estado)}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>` : '<div style="font-size:12px;color:var(--t3);margin-bottom:14px;">Sin viajes registrados</div>'}
+
+    <!-- Últimas cargas combustible -->
+    <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Últimas cargas de combustible</div>
+    ${comb.length ? `
+    <div style="border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;">
+      ${comb.slice(-4).reverse().map(c=>`
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 11px;border-bottom:1px solid var(--bg3);">
+          <span style="font-size:11px;color:var(--t2);">${c.Fecha||'—'} · ${Number(c.Galones||0).toFixed(1)} gal · ${c.Estacion||'—'}</span>
+          <span style="font-size:11px;font-family:var(--mono);font-weight:600;">${fmtK(c.Costo_Total||0)}</span>
+        </div>`).join('')}
+    </div>` : '<div style="font-size:12px;color:var(--t3);">Sin cargas registradas</div>'}
+  `;
 }
 </script>
 </body>
