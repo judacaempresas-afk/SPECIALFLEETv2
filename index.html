@@ -692,7 +692,7 @@ tr:hover td{background:#FAFBFC;}
         </div></div>
         <div class="ffoot"><div id="al-vj" style="flex:1;"></div><button class="btn btn-sm" onclick="tp('fvj')">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearVJ()">Registrar viaje</button></div>
       </div>
-      <div class="tw"><table><thead><tr><th>ID</th><th>Placa</th><th>Conductor</th><th>Origen → Destino</th><th>F. Salida</th><th>Cliente</th><th>Anticipo</th><th>Ingreso</th><th>Utilidad</th><th>Estado</th></tr></thead><tbody id="tbl-vj"><tr><td colspan="10" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
+      <div class="tw"><table><thead><tr><th>ID</th><th>Placa</th><th>Conductor</th><th>Origen → Destino</th><th>F. Salida</th><th>Cliente</th><th>Anticipo</th><th>Ingreso</th><th>Utilidad</th><th>Estado</th><th></th></tr></thead><tbody id="tbl-vj"><tr><td colspan="11" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
     </div>
   </div>
 
@@ -1676,9 +1676,10 @@ function renderVJ(){
   const q=(document.getElementById('svj')||{}).value||'';
   const rows=DB.vj.filter(r=>(F.vj==='todos'||r.Estado===F.vj)&&(!q||String(r.Placa||'').toLowerCase().includes(q.toLowerCase())||String(r.Conductor||'').toLowerCase().includes(q.toLowerCase())));
   const tb=document.getElementById('tbl-vj');
-  if(!rows.length){tb.innerHTML='<tr><td colspan="10"><div class="empty"><div class="ei">🚚</div><p>Sin viajes</p></div></td></tr>';return;}
+  if(!rows.length){tb.innerHTML='<tr><td colspan="11"><div class="empty"><div class="ei">🚚</div><p>Sin viajes</p></div></td></tr>';return;}
   tb.innerHTML=rows.slice().reverse().map(r=>{
     const util=Number(r.Utilidad||0);
+    const puedeCerrar = r.Estado==='En curso'||r.Estado==='Programado';
     return`<tr>
       <td class="tmono" style="font-size:11px;color:var(--brand);">${r.ID_Viaje||'—'}</td>
       <td class="tmono" style="font-weight:700;">${r.Placa||''}</td>
@@ -1689,7 +1690,11 @@ function renderVJ(){
       <td class="tmono">${fmtK(r.Anticipo||0)}</td>
       <td class="tmono">${fmtK(r.Ingreso||0)}</td>
       <td class="tmono" style="color:${util>=0?'var(--green)':'var(--red)'};font-weight:700;">${fmtK(util)}</td>
-      <td>${badge(r.Estado||'')}</td>`;
+      <td>${badge(r.Estado||'')}</td>
+      <td style="white-space:nowrap;">
+        <button class="btn btn-xs" onclick="detalleVJ(${DB.vj.indexOf(r)})">🔍</button>
+        ${puedeCerrar?`<button class="btn btn-xs btn-grn" onclick="abrirCierreVJ(${DB.vj.indexOf(r)})">✓ Cerrar</button>`:''}
+      </td>`;
   }).join('');
 }
 function sfVJ(f,b){F.vj=f;document.querySelectorAll('#pg-viajes .ftab').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderVJ();}
@@ -2014,6 +2019,92 @@ document.addEventListener('click', e => {
     document.getElementById('gsearch-results').style.display='none';
   }
 });
+  // ══════════════════════════════════════════════
+//  CERRAR VIAJE
+// ══════════════════════════════════════════════
+function abrirCierreVJ(idx){
+  const r = DB.vj[idx];
+  openModal('Cerrar viaje: ' + r.ID_Viaje, `
+    <p style="font-size:12px;color:var(--t2);margin-bottom:14px;">${r.Placa} · ${r.Origen||''} → ${r.Destino||''} · ${r.Cliente||''}</p>
+    <div class="fg2" style="gap:11px;">
+      <div class="fl"><label>KM llegada</label><input id="cvj-km" type="number" placeholder="0" style="font-family:var(--mono);" value="${r.KM_Llegada||''}"></div>
+      <div class="fl"><label>Fecha llegada real</label><input id="cvj-fecha" type="date" value="${today()}"></div>
+      <div class="fl"><label>Ingreso real (COP)</label><input id="cvj-ingreso" type="number" value="${r.Ingreso||0}" style="font-family:var(--mono);" oninput="recalcUtilVJ()"></div>
+      <div class="fl"><label>Gastos reales (COP)</label><input id="cvj-gastos" type="number" value="${r.Gastos||0}" style="font-family:var(--mono);" oninput="recalcUtilVJ()"></div>
+      <div class="fl s2"><label>Observaciones finales</label><input id="cvj-obs" placeholder="Novedades del viaje..." value="${r.Observaciones||''}"></div>
+    </div>
+    <div style="margin-top:12px;padding:10px 14px;background:var(--bg);border-radius:var(--r);border:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:12px;font-weight:600;color:var(--t2);">Utilidad calculada</span>
+      <span id="cvj-util-lbl" style="font-size:16px;font-weight:700;font-family:var(--mono);">$0</span>
+    </div>
+    <div id="al-cvj" style="margin-top:10px;"></div>`,
+    `<button class="btn" onclick="closeModal()">Cancelar</button>
+     <button class="btn btn-grn" onclick="confirmarCierreVJ('${r.ID_Viaje}')">✓ Confirmar llegada</button>`
+  );
+  recalcUtilVJ();
+}
+
+function recalcUtilVJ(){
+  const ingreso = Number(document.getElementById('cvj-ingreso')?.value)||0;
+  const gastos  = Number(document.getElementById('cvj-gastos')?.value)||0;
+  const util    = ingreso - gastos;
+  const lbl     = document.getElementById('cvj-util-lbl');
+  if(lbl){
+    lbl.textContent = fmtK(util);
+    lbl.style.color = util>=0 ? 'var(--green)' : 'var(--red)';
+  }
+}
+
+async function confirmarCierreVJ(vjId){
+  const ingreso = Number(document.getElementById('cvj-ingreso').value)||0;
+  const gastos  = Number(document.getElementById('cvj-gastos').value)||0;
+  const km      = document.getElementById('cvj-km').value;
+  const fecha   = document.getElementById('cvj-fecha').value;
+  const obs     = document.getElementById('cvj-obs').value;
+  const util    = ingreso - gastos;
+
+  const btn = event.target; btn.disabled=true; btn.textContent='Guardando...';
+  const r = await apip({
+    accion:'actualizar', modulo:'viajes',
+    buscarCampo:'ID_Viaje', buscarValor:vjId,
+    datos:{
+      Estado:'Completado',
+      Ingreso: ingreso,
+      Gastos:  gastos,
+      Utilidad: util,
+      KM_Llegada: km,
+      Fecha_Llegada: fecha,
+      Observaciones: obs
+    }
+  });
+  btn.disabled=false; btn.textContent='✓ Confirmar llegada';
+  if(r.ok){ closeModal(); await loadVJ(); }
+  else document.getElementById('al-cvj').innerHTML='<div class="alert a-err">Error al guardar</div>';
+}
+
+function detalleVJ(idx){
+  const r = DB.vj[idx];
+  const util = Number(r.Utilidad||0);
+  openModal('Viaje: ' + r.ID_Viaje, `
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;">${badge(r.Estado||'')} <span class="badge bgr">${r.Placa||''}</span></div>
+    <div class="dgrid">
+      <div class="dcell"><div class="dk">Conductor</div><div class="dv">${r.Conductor||'—'}</div></div>
+      <div class="dcell"><div class="dk">Cliente</div><div class="dv">${r.Cliente||'—'}</div></div>
+      <div class="dcell"><div class="dk">Origen</div><div class="dv">${r.Origen||'—'}</div></div>
+      <div class="dcell"><div class="dk">Destino</div><div class="dv">${r.Destino||'—'}</div></div>
+      <div class="dcell"><div class="dk">Salida</div><div class="dv">${r.Fecha_Salida||'—'}</div></div>
+      <div class="dcell"><div class="dk">Llegada</div><div class="dv">${r.Fecha_Llegada||'—'}</div></div>
+      <div class="dcell"><div class="dk">KM salida</div><div class="dv tmono">${fmt(r.KM_Salida||0)} km</div></div>
+      <div class="dcell"><div class="dk">KM llegada</div><div class="dv tmono">${fmt(r.KM_Llegada||0)} km</div></div>
+      <div class="dcell"><div class="dk">Anticipo</div><div class="dv tmono">${fmtK(r.Anticipo||0)}</div></div>
+      <div class="dcell"><div class="dk">Ingreso real</div><div class="dv tmono">${fmtK(r.Ingreso||0)}</div></div>
+      <div class="dcell"><div class="dk">Gastos</div><div class="dv tmono">${fmtK(r.Gastos||0)}</div></div>
+      <div class="dcell"><div class="dk">Utilidad</div><div class="dv tmono" style="color:${util>=0?'var(--green)':'var(--red)'};">${fmtK(util)}</div></div>
+    </div>
+    ${r.Carga?`<div style="font-size:12px;color:var(--t2);margin-top:4px;"><strong>Carga:</strong> ${r.Carga}</div>`:''}
+    ${r.Observaciones?`<div style="font-size:12px;color:var(--t2);margin-top:6px;"><strong>Obs:</strong> ${r.Observaciones}</div>`:''}
+  `);
+}
 </script>
 </body>
 </html>
