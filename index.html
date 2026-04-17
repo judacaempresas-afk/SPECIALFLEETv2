@@ -93,7 +93,7 @@ aside{width:var(--sb-w);min-width:var(--sb-w);background:var(--sb);display:flex;
 
 /* ══ MAIN ══ */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
-.topbar{background:var(--bg2);border-bottom:1px solid var(--bd);padding:0 20px;height:var(--top-h);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--bd);padding:0 20px;height:var(--top-h);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:relative;}
 .topbar-title{font-size:14px;font-weight:700;color:var(--t);}
 .topbar-sub{font-size:11px;color:var(--t3);margin-top:1px;}
 .topbar-actions{display:flex;gap:8px;align-items:center;}
@@ -396,7 +396,8 @@ tr:hover td{background:#FAFBFC;}
   <div class="topbar">
     <div><div class="topbar-title" id="tb-title">Dashboard</div><div class="topbar-sub" id="tb-sub">Resumen general de la operación</div></div>
     <div class="topbar-actions" id="topbar-actions-wrap">
-      <input class="t-search" placeholder="Buscar en la plataforma..." id="gsearch">
+     <input class="t-search" placeholder="Buscar en la plataforma..." id="gsearch" oninput="buscarGlobal(this.value)" autocomplete="off">
+<div id="gsearch-results" style="display:none;position:absolute;top:44px;right:20px;width:320px;background:var(--bg2);border:1px solid var(--bd);border-radius:var(--rl);box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:300;max-height:340px;overflow-y:auto;"></div>
       <button class="btn btn-sm" id="btn-init" onclick="initSheets()" title="Inicializar hojas">⚙ Init Sheet</button>
       <button class="btn btn-sm" onclick="recargar()">↻ Actualizar</button>
     </div>
@@ -749,6 +750,7 @@ tr:hover td{background:#FAFBFC;}
           <div class="fl"><label>OT asociada</label><input id="vcp-ot" placeholder="OT-2026-XXXX" style="font-family:var(--mono);"></div>
           <div class="fl"><label>Placa asociada</label><select id="vcp-placa"><option value="">Sin placa asociada</option></select></div>
           <div class="fl"><label>No. Factura</label><input id="vcp-factura" placeholder="FAC-XXXXX" style="font-family:var(--mono);"></div>
+          <div class="fl"><label>¿Actualiza inventario?</label><select id="vcp-actualizainv"><option value="Si">Sí — sumar stock al recibir</option><option value="No">No</option></select></div>
           <div class="fl"><label>Estado</label><select id="vcp-estado"><option>Pendiente</option><option>Aprobada</option><option>Recibido</option><option>Cancelada</option></select></div>
         </div></div>
         <div class="ffoot"><div id="al-cp" style="flex:1;"></div><button class="btn btn-sm" onclick="tp('fcp')">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearCP()">Registrar compra</button></div>
@@ -1396,8 +1398,7 @@ async function crearC(){
 async function loadM(){
   document.getElementById('tbl-m').innerHTML='<tr><td colspan="9" class="loader"><span class="spin"></span></td></tr>';
   const[dm,dv,dc,dinv]=await Promise.all([apig({accion:'listar',modulo:'mantenimiento'}),apig({accion:'listar',modulo:'vehiculos'}),apig({accion:'listar',modulo:'conductores'}),apig({accion:'listar',modulo:'inventario'})]);
-DB.m=dm.data||[];DB.v=dv.data||[];DB.c=dc.data||[];DB.inv=dinv.data||[];
-  DB.m=dm.data||[];DB.v=dv.data||[];DB.c=dc.data||[];updateSB();
+DB.m=dm.data||[];DB.v=dv.data||[];DB.c=dc.data||[];DB.inv=dinv.data||[];updateSB();
   document.getElementById('vm-placa').innerHTML='<option value="">Seleccionar...</option>'+DB.v.map(v=>`<option>${v.Placa}</option>`).join('');
   document.getElementById('vm-conductor').innerHTML='<option value="">Seleccionar...</option>'+DB.c.filter(x=>x.Estado==='Activo').map(x=>`<option>${x.Nombre}</option>`).join('');
   document.getElementById('vm-fecha').value=today();
@@ -1424,11 +1425,40 @@ function renderM(){
 }
 function sfM(f,b){F.m=f;document.querySelectorAll('#pg-mantenimiento .ftab').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderM();}
 
-async function cambioEstM(sel,otId,val){
-  sel.disabled=true;
-  const r=await apip({accion:'actualizar',modulo:'mantenimiento',buscarCampo:'OT_ID',buscarValor:otId,datos:{Estado:val}});
-  sel.disabled=false;
-  if(r.ok){await loadM();}
+async function cambioEstM(sel, otId, val){
+  if(val === 'Cerrada'){
+    const ot = DB.m.find(x => x.OT_ID === otId);
+    const costoActual = ot ? (ot.Costo_Total || 0) : 0;
+    openModal('Cerrar OT: ' + otId, `
+      <p style="font-size:12px;color:var(--t2);margin-bottom:14px;">Confirma los datos finales antes de cerrar la orden.</p>
+      <div class="fg2" style="gap:11px;">
+        <div class="fl"><label>Costo final real (COP)</label><input id="cer-costo" type="number" value="${costoActual}" style="font-family:var(--mono);font-size:14px;font-weight:700;"></div>
+        <div class="fl"><label>Fecha de cierre</label><input id="cer-fecha" type="date" value="${today()}"></div>
+        <div class="fl s2"><label>Observaciones finales</label><input id="cer-obs" placeholder="Trabajo completado, garantía, notas..."></div>
+      </div>
+      <div id="al-cer" style="margin-top:10px;"></div>`,
+      `<button class="btn" onclick="closeModal();loadM()">Cancelar</button>
+       <button class="btn btn-grn" onclick="confirmarCierreOT('${otId}')">✓ Confirmar cierre</button>`
+    );
+    sel.value = ot ? (ot.Estado || 'Abierta') : 'Abierta';
+    return;
+  }
+  sel.disabled = true;
+  const r = await apip({accion:'actualizar',modulo:'mantenimiento',buscarCampo:'OT_ID',buscarValor:otId,datos:{Estado:val}});
+  sel.disabled = false;
+  if(r.ok){ await loadM(); }
+}
+
+async function confirmarCierreOT(otId){
+  const costo = document.getElementById('cer-costo').value;
+  const fecha  = document.getElementById('cer-fecha').value;
+  const obs    = document.getElementById('cer-obs').value;
+  if(!costo){ document.getElementById('al-cer').innerHTML='<div class="alert a-err">Ingresa el costo final</div>'; return; }
+  const btn = event.target; btn.disabled=true; btn.textContent='Cerrando...';
+  const r = await apip({accion:'actualizar',modulo:'mantenimiento',buscarCampo:'OT_ID',buscarValor:otId,datos:{Estado:'Cerrada',Costo_Total:costo,Fecha_Cierre:fecha,Observaciones:obs}});
+  btn.disabled=false; btn.textContent='✓ Confirmar cierre';
+  if(r.ok){ closeModal(); await loadM(); }
+  else document.getElementById('al-cer').innerHTML='<div class="alert a-err">Error al cerrar</div>';
 }
 
 function detalleM(idx){
@@ -1760,7 +1790,7 @@ async function crearCP(){
   const costo=Number(document.getElementById('vcp-costo').value)||0;
   const btn=event.target;btn.disabled=true;btn.textContent='Guardando...';
   const cpId=genID('CP');
-  const r=await apip({accion:'crear',modulo:'compras',ID_Compra:cpId,Referencia:document.getElementById('vcp-ref').value,Descripcion:desc,Cantidad:qty,Costo_Unit:costo,Total:qty*costo,Proveedor:prov,Fecha:document.getElementById('vcp-fecha').value,OT_Asociada:document.getElementById('vcp-ot').value,Placa:document.getElementById('vcp-placa').value,Estado:document.getElementById('vcp-estado').value,Factura:document.getElementById('vcp-factura').value});
+  const r=await apip({accion:'crear',modulo:'compras',ID_Compra:cpId,Referencia:document.getElementById('vcp-ref').value,Descripcion:desc,Cantidad:qty,Costo_Unit:costo,Total:qty*costo,Proveedor:prov,Fecha:document.getElementById('vcp-fecha').value,OT_Asociada:document.getElementById('vcp-ot').value,Placa:document.getElementById('vcp-placa').value,Estado:document.getElementById('vcp-estado').value,Factura:document.getElementById('vcp-factura').value,Actualiza_Inventario:document.getElementById('vcp-actualizainv').value});
   btn.disabled=false;btn.textContent='Registrar compra';
   if(r.ok){showAlert('al-cp','✅ Compra '+cpId+' registrada','ok');setTimeout(()=>{tp('fcp');loadCP();},1500);}
   else showAlert('al-cp','❌ '+(r.error||'Error'),'err');
@@ -1918,6 +1948,72 @@ function selRepuestoOT(idx, ref){
   }
   renderRepuestosOT();
 }
+  // ══════════════════════════════════════════════
+//  BÚSQUEDA GLOBAL
+// ══════════════════════════════════════════════
+function buscarGlobal(q){
+  const box = document.getElementById('gsearch-results');
+  q = q.trim().toLowerCase();
+  if(q.length < 2){ box.style.display='none'; return; }
+
+  const resultados = [];
+
+  DB.v.filter(r => String(r.Placa||'').toLowerCase().includes(q) || String(r.Marca||'').toLowerCase().includes(q))
+    .slice(0,4).forEach(r => resultados.push({
+      icono:'🚗', titulo: r.Placa + ' — ' + r.Marca + ' ' + (r.Modelo||''),
+      sub: r.Estado + ' · ' + fmt(r.KM||0) + ' km',
+      accion: ()=>{ goTo('vehiculos', document.getElementById('nav-vehiculos')); setTimeout(()=>{ document.getElementById('sv').value=r.Placa; renderV(); },300); }
+    }));
+
+  DB.m.filter(r => String(r.OT_ID||'').toLowerCase().includes(q) || String(r.Placa||'').toLowerCase().includes(q) || String(r.Descripcion||'').toLowerCase().includes(q))
+    .slice(0,4).forEach(r => resultados.push({
+      icono:'🔧', titulo: r.OT_ID + ' — ' + r.Placa,
+      sub: r.Tipo + ' · ' + (r.Descripcion||'').slice(0,40) + ' · ' + r.Estado,
+      accion: ()=>{ goTo('mantenimiento', document.getElementById('nav-mantenimiento')); setTimeout(()=>{ document.getElementById('sm').value=r.Placa; renderM(); },300); }
+    }));
+
+  DB.c.filter(r => String(r.Nombre||'').toLowerCase().includes(q) || String(r.Cedula||'').toLowerCase().includes(q))
+    .slice(0,3).forEach(r => resultados.push({
+      icono:'👤', titulo: r.Nombre,
+      sub: r.Cedula + ' · ' + r.Rol + ' · ' + r.Estado,
+      accion: ()=>{ goTo('conductores', document.getElementById('nav-conductores')); setTimeout(()=>{ document.getElementById('sc').value=r.Nombre; renderC(); },300); }
+    }));
+
+  DB.inv.filter(r => String(r.Referencia||'').toLowerCase().includes(q) || String(r.Nombre||'').toLowerCase().includes(q))
+    .slice(0,3).forEach(r => resultados.push({
+      icono:'📦', titulo: r.Referencia + ' — ' + r.Nombre,
+      sub: 'Stock: ' + r.Stock + ' · ' + fmtK(r.Costo_Unitario||0),
+      accion: ()=>{ goTo('inventario', document.getElementById('nav-inventario')); setTimeout(()=>{ document.getElementById('sinv').value=r.Referencia; renderINV(); },300); }
+    }));
+
+  if(!resultados.length){
+    box.innerHTML='<div style="padding:14px 16px;font-size:12px;color:var(--t3);">Sin resultados para "'+q+'"</div>';
+    box.style.display='block'; return;
+  }
+
+  box.innerHTML = resultados.map((res,i) => `
+    <div onclick="selResultado(${i})" style="display:flex;align-items:center;gap:10px;padding:9px 14px;cursor:pointer;border-bottom:1px solid var(--bg3);" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background=''">
+      <span style="font-size:18px;flex-shrink:0;">${res.icono}</span>
+      <div style="min-width:0;">
+        <div style="font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${res.titulo}</div>
+        <div style="font-size:11px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${res.sub}</div>
+      </div>
+    </div>`).join('');
+  box.style.display='block';
+  window._gsResultados = resultados;
+}
+
+function selResultado(i){
+  window._gsResultados[i].accion();
+  document.getElementById('gsearch').value='';
+  document.getElementById('gsearch-results').style.display='none';
+}
+
+document.addEventListener('click', e => {
+  if(!e.target.closest('#gsearch') && !e.target.closest('#gsearch-results')){
+    document.getElementById('gsearch-results').style.display='none';
+  }
+});
 </script>
 </body>
 </html>
