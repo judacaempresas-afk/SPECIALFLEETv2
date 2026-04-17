@@ -532,6 +532,14 @@ tr:hover td{background:#FAFBFC;}
             <div class="fl"><label>Costo estimado (COP)</label><input id="vm-costo" type="number" placeholder="0" style="font-family:var(--mono);"></div>
             <div class="fl"><label>Ciudad</label><input id="vm-ciudad" placeholder="Medellín..."></div>
           </div>
+          <div style="border-top:1px solid var(--bd);padding-top:10px;margin-top:4px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+    <span style="font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.4px;">Repuestos del inventario</span>
+    <button type="button" class="btn btn-sm" onclick="agregarRepuestoOT()">+ Agregar repuesto</button>
+  </div>
+  <div id="ot-repuestos-lista" style="display:flex;flex-direction:column;gap:6px;"></div>
+  <div id="ot-repuestos-total" style="font-size:12px;font-weight:700;color:var(--t2);margin-top:6px;text-align:right;"></div>
+</div>
           <div style="display:flex;gap:16px;padding-top:8px;border-top:1px solid var(--bd);">
             <label style="display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;cursor:pointer;"><input type="checkbox" class="tgl" id="vm-disp"> Afecta disponibilidad</label>
             <label style="display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;cursor:pointer;"><input type="checkbox" class="tgl" id="vm-falla"> Es una falla</label>
@@ -558,7 +566,7 @@ tr:hover td{background:#FAFBFC;}
         <div class="fpanel"><div class="fg">
           <div class="fl"><label>Placa <span class="req">*</span></label><select id="vcb-placa"><option value="">Seleccionar...</option></select></div>
           <div class="fl"><label>Fecha <span class="req">*</span></label><input id="vcb-fecha" type="date"></div>
-          <div class="fl"><label>Litros cargados</label><input id="vcb-litros" type="number" step="0.01" placeholder="0.0" style="font-family:var(--mono);"></div>
+          <div class="fl"><label>Galones cargados</label><input id="vcb-galones" type="number" step="0.01" placeholder="0.0" style="font-family:var(--mono);"></div>
           <div class="fl"><label>Costo total (COP)</label><input id="vcb-costo" type="number" placeholder="0" style="font-family:var(--mono);"></div>
           <div class="fl"><label>KM al momento</label><input id="vcb-km" type="number" placeholder="0" style="font-family:var(--mono);"></div>
           <div class="fl"><label>Estación / Proveedor</label><input id="vcb-est" placeholder="Terpel, Biomax..."></div>
@@ -568,7 +576,7 @@ tr:hover td{background:#FAFBFC;}
         </div></div>
         <div class="ffoot"><div id="al-cb" style="flex:1;"></div><button class="btn btn-sm" onclick="tp('fcb')">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearCB()">Registrar</button></div>
       </div>
-      <div class="tw"><table><thead><tr><th>Placa</th><th>Fecha</th><th>Litros</th><th>Costo</th><th>$/Litro</th><th>KM</th><th>Rendimiento</th><th>Estación</th><th>Tipo</th></tr></thead><tbody id="tbl-cb"><tr><td colspan="9" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
+      <div class="tw"><table><thead><tr><th>Placa</th><th>Fecha</th><th>Galones</th><th>Costo</th><th>$/Galón</th><th>KM</th><th>Km/Gal</th><th>Estación</th><th>Tipo</th></tr></thead><tbody id="tbl-cb"><tr><td colspan="9" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
     </div>
   </div>
 
@@ -1017,7 +1025,7 @@ const F  = { v:'todos', c:'todos', m:'todos', cb:'', n:'todos', ch:'todos', vj:'
 //  UTILIDADES
 // ══════════════════════════════════════════════
 const fmt  = n => Number(n||0).toLocaleString('es-CO');
-const fmtK = n => { const v=Number(n||0); return v>=1000000?'$'+Math.round(v/1000000)+'M':v>=1000?'$'+Math.round(v/1000)+'K':'$'+fmt(v); };
+const fmtK = n => '$' + Math.round(Number(n||0)).toLocaleString('es-CO');
 
 function badge(e){
   const m={
@@ -1156,7 +1164,7 @@ async function loadDash(){
   const otAbiertas=DB.m.filter(x=>x.Estado!=='Cerrada'&&x.Estado!=='Anulada').length;
   const costMant=DB.m.reduce((s,x)=>s+(Number(x.Costo_Total)||0),0);
   const costComb=DB.cb.reduce((s,x)=>s+(Number(x.Costo_Total)||0),0);
-  const litros=DB.cb.reduce((s,x)=>s+(Number(x.Litros)||0),0);
+  const galones=DB.cb.reduce((s,x)=>s+(Number(x.Galones)||0),0);
   const vjActivos=DB.vj.filter(x=>x.Estado==='En curso').length;
   const utilidad=DB.vj.reduce((s,x)=>s+(Number(x.Utilidad)||0),0);
   const stockBajo=DB.inv.filter(x=>Number(x.Stock)<=Number(x.Stock_Minimo)).length;
@@ -1166,7 +1174,7 @@ async function loadDash(){
     <div class="kpi"><div class="kpi-head"><div class="kpi-icon green">✓</div>${vact>0?`<span class="kpi-delta up">${Math.round(vact/Math.max(DB.v.length,1)*100)}%</span>`:''}</div><div class="kpi-val">${vact}</div><div class="kpi-lbl">Vehículos activos</div><div class="kpi-sub">Disponibles para operación</div></div>
     <div class="kpi"><div class="kpi-head"><div class="kpi-icon red">🔧</div>${otAbiertas>0?`<span class="kpi-delta dn">${otAbiertas}</span>`:''}</div><div class="kpi-val">${otAbiertas}</div><div class="kpi-lbl">OT abiertas</div><div class="kpi-sub">Pendientes + En proceso</div></div>
     <div class="kpi"><div class="kpi-head"><div class="kpi-icon amber">💰</div></div><div class="kpi-val" style="font-size:18px;">${fmtK(costMant)}</div><div class="kpi-lbl">Costo mantenimiento</div><div class="kpi-sub">Acumulado total</div></div>
-    <div class="kpi"><div class="kpi-head"><div class="kpi-icon amber">⛽</div></div><div class="kpi-val" style="font-size:18px;">${fmtK(costComb)}</div><div class="kpi-lbl">Costo combustible</div><div class="kpi-sub">${litros.toFixed(0)} litros registrados</div></div>
+    <div class="kpi"><div class="kpi-head"><div class="kpi-icon amber">⛽</div></div><div class="kpi-val" style="font-size:18px;">${fmtK(costComb)}</div><div class="kpi-lbl">Costo combustible</div><div class="kpi-sub">${galones.toFixed(1)} galones registrados</div></div>
     <div class="kpi"><div class="kpi-head"><div class="kpi-icon teal">🚚</div></div><div class="kpi-val">${vjActivos}</div><div class="kpi-lbl">Viajes en curso</div><div class="kpi-sub">Utilidad acum.: ${fmtK(utilidad)}</div></div>
     <div class="kpi"><div class="kpi-head"><div class="kpi-icon purple">📦</div>${stockBajo>0?`<span class="kpi-delta dn">${stockBajo} bajo</span>`:''}</div><div class="kpi-val">${DB.inv.length}</div><div class="kpi-lbl">Ítems inventario</div><div class="kpi-sub">${stockBajo} con stock bajo</div></div>
   `;
@@ -1387,7 +1395,8 @@ async function crearC(){
 // ══════════════════════════════════════════════
 async function loadM(){
   document.getElementById('tbl-m').innerHTML='<tr><td colspan="9" class="loader"><span class="spin"></span></td></tr>';
-  const[dm,dv,dc]=await Promise.all([apig({accion:'listar',modulo:'mantenimiento'}),apig({accion:'listar',modulo:'vehiculos'}),apig({accion:'listar',modulo:'conductores'})]);
+  const[dm,dv,dc,dinv]=await Promise.all([apig({accion:'listar',modulo:'mantenimiento'}),apig({accion:'listar',modulo:'vehiculos'}),apig({accion:'listar',modulo:'conductores'}),apig({accion:'listar',modulo:'inventario'})]);
+DB.m=dm.data||[];DB.v=dv.data||[];DB.c=dc.data||[];DB.inv=dinv.data||[];
   DB.m=dm.data||[];DB.v=dv.data||[];DB.c=dc.data||[];updateSB();
   document.getElementById('vm-placa').innerHTML='<option value="">Seleccionar...</option>'+DB.v.map(v=>`<option>${v.Placa}</option>`).join('');
   document.getElementById('vm-conductor').innerHTML='<option value="">Seleccionar...</option>'+DB.c.filter(x=>x.Estado==='Activo').map(x=>`<option>${x.Nombre}</option>`).join('');
@@ -1434,7 +1443,8 @@ function detalleM(idx){
       <div class="dcell"><div class="dk">Fecha orden</div><div class="dv">${r.Fecha_Orden||'—'}</div></div>
       <div class="dcell"><div class="dk">Costo total</div><div class="dv tmono" style="color:var(--red);">${fmtK(r.Costo_Total||0)}</div></div>
     </div>
-    ${r.Descripcion?`<div><div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;margin-bottom:4px;">Trabajo</div><div style="font-size:12px;line-height:1.6;color:var(--t2);">${r.Descripcion}</div></div>`:''}
+   ${r.Descripcion?`<div><div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;margin-bottom:4px;">Trabajo</div><div style="font-size:12px;line-height:1.6;color:var(--t2);">${r.Descripcion}</div></div>`:''}
+    ${(()=>{try{const reps=r.Repuestos_Usados?JSON.parse(r.Repuestos_Usados):[];if(!reps.length)return '';return `<div style="margin-top:12px;"><div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;margin-bottom:6px;">Repuestos usados</div>${reps.map(x=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid var(--bg3);"><span>${x.nombre||x.ref}</span><span style="font-family:var(--mono);color:var(--t2);">x${x.qty} · $${Math.round(x.costo*x.qty).toLocaleString('es-CO')}</span></div>`).join('')}</div>`;}catch(e){return '';}})()} 
   `);
 }
 
@@ -1444,9 +1454,12 @@ async function crearM(){
   if(!placa||!desc){showAlert('al-m','Placa y descripción son obligatorios','err');return;}
   const btn=event.target;btn.disabled=true;btn.textContent='Guardando...';
   const otId=genID('OT');
-  const r=await apip({accion:'crear',modulo:'mantenimiento',OT_ID:otId,Placa:placa,Tipo:document.getElementById('vm-tipo').value,Descripcion:desc,Fecha_Orden:document.getElementById('vm-fecha').value,Fecha_Ingreso:document.getElementById('vm-ingreso').value,Fecha_Cierre:document.getElementById('vm-cierre').value,Odometro:document.getElementById('vm-odo').value||0,Proveedor:document.getElementById('vm-prov').value,Conductor:document.getElementById('vm-conductor').value,Centro_Costos:document.getElementById('vm-cdc').value,Afecta_Disp:document.getElementById('vm-disp').checked,Es_Falla:document.getElementById('vm-falla').checked,Motivo:document.getElementById('vm-motivo').value,Costo_Total:document.getElementById('vm-costo').value||0,Ciudad:document.getElementById('vm-ciudad').value,Estado:'Abierta'});
+  const r=await apip({accion:'crear',modulo:'mantenimiento',OT_ID:otId,Placa:placa,Tipo:document.getElementById('vm-tipo').value,Descripcion:desc,Fecha_Orden:document.getElementById('vm-fecha').value,Fecha_Ingreso:document.getElementById('vm-ingreso').value,Fecha_Cierre:document.getElementById('vm-cierre').value,Odometro:document.getElementById('vm-odo').value||0,Proveedor:document.getElementById('vm-prov').value,Conductor:document.getElementById('vm-conductor').value,Centro_Costos:document.getElementById('vm-cdc').value,Afecta_Disp:document.getElementById('vm-disp').checked,Es_Falla:document.getElementById('vm-falla').checked,Motivo:document.getElementById('vm-motivo').value,Costo_Total:document.getElementById('vm-costo').value||0,Ciudad:document.getElementById('vm-ciudad').value,Estado:'Abierta',
+Repuestos_Usados: _otRepuestos.filter(r=>r.ref).length
+  ? JSON.stringify(_otRepuestos.filter(r=>r.ref).map(r=>({ref:r.ref,nombre:r.nombre,qty:r.qty,costo:r.costo})))
+  : ''});
   btn.disabled=false;btn.textContent='Crear OT';
-  if(r.ok){showAlert('al-m','✅ OT '+otId+' creada','ok');setTimeout(()=>{tp('fm');loadM();},1500);}
+ if(r.ok){ _otRepuestos=[]; renderRepuestosOT(); showAlert('al-m','✅ OT '+otId+' creada','ok');setTimeout(()=>{tp('fm');loadM();},1500);}
   else showAlert('al-m','❌ '+(r.error||'Error'),'err');
 }
 
@@ -1460,12 +1473,15 @@ async function loadCB(){
   document.getElementById('vcb-placa').innerHTML='<option value="">Seleccionar...</option>'+DB.v.map(v=>`<option>${v.Placa}</option>`).join('');
   document.getElementById('vcb-conductor').innerHTML='<option value="">Seleccionar...</option>'+DB.c.filter(x=>x.Estado==='Activo').map(x=>`<option>${x.Nombre}</option>`).join('');
   document.getElementById('vcb-fecha').value=today();
-  const litros=DB.cb.reduce((s,x)=>s+(Number(x.Litros)||0),0);
+
+  // ✅ Galones (no litros), costo completo en pesos
+  const galones=DB.cb.reduce((s,x)=>s+(Number(x.Galones)||0),0);
   const costo=DB.cb.reduce((s,x)=>s+(Number(x.Costo_Total)||0),0);
-  const rendProm=DB.cb.filter(x=>Number(x.Rendimiento)>0).reduce((s,x)=>s+(Number(x.Rendimiento)||0),0)/Math.max(DB.cb.filter(x=>Number(x.Rendimiento)>0).length,1);
+  const rendProm=DB.cb.filter(x=>Number(x.Rendimiento_KmGal)>0).reduce((s,x)=>s+(Number(x.Rendimiento_KmGal)||0),0)/Math.max(DB.cb.filter(x=>Number(x.Rendimiento_KmGal)>0).length,1);
+
   document.getElementById('cb-kpis').innerHTML=`
-    <div class="kpi"><div class="kpi-head"><div class="kpi-icon amber">⛽</div></div><div class="kpi-val" style="font-size:20px;">${litros.toFixed(1)} L</div><div class="kpi-lbl">Total litros</div></div>
-    <div class="kpi"><div class="kpi-head"><div class="kpi-icon red">💰</div></div><div class="kpi-val" style="font-size:18px;">${fmtK(costo)}</div><div class="kpi-lbl">Costo total</div></div>
+    <div class="kpi"><div class="kpi-head"><div class="kpi-icon amber">⛽</div></div><div class="kpi-val" style="font-size:20px;">${galones.toFixed(1)} Gal</div><div class="kpi-lbl">Total galones</div></div>
+    <div class="kpi"><div class="kpi-head"><div class="kpi-icon red">💰</div></div><div class="kpi-val" style="font-size:16px;">$${Math.round(costo).toLocaleString('es-CO')}</div><div class="kpi-lbl">Costo total</div></div>
     <div class="kpi"><div class="kpi-head"><div class="kpi-icon green">📊</div></div><div class="kpi-val" style="font-size:20px;">${rendProm.toFixed(1)}</div><div class="kpi-lbl">Km/Gal promedio</div></div>
     <div class="kpi"><div class="kpi-head"><div class="kpi-icon blue">🔢</div></div><div class="kpi-val">${DB.cb.length}</div><div class="kpi-lbl">Registros</div></div>`;
   renderCB();
@@ -1478,24 +1494,25 @@ function renderCB(){
   tb.innerHTML=rows.slice().reverse().map(r=>`<tr>
     <td class="tmono" style="font-weight:700;">${r.Placa||''}</td>
     <td class="tdim">${r.Fecha||''}</td>
-    <td class="tmono">${Number(r.Litros||0).toFixed(1)} L</td>
-    <td class="tmono">${fmtK(r.Costo_Total||0)}</td>
-    <td class="tmono">${r.Litros&&r.Costo_Total?'$'+Math.round(r.Costo_Total/r.Litros).toLocaleString('es-CO'):'-'}</td>
+    <td class="tmono">${Number(r.Galones||0).toFixed(2)} Gal</td>
+    <td class="tmono">$${Math.round(Number(r.Costo_Total||0)).toLocaleString('es-CO')}</td>
+    <td class="tmono">${r.Galones&&r.Costo_Total?'$'+Math.round(r.Costo_Total/r.Galones).toLocaleString('es-CO'):'-'}</td>
     <td class="tmono">${fmt(r.KM_Momento||0)} km</td>
-    <td class="tmono">${Number(r.Rendimiento||0).toFixed(1)} km/gal</td>
+    <td class="tmono">${Number(r.Rendimiento_KmGal||0).toFixed(2)} km/gal</td>
     <td class="tdim">${r.Estacion||'—'}</td>
     <td><span class="badge bgr">${r.Tipo_Combustible||''}</span></td>`).join('');
 }
 async function crearCB(){
   const placa=document.getElementById('vcb-placa').value;
   if(!placa){showAlert('al-cb','Selecciona una placa','err');return;}
-  const litros=document.getElementById('vcb-litros').value;
+  const galones=document.getElementById('vcb-galones').value;
   const costo=document.getElementById('vcb-costo').value;
   const km=document.getElementById('vcb-km').value;
-  const rendimiento=litros&&km?((Number(km)*0.264172)/Number(litros)).toFixed(2):0;
-  const pLitro=litros&&costo?Math.round(costo/litros):0;
+  // Rendimiento: km recorridos / galones
+  const rendimiento=galones&&km?(Number(km)/Number(galones)).toFixed(2):0;
+  const pGalon=galones&&costo?Math.round(costo/galones):0;
   const btn=event.target;btn.disabled=true;btn.textContent='Guardando...';
-  const r=await apip({accion:'crear',modulo:'combustible',Placa:placa,Fecha:document.getElementById('vcb-fecha').value,Litros:litros,Costo_Total:costo,KM_Momento:km,Precio_Litro:pLitro,Rendimiento:rendimiento,Estacion:document.getElementById('vcb-est').value,Conductor:document.getElementById('vcb-conductor').value,Tipo_Combustible:document.getElementById('vcb-tipo').value,Factura:document.getElementById('vcb-factura').value});
+  const r=await apip({accion:'crear',modulo:'combustible',Placa:placa,Fecha:document.getElementById('vcb-fecha').value,Galones:galones,Costo_Total:costo,KM_Momento:km,Precio_Galon:pGalon,Rendimiento_KmGal:rendimiento,Estacion:document.getElementById('vcb-est').value,Conductor:document.getElementById('vcb-conductor').value,Tipo_Combustible:document.getElementById('vcb-tipo').value,Factura:document.getElementById('vcb-factura').value});
   btn.disabled=false;btn.textContent='Registrar';
   if(r.ok){showAlert('al-cb','✅ Carga registrada','ok');setTimeout(()=>{tp('fcb');loadCB();},1500);}
   else showAlert('al-cb','❌ '+(r.error||'Error'),'err');
@@ -1854,6 +1871,53 @@ goTo = function(pg, btn){
   if(bid) document.getElementById(bid).classList.add('active');
   else document.getElementById('bn-more').classList.add('active');
 };
+
+// ══════════════════════════════════════════════
+//  REPUESTOS EN OT
+// ══════════════════════════════════════════════
+let _otRepuestos = [];
+
+function agregarRepuestoOT(){
+  // Necesita que el inventario esté cargado
+  if(!DB.inv.length){ showAlert('al-m','Carga primero la sección de inventario o espera...','warn'); return; }
+  const id = 'rp-' + Date.now();
+  _otRepuestos.push({ id, ref:'', nombre:'', qty:1, costo:0 });
+  renderRepuestosOT();
+}
+
+function renderRepuestosOT(){
+  const lista = document.getElementById('ot-repuestos-lista');
+  const total = document.getElementById('ot-repuestos-total');
+  if(!_otRepuestos.length){ lista.innerHTML='<div style="font-size:12px;color:var(--t3);padding:4px 0;">Sin repuestos agregados — la OT no descontará inventario</div>'; total.textContent=''; return; }
+
+  lista.innerHTML = _otRepuestos.map((rp,i) => `
+    <div style="display:grid;grid-template-columns:1fr 90px 100px 24px;gap:6px;align-items:center;background:var(--bg);border-radius:var(--r);padding:7px 9px;border:1px solid var(--bd);">
+      <select style="font-size:12px;padding:5px 7px;border:1px solid var(--bd);border-radius:var(--r);background:var(--bg2);color:var(--t);" onchange="selRepuestoOT(${i},this.value)">
+        <option value="">— Seleccionar repuesto —</option>
+        ${DB.inv.map(x=>`<option value="${x.Referencia}" ${rp.ref===x.Referencia?'selected':''}>${x.Referencia} — ${x.Nombre} (Stock: ${x.Stock})</option>`).join('')}
+      </select>
+      <input type="number" min="1" value="${rp.qty}" placeholder="Cant."
+        style="font-size:12px;padding:5px 7px;border:1px solid var(--bd);border-radius:var(--r);font-family:var(--mono);"
+        onchange="_otRepuestos[${i}].qty=Number(this.value)||1;renderRepuestosOT()">
+      <span style="font-size:12px;font-family:var(--mono);color:var(--t2);">$${Math.round(rp.costo*rp.qty).toLocaleString('es-CO')}</span>
+      <button type="button" style="background:none;border:none;cursor:pointer;color:var(--red);font-size:16px;line-height:1;" onclick="_otRepuestos.splice(${i},1);renderRepuestosOT()">×</button>
+    </div>`).join('');
+
+  const sumaTotal = _otRepuestos.reduce((s,r)=>s+(r.costo*r.qty),0);
+  total.textContent = sumaTotal>0 ? 'Subtotal repuestos: $'+Math.round(sumaTotal).toLocaleString('es-CO') : '';
+}
+
+function selRepuestoOT(idx, ref){
+  const item = DB.inv.find(x=>x.Referencia===ref);
+  if(item){
+    _otRepuestos[idx].ref    = item.Referencia;
+    _otRepuestos[idx].nombre = item.Nombre;
+    _otRepuestos[idx].costo  = Number(item.Costo_Unitario)||0;
+  } else {
+    _otRepuestos[idx] = { ..._otRepuestos[idx], ref:'', nombre:'', costo:0 };
+  }
+  renderRepuestosOT();
+}
 </script>
 </body>
 </html>
