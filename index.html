@@ -1490,7 +1490,7 @@ Repuestos_Usados: _otRepuestos.filter(r=>r.ref).length
   ? JSON.stringify(_otRepuestos.filter(r=>r.ref).map(r=>({ref:r.ref,nombre:r.nombre,qty:r.qty,costo:r.costo})))
   : ''});
   btn.disabled=false;btn.textContent='Crear OT';
- if(r.ok){ _otRepuestos=[]; renderRepuestosOT(); showAlert('al-m','✅ OT '+otId+' creada','ok');setTimeout(()=>{tp('fm');loadM();},1500);}
+ if(r.ok){ _otRepuestos=[]; renderRepuestosOT(); showAlert('al-m','✅ OT '+otId+' creada','ok');setTimeout(async()=>{tp('fm'); await loadM(); const di=await apig({accion:'listar',modulo:'inventario'}); DB.inv=di.data||[]; updateSB();},1500);}
   else showAlert('al-m','❌ '+(r.error||'Error'),'err');
 }
 
