@@ -2217,15 +2217,7 @@ async function confirmarRecepcion(cpId, ref, qty, actualizaInv, proveedor){
         accion:'crear', modulo:'email',
         para: emailProv,
         asunto: 'Confirmación de recepción - Orden '+cpId,
-        cuerpo: `Estimado proveedor ${proveedor},
-
-Confirmamos la recepción del pedido ${cpId} el ${fecha}.
-Recibido por: ${usuario}.
-${notas?'Notas: '+notas+'
-':''}
-Gracias por su atención.
-
-FleetCO — Gestión de Flota`
+        cuerpo: 'Estimado proveedor '+proveedor+',\n\nConfirmamos la recepción del pedido '+cpId+' el '+fecha+'.\nRecibido por: '+usuario+'.\n'+(notas?'Notas: '+notas+'\n':'')+'\nGracias por su atención.\n\nFleetCO — Gestión de Flota'
       });
     }
     closeModal();
@@ -2308,18 +2300,7 @@ async function confirmarRechazo(cpId, ref, proveedor){
         accion:'crear', modulo:'email',
         para: emailProv,
         asunto: 'Notificación de rechazo/devolución - Orden '+cpId,
-        cuerpo: `Estimado proveedor ${proveedor},
-
-Le informamos que el pedido ${cpId} ha sido RECHAZADO / DEVUELTO el ${fecha}.
-
-Motivo: ${tipo}
-Descripción: ${novedad}
-Cantidad devuelta: ${qtyDev} unidades
-Gestionado por: ${usuario}
-
-Por favor tome las acciones correspondientes.
-
-FleetCO — Gestión de Flota`
+        cuerpo: 'Estimado proveedor '+proveedor+',\n\nLe informamos que el pedido '+cpId+' ha sido RECHAZADO / DEVUELTO el '+fecha+'.\n\nMotivo: '+tipo+'\nDescripción: '+novedad+'\nCantidad devuelta: '+qtyDev+' unidades\nGestionado por: '+usuario+'\n\nPor favor tome las acciones correspondientes.\n\nFleetCO — Gestión de Flota'
       });
     }
     closeModal();
