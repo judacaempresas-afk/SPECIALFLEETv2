@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0D1117">
+<title>FleetCO — Conductor</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --brand:#0066CC;--brand2:#0052A3;
+  --green:#16A34A;--green-l:#DCFCE7;
+  --red:#DC2626;--red-l:#FEE2E2;
+  --amber:#D97706;--amber-l:#FEF3C7;
+  --bg:#0D1117;--bg2:#161B22;--bg3:#21262D;
+  --bd:#30363D;--t:#E6EDF3;--t2:#8B949E;--t3:#484F58;
+  --font:'Segoe UI',system-ui,sans-serif;
+  --r:10px;
+}
+body{
+  font-family:var(--font);background:var(--bg);color:var(--t);
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  padding:0;font-size:14px;
+}
+
+/* ══ PANTALLA LOGIN ══ */
+#pantalla-login{
+  width:100%;max-width:420px;padding:32px 20px;
+  display:flex;flex-direction:column;gap:20px;
+}
+.logo{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+.logo-icon{width:48px;height:48px;border-radius:12px;background:var(--brand);
+  display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;}
+.logo-text{font-size:22px;font-weight:700;color:var(--t);}
+.logo-text span{color:#58A6FF;}
+.logo-sub{font-size:12px;color:var(--t2);}
+.field{display:flex;flex-direction:column;gap:6px;}
+.field label{font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;}
+.field input, .field select{
+  padding:13px 14px;font-size:15px;font-family:var(--font);
+  border:1px solid var(--bd);border-radius:var(--r);
+  background:var(--bg2);color:var(--t);outline:none;
+  transition:border-color .15s;-webkit-appearance:none;
+}
+.field input:focus, .field select:focus{border-color:var(--brand);}
+.btn-main{
+  padding:15px;font-size:15px;font-weight:700;font-family:var(--font);
+  border-radius:var(--r);border:none;background:var(--brand);color:#fff;
+  cursor:pointer;transition:background .15s;width:100%;margin-top:4px;
+}
+.btn-main:hover{background:var(--brand2);}
+.btn-main:disabled{opacity:.5;cursor:not-allowed;}
+.err-box{
+  background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.3);
+  border-radius:var(--r);padding:11px 14px;font-size:13px;color:#F87171;
+  display:none;
+}
+
+/* ══ PANTALLA ACTIVA ══ */
+#pantalla-activa{
+  width:100%;max-width:420px;padding:20px;
+  display:none;flex-direction:column;gap:16px;
+}
+
+/* Estado principal */
+.estado-card{
+  background:var(--bg2);border:1px solid var(--bd);border-radius:16px;
+  padding:20px;text-align:center;
+}
+.estado-icono{font-size:56px;margin-bottom:8px;line-height:1;}
+.estado-titulo{font-size:18px;font-weight:700;margin-bottom:4px;}
+.estado-sub{font-size:13px;color:var(--t2);}
+
+/* Pulso animado cuando está activo */
+@keyframes pulso{0%{transform:scale(1);opacity:1;}50%{transform:scale(1.05);opacity:.85;}100%{transform:scale(1);opacity:1;}}
+.activo .estado-card{border-color:var(--green);animation:pulso 2s ease-in-out infinite;}
+.activo .estado-titulo{color:var(--green);}
+
+/* Info cards */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.info-card{
+  background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);
+  padding:14px;
+}
+.info-label{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;}
+.info-val{font-size:16px;font-weight:700;color:var(--t);}
+.info-val.mono{font-family:'Courier New',monospace;font-size:13px;}
+
+/* Botón parar */
+.btn-parar{
+  padding:15px;font-size:15px;font-weight:700;font-family:var(--font);
+  border-radius:var(--r);border:2px solid var(--red);
+  background:rgba(220,38,38,.1);color:var(--red);
+  cursor:pointer;width:100%;
+}
+.btn-parar:hover{background:rgba(220,38,38,.2);}
+
+/* Log de envíos */
+.log-box{
+  background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);
+  padding:12px;max-height:140px;overflow-y:auto;
+}
+.log-title{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;}
+.log-item{font-size:11px;color:var(--t2);padding:2px 0;border-bottom:1px solid var(--bg3);font-family:'Courier New',monospace;}
+.log-item.ok{color:#3FB950;}
+.log-item.err{color:#F87171;}
+
+/* Alerta de GPS */
+.gps-alert{
+  background:var(--amber-l);border:1px solid var(--amber);
+  border-radius:var(--r);padding:12px 14px;
+  font-size:13px;color:#92400E;display:none;
+}
+
+/* Spinner */
+.spin{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);
+  border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+
+<!-- ══ PANTALLA LOGIN ══ -->
+<div id="pantalla-login">
+  <div class="logo">
+    <div class="logo-icon">FC</div>
+    <div>
+      <div class="logo-text">Fleet<span>CO</span></div>
+      <div class="logo-sub">App del conductor</div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Placa del vehículo</label>
+    <input id="inp-placa" placeholder="ABC-123" maxlength="8"
+      oninput="this.value=this.value.toUpperCase()" autocomplete="off" spellcheck="false">
+  </div>
+
+  <div class="field">
+    <label>Tu nombre</label>
+    <input id="inp-conductor" placeholder="Nombre completo" autocomplete="name">
+  </div>
+
+  <div class="field">
+    <label>Plataforma / Ruta (opcional)</label>
+    <input id="inp-ruta" placeholder="Ej: Ruta Bogotá - Medellín">
+  </div>
+
+  <div class="err-box" id="err-login"></div>
+
+  <button class="btn-main" onclick="iniciarRastreo()">
+    📍 Iniciar rastreo
+  </button>
+
+  <p style="font-size:11px;color:var(--t3);text-align:center;line-height:1.6;">
+    Al iniciar, tu ubicación GPS se enviará automáticamente cada 15 segundos.<br>
+    Mantén esta página abierta mientras conduces.
+  </p>
+</div>
+
+<!-- ══ PANTALLA ACTIVA ══ -->
+<div id="pantalla-activa">
+
+  <div class="estado-card" id="estado-card">
+    <div class="estado-icono" id="estado-icono">📡</div>
+    <div class="estado-titulo" id="estado-titulo">Conectando...</div>
+    <div class="estado-sub" id="estado-sub">Obteniendo señal GPS</div>
+  </div>
+
+  <div class="gps-alert" id="gps-alert">
+    ⚠️ GPS con baja precisión. Muévete a un lugar con mejor señal o activa el GPS de alta precisión en tu teléfono.
+  </div>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="info-label">Placa</div>
+      <div class="info-val mono" id="inf-placa">—</div>
+    </div>
+    <div class="info-card">
+      <div class="info-label">Conductor</div>
+      <div class="info-val" id="inf-conductor" style="font-size:13px;">—</div>
+    </div>
+    <div class="info-card">
+      <div class="info-label">Velocidad</div>
+      <div class="info-val" id="inf-velocidad">— km/h</div>
+    </div>
+    <div class="info-card">
+      <div class="info-label">Precisión GPS</div>
+      <div class="info-val" id="inf-precision">—</div>
+    </div>
+    <div class="info-card">
+      <div class="info-label">Latitud</div>
+      <div class="info-val mono" id="inf-lat">—</div>
+    </div>
+    <div class="info-card">
+      <div class="info-label">Longitud</div>
+      <div class="info-val mono" id="inf-lng">—</div>
+    </div>
+  </div>
+
+  <div class="log-box">
+    <div class="log-title">📋 Registro de envíos</div>
+    <div id="log-lista"></div>
+  </div>
+
+  <button class="btn-parar" onclick="detenerRastreo()">
+    ⏹ Detener rastreo
+  </button>
+</div>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbyTBx0onyXsVXYgKa7PorHOjrkk6Z3w4PNsWJcS83wn65YNZ8le70JaKC-0GkNp05M5/exec';
+const INTERVALO_MS = 15000; // 15 segundos
+
+let _watchId = null;
+let _intervalo = null;
+let _ultimaPos = null;
+let _placa = '';
+let _conductor = '';
+let _ruta = '';
+let _enviando = false;
+let _totalEnvios = 0;
+let _errores = 0;
+
+function mostrarError(msg){
+  const el = document.getElementById('err-login');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function iniciarRastreo(){
+  const placa = document.getElementById('inp-placa').value.trim();
+  const conductor = document.getElementById('inp-conductor').value.trim();
+  if(!placa){ mostrarError('Ingresa la placa del vehículo'); return; }
+  if(!conductor){ mostrarError('Ingresa tu nombre'); return; }
+
+  if(!navigator.geolocation){
+    mostrarError('Tu dispositivo no tiene GPS o el navegador no lo permite.');
+    return;
+  }
+
+  _placa = placa;
+  _conductor = conductor;
+  _ruta = document.getElementById('inp-ruta').value.trim();
+
+  // Guardar en localStorage para no repetir
+  localStorage.setItem('fc_placa', placa);
+  localStorage.setItem('fc_conductor', conductor);
+
+  // Cambiar pantalla
+  document.getElementById('pantalla-login').style.display = 'none';
+  document.getElementById('pantalla-activa').style.display = 'flex';
+  document.getElementById('inf-placa').textContent = placa;
+  document.getElementById('inf-conductor').textContent = conductor;
+
+  actualizarEstado('conectando');
+
+  // Pedir GPS
+  _watchId = navigator.geolocation.watchPosition(
+    onPosicion,
+    onErrorGPS,
+    { enableHighAccuracy: true, timeout: 15000, maximumAge: 5000 }
+  );
+
+  // Enviar cada INTERVALO_MS
+  _intervalo = setInterval(enviarUbicacion, INTERVALO_MS);
+}
+
+function onPosicion(pos){
+  _ultimaPos = pos;
+  const lat = pos.coords.latitude.toFixed(5);
+  const lng = pos.coords.longitude.toFixed(5);
+  const vel = pos.coords.speed != null ? Math.round(pos.coords.speed * 3.6) : null;
+  const prec = Math.round(pos.coords.accuracy);
+
+  document.getElementById('inf-lat').textContent = lat;
+  document.getElementById('inf-lng').textContent = lng;
+  document.getElementById('inf-velocidad').textContent = vel !== null ? vel + ' km/h' : '— km/h';
+  document.getElementById('inf-precision').textContent = prec + ' m';
+
+  // Alerta de baja precisión
+  document.getElementById('gps-alert').style.display = prec > 100 ? 'block' : 'none';
+
+  actualizarEstado('activo');
+}
+
+function onErrorGPS(err){
+  actualizarEstado('error');
+  agregarLog('GPS: ' + err.message, 'err');
+}
+
+function actualizarEstado(tipo){
+  const card = document.getElementById('estado-card');
+  const icono = document.getElementById('estado-icono');
+  const titulo = document.getElementById('estado-titulo');
+  const sub = document.getElementById('estado-sub');
+  const wrap = document.getElementById('pantalla-activa');
+
+  wrap.className = tipo === 'activo' ? 'activo' : '';
+  card.className = 'estado-card';
+
+  if(tipo === 'activo'){
+    icono.textContent = '📡';
+    titulo.textContent = '● Transmitiendo';
+    titulo.style.color = 'var(--green)';
+    sub.textContent = 'Ubicación enviándose cada 15 segundos';
+    card.style.borderColor = 'var(--green)';
+  } else if(tipo === 'conectando'){
+    icono.textContent = '🔍';
+    titulo.textContent = 'Buscando GPS...';
+    titulo.style.color = 'var(--amber)';
+    sub.textContent = 'Activa el GPS y espera unos segundos';
+    card.style.borderColor = 'var(--amber)';
+  } else if(tipo === 'error'){
+    icono.textContent = '📵';
+    titulo.textContent = 'Sin señal GPS';
+    titulo.style.color = 'var(--red)';
+    sub.textContent = 'Comprueba los permisos de ubicación';
+    card.style.borderColor = 'var(--red)';
+  } else if(tipo === 'detenido'){
+    icono.textContent = '⏹';
+    titulo.textContent = 'Rastreo detenido';
+    titulo.style.color = 'var(--t2)';
+    sub.textContent = 'Puedes cerrar esta página';
+    card.style.borderColor = 'var(--bd)';
+  }
+}
+
+async function enviarUbicacion(){
+  if(!_ultimaPos || _enviando) return;
+  _enviando = true;
+
+  const { latitude, longitude, speed, heading, accuracy } = _ultimaPos.coords;
+  const velocidad = speed != null ? Math.round(speed * 3.6) : 0;
+
+  try {
+    const resp = await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({
+        accion: 'crear',
+        modulo: 'ubicaciones',
+        Placa: _placa,
+        Conductor: _conductor,
+        Ruta: _ruta,
+        Lat: latitude.toFixed(6),
+        Lng: longitude.toFixed(6),
+        Velocidad: velocidad,
+        Rumbo: heading ? Math.round(heading) : 0,
+        Precision: Math.round(accuracy),
+        Timestamp: new Date().toISOString(),
+      })
+    });
+    const data = await resp.json();
+    _totalEnvios++;
+    const hora = new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    agregarLog(`${hora} ✓ ${latitude.toFixed(4)}, ${longitude.toFixed(4)} · ${velocidad}km/h`, 'ok');
+  } catch(e){
+    _errores++;
+    agregarLog('Error de red: ' + e.message, 'err');
+  } finally {
+    _enviando = false;
+  }
+}
+
+function agregarLog(msg, tipo){
+  const lista = document.getElementById('log-lista');
+  const item = document.createElement('div');
+  item.className = 'log-item ' + (tipo||'');
+  item.textContent = msg;
+  lista.insertBefore(item, lista.firstChild);
+  // Máximo 20 entradas
+  while(lista.children.length > 20) lista.removeChild(lista.lastChild);
+}
+
+function detenerRastreo(){
+  if(_watchId !== null){ navigator.geolocation.clearWatch(_watchId); _watchId = null; }
+  if(_intervalo){ clearInterval(_intervalo); _intervalo = null; }
+  actualizarEstado('detenido');
+  agregarLog('Rastreo detenido por el conductor.', '');
+}
+
+// Restaurar datos del localStorage si existen
+window.addEventListener('load', ()=>{
+  const placa = localStorage.getItem('fc_placa');
+  const conductor = localStorage.getItem('fc_conductor');
+  if(placa) document.getElementById('inp-placa').value = placa;
+  if(conductor) document.getElementById('inp-conductor').value = conductor;
+});
+
+// Evitar que la pantalla se apague (Wake Lock API)
+async function mantenerPantallaActiva(){
+  try {
+    if('wakeLock' in navigator){
+      await navigator.wakeLock.request('screen');
+    }
+  } catch(e){ /* no soportado */ }
+}
+mantenerPantallaActiva();
+</script>
+</body>
+</html>
