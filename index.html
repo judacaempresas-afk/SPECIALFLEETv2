@@ -2934,11 +2934,27 @@ function renderUbicacionesMapa(){
 
   placas.forEach((placa, i) => {
     const u = porPlaca[placa];
-    // Limpiar formato Sheets (puede venir como "6.158.572" o "6,158572")
-    const limpiarCoord = v => parseFloat(String(v).replace(/\./g,'').replace(',','.')) || 
-                              parseFloat(String(v).replace(',','.')) || Number(v);
-    const lat = Number(u.Lat) || limpiarCoord(u.Lat);
-    const lng = Number(u.Lng) || limpiarCoord(u.Lng);
+    // Limpiar coordenadas — Sheets puede formatear "6.158572" como "6.158.572"
+    const limpiarCoord = v => {
+      let s = String(v).trim();
+      // Contar puntos
+      const puntos = (s.match(/\./g)||[]).length;
+      if(puntos > 1){
+        // Tiene separadores de miles: quitar todos los puntos, el último era decimal
+        // "6.158.572" → "6158572" → necesitamos saber cuántos decimales había
+        // Sheets usa 3 decimales de miles, así que el último grupo tiene los decimales reales
+        // Solución: quitar todos los puntos y reconstruir con el decimal en posición correcta
+        const partes = s.split('.');
+        // partes[0] = entero, partes[1..n-1] = grupos de miles, partes[n] = decimales
+        const entero = partes[0];
+        const decimales = partes[partes.length-1];
+        const miles = partes.slice(1, partes.length-1).join('');
+        s = entero + miles + '.' + decimales;
+      }
+      return parseFloat(s.replace(',','.')) || 0;
+    };
+    const lat = limpiarCoord(u.Lat);
+    const lng = limpiarCoord(u.Lng);
     if(!lat || !lng) return;
 
     const activo = estaActivo(u);
@@ -3133,20 +3149,34 @@ async function dibujarRutaFecha(placa, color){
   dibujarRuta(placa, color, fecha);
 }
 
-function dibujarRuta(placa, color, fecha){
+async function dibujarRuta(placa, color, fecha){
   if(!_mapaRastreo || !window.google) return;
 
+  // Mostrar loading en el mapa
+  const estadoEl = document.getElementById('rastreo-estado');
+  if(estadoEl){ estadoEl.textContent = 'Cargando ruta...'; estadoEl.style.background='var(--amber-l)'; estadoEl.style.color='var(--amber)'; }
+
+  // Cargar TODOS los registros de ubicaciones (no solo los últimos en memoria)
+  let todosLosRegistros = _ubicaciones;
+  try {
+    const d = await apig({ accion:'listar', modulo:'ubicaciones' });
+    todosLosRegistros = d.data || _ubicaciones;
+    _ubicaciones = todosLosRegistros; // actualizar cache
+  } catch(e){ console.warn('Usando cache de ubicaciones'); }
+
+  if(estadoEl){ estadoEl.textContent = ''; estadoEl.style.background=''; }
+
   // Filtrar ubicaciones de esa placa y fecha
-  const puntos = _ubicaciones
+  const puntos = todosLosRegistros
     .filter(u => {
-      if(u.Placa !== placa) return false;
+      if(String(u.Placa).trim() !== String(placa).trim()) return false;
       if(!u.Timestamp) return false;
       const diaUbic = new Date(u.Timestamp).toISOString().split('T')[0];
       return diaUbic === fecha;
     })
     .map(u => ({
-      lat: parseFloat(String(u.Lat).replace(/\./g,'').replace(',','.')) || parseFloat(String(u.Lat).replace(',','.')) || Number(u.Lat),
-      lng: parseFloat(String(u.Lng).replace(/\./g,'').replace(',','.')) || parseFloat(String(u.Lng).replace(',','.')) || Number(u.Lng),
+      lat: limpiarCoordGPS(u.Lat),
+      lng: limpiarCoordGPS(u.Lng),
       ts: new Date(u.Timestamp),
       vel: Number(u.Velocidad)||0
     }))
@@ -3231,6 +3261,19 @@ function dibujarRuta(placa, color, fecha){
   });
   infoRuta.open(_mapaRastreo);
   _polylines[placa].push(infoRuta);
+}
+
+function limpiarCoordGPS(v){
+  let s = String(v).trim();
+  const puntos = (s.match(/\./g)||[]).length;
+  if(puntos > 1){
+    const partes = s.split('.');
+    const entero = partes[0];
+    const decimales = partes[partes.length-1];
+    const miles = partes.slice(1, partes.length-1).join('');
+    s = entero + miles + '.' + decimales;
+  }
+  return parseFloat(s.replace(',','.')) || 0;
 }
 
 function distanciaKm(lat1,lng1,lat2,lng2){
