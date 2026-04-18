@@ -359,7 +359,7 @@ tr:hover td{background:#FAFBFC;}
   .etab{padding:4px 8px;font-size:10.5px;}
 }
 </style>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0SUA8TpcWiH5WkwsMoMv-cGwlmN397AU&callback=initMapRastreo&loading=async" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0SUA8TpcWiH5WkwsMoMv-cGwlmN397AU" defer></script>
 </head>
 <body>
 
@@ -2792,26 +2792,21 @@ async function reporteV(placa){
 //  MÓDULO RASTREO EN VIVO
 // ══════════════════════════════════════════════════════════════
 let _mapaRastreo = null;
-let _mapaListo = false;
 let _marcadores = {};
 let _infoWindows = {};
 let _rastreoInterval = null;
 let _ubicaciones = [];
 const RASTREO_CONDUCTOR_URL = location.href.replace('index.html','').replace(/\/[^/]*$/, '') + '/conductor.html';
 
-// Callback de Google Maps cuando carga
-function initMapRastreo(){
-  _mapaListo = true;
-  // Si ya estamos en la página de rastreo, inicializar
-  if(document.getElementById('pg-rastreo').classList.contains('active')){
-    _crearMapa();
-  }
+// Verificar si Google Maps ya cargó
+function _mapsListo(){
+  return typeof google !== 'undefined' && google.maps && google.maps.Map;
 }
 
 function _crearMapa(){
   if(_mapaRastreo) return; // ya existe
   const el = document.getElementById('mapa-rastreo');
-  if(!el || !window.google) return;
+  if(!el || !_mapsListo()) return;
   _mapaRastreo = new google.maps.Map(el, {
     center: { lat: 4.7110, lng: -74.0721 }, // Bogotá por defecto
     zoom: 11,
@@ -2827,16 +2822,18 @@ function _crearMapa(){
 }
 
 async function loadRastreo(){
-  if(!_mapaListo){
-    document.getElementById('rastreo-estado').textContent = 'Cargando mapa...';
-    document.getElementById('rastreo-estado').style.background = 'var(--amber-l)';
-    document.getElementById('rastreo-estado').style.color = 'var(--amber)';
-    // Esperar a que cargue Maps
+  const estadoEl = document.getElementById('rastreo-estado');
+  if(!_mapsListo()){
+    if(estadoEl){
+      estadoEl.textContent = 'Cargando mapa...';
+      estadoEl.style.background = 'var(--amber-l)';
+      estadoEl.style.color = 'var(--amber)';
+    }
     let intentos = 0;
     const esperar = setInterval(()=>{
       intentos++;
-      if(_mapaListo){ clearInterval(esperar); _iniciarRastreo(); }
-      if(intentos > 20){ clearInterval(esperar); mostrarErrorMapa(); }
+      if(_mapsListo()){ clearInterval(esperar); _iniciarRastreo(); }
+      if(intentos > 40){ clearInterval(esperar); mostrarErrorMapa(); }
     }, 500);
     return;
   }
@@ -2845,7 +2842,7 @@ async function loadRastreo(){
 
 function _iniciarRastreo(){
   _crearMapa();
-  actualizarUbicaciones();
+  setTimeout(actualizarUbicaciones, 300);
   // Limpiar intervalo anterior
   if(_rastreoInterval) clearInterval(_rastreoInterval);
   const intervalo = Number(document.getElementById('rastreo-intervalo').value) || 20000;
