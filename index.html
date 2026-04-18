@@ -2929,8 +2929,11 @@ function renderUbicacionesMapa(){
 
   placas.forEach((placa, i) => {
     const u = porPlaca[placa];
-    const lat = Number(u.Lat);
-    const lng = Number(u.Lng);
+    // Limpiar formato Sheets (puede venir como "6.158.572" o "6,158572")
+    const limpiarCoord = v => parseFloat(String(v).replace(/\./g,'').replace(',','.')) || 
+                              parseFloat(String(v).replace(',','.')) || Number(v);
+    const lat = Number(u.Lat) || limpiarCoord(u.Lat);
+    const lng = Number(u.Lng) || limpiarCoord(u.Lng);
     if(!lat || !lng) return;
 
     const activo = estaActivo(u);
