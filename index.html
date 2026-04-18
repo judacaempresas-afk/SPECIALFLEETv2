@@ -2798,6 +2798,9 @@ let _marcadores = {};
 let _infoWindows = {};
 let _rastreoInterval = null;
 let _ubicaciones = [];
+let _polylines = {};        // líneas de ruta por placa
+let _rutaActiva = null;     // placa con ruta visible actualmente
+let _fechaFiltro = null;    // fecha seleccionada para ver historial
 const RASTREO_CONDUCTOR_URL = location.href.replace('index.html','').replace(/\/[^/]*$/, '') + '/conductor.html';
 
 // Verificar si Google Maps ya cargó
@@ -2978,18 +2981,36 @@ function renderUbicacionesMapa(){
     // Card en lista lateral
     const velocidad = u.Velocidad ? Math.round(Number(u.Velocidad)) + ' km/h' : '— km/h';
     htmlLista += `
-      <div onclick="enfocarVehiculo('${placa}')"
-        style="padding:8px 10px;border-radius:var(--r);margin-bottom:4px;cursor:pointer;
+      <div style="border-radius:var(--r);margin-bottom:6px;
                border:1px solid ${activo?color+'40':'var(--bd)'};
                background:${activo?color+'08':'var(--bg3)'};
-               transition:all .15s;">
-        <div style="display:flex;align-items:center;gap:7px;">
-          <div style="width:8px;height:8px;border-radius:50%;background:${activo?color:'#9AA0AC'};flex-shrink:0;${activo?'box-shadow:0 0 6px '+color+';':''}"></div>
-          <span style="font-weight:700;font-size:12px;font-family:var(--mono);color:${activo?'var(--t)':'var(--t3)'};">${placa}</span>
-          <span style="margin-left:auto;font-size:10px;font-family:var(--mono);color:${activo?color:'var(--t3)'};">${velocidad}</span>
+               overflow:hidden;">
+        <div onclick="enfocarVehiculo('${placa}')" style="padding:8px 10px;cursor:pointer;">
+          <div style="display:flex;align-items:center;gap:7px;">
+            <div style="width:8px;height:8px;border-radius:50%;background:${activo?color:'#9AA0AC'};flex-shrink:0;${activo?'box-shadow:0 0 6px '+color+';':''}"></div>
+            <span style="font-weight:700;font-size:12px;font-family:var(--mono);color:${activo?'var(--t)':'var(--t3)'};">${placa}</span>
+            <span style="margin-left:auto;font-size:10px;font-family:var(--mono);color:${activo?color:'var(--t3)'};">${velocidad}</span>
+          </div>
+          <div style="font-size:10px;color:var(--t3);margin-top:3px;padding-left:15px;">${u.Conductor||'Sin conductor'}</div>
+          <div style="font-size:10px;color:var(--t3);padding-left:15px;">${tiempoDesde(u.Timestamp)}</div>
         </div>
-        <div style="font-size:10px;color:var(--t3);margin-top:3px;padding-left:15px;">${u.Conductor||'Sin conductor'}</div>
-        <div style="font-size:10px;color:var(--t3);padding-left:15px;">${tiempoDesde(u.Timestamp)}</div>
+        <div style="display:flex;gap:1px;border-top:1px solid ${activo?color+'30':'var(--bd)'};">
+          <button onclick="toggleRuta('${placa}','${color}')"
+            id="btn-ruta-${placa}"
+            style="flex:1;padding:5px;font-size:10px;font-weight:600;border:none;cursor:pointer;
+                   background:transparent;color:${color};transition:background .12s;"
+            onmouseover="this.style.background='${color}18'"
+            onmouseout="this.style.background='transparent'">
+            📍 Ver ruta hoy
+          </button>
+          <button onclick="verRutaFecha('${placa}','${color}')"
+            style="flex:1;padding:5px;font-size:10px;font-weight:600;border:none;cursor:pointer;
+                   background:transparent;color:var(--t3);border-left:1px solid ${activo?color+'30':'var(--bd)'};transition:background .12s;"
+            onmouseover="this.style.background='var(--bg3)'"
+            onmouseout="this.style.background='transparent'">
+            📅 Otra fecha
+          </button>
+        </div>
       </div>`;
   });
 
@@ -3059,6 +3080,164 @@ function abrirEnlaceConductor(){
 
 // Detener rastreo al salir de la página
 const _origGoTo = window.goTo;
+
+// ══════════════════════════════════════════════════════════════
+//  RUTAS — historial de recorrido por vehículo
+// ══════════════════════════════════════════════════════════════
+
+function toggleRuta(placa, color){
+  // Si ya está activa esta ruta, ocultarla
+  if(_rutaActiva === placa){
+    ocultarRuta(placa);
+    return;
+  }
+  // Ocultar ruta anterior si había otra
+  if(_rutaActiva) ocultarRuta(_rutaActiva);
+  // Mostrar ruta de hoy
+  const hoyStr = new Date().toISOString().split('T')[0];
+  dibujarRuta(placa, color, hoyStr);
+}
+
+function ocultarRuta(placa){
+  if(_polylines[placa]){
+    _polylines[placa].forEach(p => p.setMap(null));
+    delete _polylines[placa];
+  }
+  _rutaActiva = null;
+  // Restaurar botón
+  const btn = document.getElementById('btn-ruta-'+placa);
+  if(btn){ btn.textContent = '📍 Ver ruta hoy'; btn.style.fontWeight = '600'; }
+}
+
+function verRutaFecha(placa, color){
+  openModal('📅 Ver ruta histórica — '+placa, `
+    <p style="font-size:12px;color:var(--t2);margin-bottom:14px;">
+      Selecciona la fecha para ver el recorrido de <strong>${placa}</strong>.
+    </p>
+    <div class="fl">
+      <label>Fecha</label>
+      <input id="ruta-fecha-sel" type="date" value="${new Date().toISOString().split('T')[0]}" max="${new Date().toISOString().split('T')[0]}">
+    </div>
+    <div id="al-ruta" style="margin-top:10px;"></div>
+  `,
+  `<button class="btn" onclick="closeModal()">Cancelar</button>
+   <button class="btn btn-pri" onclick="dibujarRutaFecha('${placa}','${color}')">📍 Ver recorrido</button>`
+  );
+}
+
+async function dibujarRutaFecha(placa, color){
+  const fecha = document.getElementById('ruta-fecha-sel').value;
+  if(!fecha){ document.getElementById('al-ruta').innerHTML='<div class="alert a-err">Selecciona una fecha</div>'; return; }
+  closeModal();
+  if(_rutaActiva) ocultarRuta(_rutaActiva);
+  dibujarRuta(placa, color, fecha);
+}
+
+function dibujarRuta(placa, color, fecha){
+  if(!_mapaRastreo || !window.google) return;
+
+  // Filtrar ubicaciones de esa placa y fecha
+  const puntos = _ubicaciones
+    .filter(u => {
+      if(u.Placa !== placa) return false;
+      if(!u.Timestamp) return false;
+      const diaUbic = new Date(u.Timestamp).toISOString().split('T')[0];
+      return diaUbic === fecha;
+    })
+    .map(u => ({
+      lat: parseFloat(String(u.Lat).replace(/\./g,'').replace(',','.')) || parseFloat(String(u.Lat).replace(',','.')) || Number(u.Lat),
+      lng: parseFloat(String(u.Lng).replace(/\./g,'').replace(',','.')) || parseFloat(String(u.Lng).replace(',','.')) || Number(u.Lng),
+      ts: new Date(u.Timestamp),
+      vel: Number(u.Velocidad)||0
+    }))
+    .filter(p => p.lat && p.lng)
+    .sort((a,b) => a.ts - b.ts);
+
+  if(puntos.length < 2){
+    // Solo 1 punto o ninguno — mostrar info
+    openModal('Sin recorrido — '+placa,`
+      <div style="text-align:center;padding:20px;">
+        <div style="font-size:40px;margin-bottom:12px;">🗺️</div>
+        <p style="font-size:13px;color:var(--t2);">No hay suficientes puntos de GPS para el <strong>${fecha}</strong>.</p>
+        <p style="font-size:12px;color:var(--t3);margin-top:8px;">Se necesitan al menos 2 registros para dibujar la ruta.</p>
+      </div>
+    `,'<button class="btn" onclick="closeModal()">Cerrar</button>');
+    return;
+  }
+
+  // Calcular distancia total aproximada
+  let distKm = 0;
+  for(let i=1;i<puntos.length;i++){
+    distKm += distanciaKm(puntos[i-1].lat, puntos[i-1].lng, puntos[i].lat, puntos[i].lng);
+  }
+  const velMax = Math.max(...puntos.map(p=>p.vel));
+  const durMin = Math.round((puntos[puntos.length-1].ts - puntos[0].ts) / 60000);
+
+  // Dibujar polyline principal
+  const linea = new google.maps.Polyline({
+    path: puntos.map(p=>({lat:p.lat, lng:p.lng})),
+    geodesic: true,
+    strokeColor: color,
+    strokeOpacity: 0.85,
+    strokeWeight: 4,
+    map: _mapaRastreo,
+    icons: [{
+      icon: { path: google.maps.SymbolPath.FORWARD_OPEN_ARROW, scale: 3, strokeColor: color },
+      offset: '50%',
+      repeat: '120px'
+    }]
+  });
+
+  // Marcador inicio (verde)
+  const mInicio = new google.maps.Marker({
+    position: {lat:puntos[0].lat, lng:puntos[0].lng},
+    map: _mapaRastreo,
+    icon: { path: google.maps.SymbolPath.CIRCLE, scale:7, fillColor:'#16A34A', fillOpacity:1, strokeColor:'#fff', strokeWeight:2 },
+    title: 'Inicio: '+puntos[0].ts.toLocaleTimeString('es-CO')
+  });
+
+  // Marcador fin (rojo)
+  const mFin = new google.maps.Marker({
+    position: {lat:puntos[puntos.length-1].lat, lng:puntos[puntos.length-1].lng},
+    map: _mapaRastreo,
+    icon: { path: google.maps.SymbolPath.CIRCLE, scale:7, fillColor:'#DC2626', fillOpacity:1, strokeColor:'#fff', strokeWeight:2 },
+    title: 'Fin: '+puntos[puntos.length-1].ts.toLocaleTimeString('es-CO')
+  });
+
+  _polylines[placa] = [linea, mInicio, mFin];
+  _rutaActiva = placa;
+
+  // Ajustar mapa a la ruta
+  const bounds = new google.maps.LatLngBounds();
+  puntos.forEach(p => bounds.extend({lat:p.lat,lng:p.lng}));
+  _mapaRastreo.fitBounds(bounds);
+
+  // Actualizar botón
+  const btn = document.getElementById('btn-ruta-'+placa);
+  if(btn){ btn.textContent = '✕ Ocultar ruta'; }
+
+  // Info flotante sobre la ruta
+  const centro = puntos[Math.floor(puntos.length/2)];
+  const infoRuta = new google.maps.InfoWindow({
+    content: `<div style="font-family:'Plus Jakarta Sans',sans-serif;padding:4px;">
+      <div style="font-weight:700;font-size:13px;margin-bottom:6px;">🗺️ Recorrido ${placa}</div>
+      <div style="font-size:11px;color:#5C6370;">📅 ${fecha}</div>
+      <div style="font-size:11px;color:#5C6370;">📏 Distancia aprox: <strong>${distKm.toFixed(1)} km</strong></div>
+      <div style="font-size:11px;color:#5C6370;">⚡ Vel. máx: <strong>${velMax} km/h</strong></div>
+      <div style="font-size:11px;color:#5C6370;">⏱ Duración: <strong>${durMin} min</strong></div>
+      <div style="font-size:11px;color:#5C6370;">📍 ${puntos.length} puntos GPS</div>
+    </div>`,
+    position: {lat:centro.lat, lng:centro.lng}
+  });
+  infoRuta.open(_mapaRastreo);
+  _polylines[placa].push(infoRuta);
+}
+
+function distanciaKm(lat1,lng1,lat2,lng2){
+  const R=6371, dLat=(lat2-lat1)*Math.PI/180, dLng=(lng2-lng1)*Math.PI/180;
+  const a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
 
 </script>
 </body>
