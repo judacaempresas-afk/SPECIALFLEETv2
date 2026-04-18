@@ -205,6 +205,16 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
 
 /* ══ DIVIDER ══ */
 .divider{height:1px;background:var(--bd);margin:4px 0 16px;}
+
+/* ══ OFFLINE ══ */
+.badge-offline{background:rgba(217,119,6,.2);color:#fbbf24;border:1px solid rgba(217,119,6,.4);}
+@keyframes parpadeo{0%,100%{opacity:1;}50%{opacity:.5;}}
+.rastreo-card.sinred{border-color:var(--amber);animation:parpadeo 1.6s ease-in-out infinite;}
+.cola-row{display:none;align-items:center;gap:9px;background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.3);border-radius:var(--r);padding:8px 13px;margin-bottom:10px;}
+.cola-dot{width:8px;height:8px;border-radius:50%;background:var(--amber);flex-shrink:0;animation:parpadeo 1.2s ease-in-out infinite;}
+.cola-txt{flex:1;font-size:12px;color:#fbbf24;font-weight:600;}
+.cola-btn{font-size:11px;font-weight:700;color:#fbbf24;background:rgba(217,119,6,.2);border:1px solid rgba(217,119,6,.4);border-radius:6px;padding:3px 9px;cursor:pointer;font-family:var(--font);}
+.cola-btn:hover{background:rgba(217,119,6,.35);}
 </style>
 </head>
 <body>
@@ -500,6 +510,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
         <div class="turno-banner-sub" id="turno-banner-sub">Checklist enviado correctamente. El rastreo GPS está activo.</div>
       </div>
 
+      <!-- Indicador de cola offline -->
+      <div class="cola-row" id="cola-row">
+        <div class="cola-dot"></div>
+        <span class="cola-txt" id="cola-contador">0 puntos en cola</span>
+        <button class="cola-btn" onclick="vaciarColaOffline()">Reintentar</button>
+      </div>
+
       <div class="rastreo-card" id="rastreo-card">
         <div class="rastreo-estado-icon" id="r-icono">📡</div>
         <div class="rastreo-estado-title" id="r-titulo">Listo para iniciar</div>
@@ -515,8 +532,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
       <div class="info-grid">
         <div class="info-c"><div class="lbl">Placa</div><div class="val mono" id="r-placa">—</div></div>
         <div class="info-c"><div class="lbl">Conductor</div><div class="val" id="r-conductor" style="font-size:13px;">—</div></div>
-        <div class="info-c"><div class="lbl">Envíos OK</div><div class="val" id="r-envios" style="color:#4ade80;">0</div></div>
-        <div class="info-c"><div class="lbl">Errores</div><div class="val" id="r-errores" style="color:#f87171;">0</div></div>
+        <div class="info-c"><div class="lbl">Enviados</div><div class="val" id="r-envios" style="color:#4ade80;">0</div></div>
+        <div class="info-c"><div class="lbl">En cola</div><div class="val" id="r-cola" style="color:#fbbf24;">0</div></div>
       </div>
 
       <div class="log-box">
@@ -1037,6 +1054,110 @@ function limpiarChecklist(){
   actualizarProgreso();
 }
 
+// ══════════════════════════════════════════
+//  COLA OFFLINE — puntos GPS guardados en
+//  localStorage cuando no hay señal de red.
+//  Se reenvían automáticamente al recuperar
+//  la conexión, en orden cronológico.
+// ══════════════════════════════════════════
+const COLA_KEY   = 'fc_gps_cola';
+const COLA_MAX   = 500;   // máx puntos guardados (~2h a 15 s/punto)
+let   _hayRed    = navigator.onLine;
+let   _enviandoCola = false;
+
+function colaCargar(){
+  try { return JSON.parse(localStorage.getItem(COLA_KEY) || '[]'); } catch(e){ return []; }
+}
+function colaGuardar(arr){
+  try { localStorage.setItem(COLA_KEY, JSON.stringify(arr.slice(-COLA_MAX))); } catch(e){}
+}
+function colaAgregar(punto){
+  const arr = colaCargar();
+  arr.push(punto);
+  colaGuardar(arr);
+  actualizarIndicadorCola();
+}
+function colaVaciar(){
+  localStorage.removeItem(COLA_KEY);
+  actualizarIndicadorCola();
+}
+
+function actualizarIndicadorCola(){
+  const n   = colaCargar().length;
+  const el  = document.getElementById('cola-contador');
+  const row = document.getElementById('cola-row');
+  const cnt = document.getElementById('r-cola');
+  if(cnt) cnt.textContent = n;
+  if(!el || !row) return;
+  if(n > 0){
+    row.style.display = 'flex';
+    el.textContent = n + ' punto' + (n===1?'':'s') + ' guardado' + (n===1?'':'s') + ' sin enviar';
+  } else {
+    row.style.display = 'none';
+  }
+}
+
+// Escuchar cambios de red
+window.addEventListener('online',  () => { _hayRed = true;  onRedRecuperada(); });
+window.addEventListener('offline', () => { _hayRed = false; onRedPerdida();    });
+
+function onRedPerdida(){
+  agregarLogGPS('⚠ Sin señal — guardando puntos en cola local', 'err');
+  actualizarEstadoRed(false);
+}
+
+function onRedRecuperada(){
+  agregarLogGPS('✓ Señal recuperada — vaciando cola...', 'ok');
+  actualizarEstadoRed(true);
+  vaciarColaOffline();
+}
+
+function actualizarEstadoRed(online){
+  const badge = document.getElementById('h-gps-badge');
+  if(!badge) return;
+  if(!online && _rastreando){
+    badge.textContent = 'Sin red';
+    badge.className   = 'header-badge badge-offline';
+  }
+  // Si online, se actualiza desde onPos()
+}
+
+async function vaciarColaOffline(){
+  if(_enviandoCola) return;
+  const cola = colaCargar();
+  if(!cola.length) return;
+  _enviandoCola = true;
+  agregarLogGPS('Reenviando ' + cola.length + ' punto(s) guardados...', '');
+
+  let enviados = 0;
+  for(const punto of cola){
+    try {
+      const r = await fetch(API, { method:'POST', body: JSON.stringify(punto) });
+      await r.json();
+      enviados++;
+      _envios++;
+      document.getElementById('r-envios').textContent = _envios;
+    } catch(e){
+      // Si vuelve a fallar, dejar el resto en cola y salir
+      break;
+    }
+  }
+
+  // Quitar los que se enviaron exitosamente
+  const restante = colaCargar().slice(enviados);
+  colaGuardar(restante);
+  actualizarIndicadorCola();
+  _enviandoCola = false;
+
+  if(enviados > 0){
+    agregarLogGPS('✓ ' + enviados + ' punto(s) reenviados desde la cola', 'ok');
+  }
+  const pendientes = restante.length;
+  if(pendientes > 0){
+    agregarLogGPS('⚠ ' + pendientes + ' punto(s) aún pendientes', 'err');
+  }
+}
+
 // ══ RASTREO GPS ══
 function iniciarRastreo(){
   if(!navigator.geolocation){
@@ -1050,7 +1171,11 @@ function iniciarRastreo(){
 
   _watchId  = navigator.geolocation.watchPosition(onPos, onErrGPS,
     { enableHighAccuracy:true, timeout:15000, maximumAge:5000 });
-  _interval = setInterval(enviarUbicacion, 15000);
+  _interval = setInterval(cicloEnvio, 15000);
+
+  // Intentar vaciar cola pendiente al arrancar (pudo haber quedado de sesión anterior)
+  if(_hayRed) vaciarColaOffline();
+  actualizarIndicadorCola();
 }
 
 function detenerRastreo(){
@@ -1064,6 +1189,9 @@ function detenerRastreo(){
   document.getElementById('gps-dot').className = 'gps-dot off';
   document.getElementById('h-gps-badge').textContent = 'GPS off';
   document.getElementById('h-gps-badge').className = 'header-badge badge-gps-off';
+
+  // Intentar vaciar cola al detener si hay red
+  if(_hayRed) vaciarColaOffline();
 }
 
 function onPos(pos){
@@ -1075,10 +1203,18 @@ function onPos(pos){
   document.getElementById('gps-coords').textContent = lat.toFixed(5) + ', ' + lng.toFixed(5);
   document.getElementById('gps-prec').textContent   = 'Precisión: ' + prec + ' m' + (prec > 100 ? ' ⚠ baja' : '');
   document.getElementById('gps-speed').textContent  = vel !== null ? vel + ' km/h' : '— km/h';
-  document.getElementById('gps-dot').className      = 'gps-dot on';
-  document.getElementById('h-gps-badge').textContent = 'GPS ON';
-  document.getElementById('h-gps-badge').className  = 'header-badge badge-gps-on';
-  actualizarEstadoRastreo('activo');
+
+  if(_hayRed){
+    document.getElementById('gps-dot').className      = 'gps-dot on';
+    document.getElementById('h-gps-badge').textContent = 'GPS ON';
+    document.getElementById('h-gps-badge').className  = 'header-badge badge-gps-on';
+    actualizarEstadoRastreo('activo');
+  } else {
+    document.getElementById('gps-dot').className      = 'gps-dot on';
+    document.getElementById('h-gps-badge').textContent = 'Sin red';
+    document.getElementById('h-gps-badge').className  = 'header-badge badge-offline';
+    actualizarEstadoRastreo('sinred');
+  }
 }
 
 function onErrGPS(err){
@@ -1091,62 +1227,74 @@ function actualizarEstadoRastreo(tipo){
   const icono  = document.getElementById('r-icono');
   const titulo = document.getElementById('r-titulo');
   const sub    = document.getElementById('r-sub');
-  card.className = 'rastreo-card' + (tipo==='activo' ? ' activo' : '');
-  if(tipo === 'activo'){
-    icono.textContent = '📡'; titulo.textContent = '● Transmitiendo';
-    titulo.style.color = 'var(--green)'; sub.textContent = 'Ubicación enviándose cada 15 segundos';
-    card.style.borderColor = 'var(--green)';
-  } else if(tipo === 'conectando'){
-    icono.textContent = '🔍'; titulo.textContent = 'Buscando GPS...';
-    titulo.style.color = 'var(--amber)'; sub.textContent = 'Activa el GPS de tu dispositivo';
-    card.style.borderColor = 'var(--amber)';
-  } else if(tipo === 'error'){
-    icono.textContent = '📵'; titulo.textContent = 'Sin señal GPS';
-    titulo.style.color = 'var(--red)'; sub.textContent = 'Revisa los permisos de ubicación';
-    card.style.borderColor = 'var(--red)';
-  } else if(tipo === 'detenido'){
-    icono.textContent = '⏹'; titulo.textContent = 'Rastreo detenido';
-    titulo.style.color = 'var(--t2)'; sub.textContent = 'Pulsa el botón para reanudar';
-    card.style.borderColor = 'var(--bd)';
-  } else {
-    icono.textContent = '📡'; titulo.textContent = 'Listo para iniciar';
-    titulo.style.color = 'var(--t)';
-    sub.textContent = _checklistEnviado
-      ? 'Checklist enviado. Pulsa el botón para comenzar el rastreo.'
-      : 'Envía el checklist primero para activar el rastreo.';
-    card.style.borderColor = 'var(--bd)';
-  }
+  card.className = 'rastreo-card' + (tipo==='activo' ? ' activo' : tipo==='sinred' ? ' sinred' : '');
+
+  const estados = {
+    activo:    { i:'📡', t:'● Transmitiendo',       c:'var(--green)', s:'Ubicación enviándose cada 15 segundos',     bc:'var(--green)' },
+    sinred:    { i:'📶', t:'Sin red — modo offline', c:'var(--amber)', s:'GPS activo. Los puntos se guardan y se enviarán cuando vuelva la señal.', bc:'var(--amber)' },
+    conectando:{ i:'🔍', t:'Buscando GPS...',        c:'var(--amber)', s:'Activa el GPS de tu dispositivo',           bc:'var(--amber)' },
+    error:     { i:'📵', t:'Sin señal GPS',           c:'var(--red)',   s:'Revisa los permisos de ubicación',         bc:'var(--red)'   },
+    detenido:  { i:'⏹', t:'Rastreo detenido',        c:'var(--t2)',    s:'Pulsa el botón para reanudar',             bc:'var(--bd)'    },
+    listo:     { i:'📡', t:'Listo para iniciar',      c:'var(--t)',
+      s: _checklistEnviado ? 'Checklist enviado. Pulsa el botón para comenzar el rastreo.' : 'Envía el checklist primero para activar el rastreo.',
+      bc:'var(--bd)' },
+  };
+  const e = estados[tipo] || estados.listo;
+  icono.textContent        = e.i;
+  titulo.textContent       = e.t;
+  titulo.style.color       = e.c;
+  sub.textContent          = e.s;
+  card.style.borderColor   = e.bc;
 }
 
-async function enviarUbicacion(){
+// cicloEnvio: cada 15s decide si envía directo o encola
+async function cicloEnvio(){
   if(!_ultimaPos || !_rastreando) return;
   const { latitude, longitude, speed, heading, accuracy } = _ultimaPos.coords;
   const velocidad = speed != null ? Math.round(speed * 3.6) : 0;
+  const punto = {
+    accion: 'crear', modulo: 'ubicaciones',
+    Placa:     SESSION.placa,
+    Conductor: SESSION.nombre,
+    Ruta:      SESSION.ruta,
+    Lat:       parseFloat(latitude.toFixed(6)),
+    Lng:       parseFloat(longitude.toFixed(6)),
+    Velocidad: velocidad,
+    Rumbo:     heading ? Math.round(heading) : 0,
+    Precision: Math.round(accuracy),
+    Timestamp: new Date().toISOString(),
+  };
+
+  if(!_hayRed){
+    // Sin red: guardar en cola local
+    colaAgregar(punto);
+    const n = colaCargar().length;
+    const hora = new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    agregarLogGPS(hora + ' 📥 Cola[' + n + '] ' + latitude.toFixed(4) + ',' + longitude.toFixed(4), 'err');
+    return;
+  }
+
+  // Con red: intentar enviar + vaciar cola pendiente
   try {
-    const resp = await fetch(API, {
-      method: 'POST',
-      body: JSON.stringify({
-        accion: 'crear', modulo: 'ubicaciones',
-        Placa:     SESSION.placa,
-        Conductor: SESSION.nombre,
-        Ruta:      SESSION.ruta,
-        Lat:       parseFloat(latitude.toFixed(6)),
-        Lng:       parseFloat(longitude.toFixed(6)),
-        Velocidad: velocidad,
-        Rumbo:     heading ? Math.round(heading) : 0,
-        Precision: Math.round(accuracy),
-        Timestamp: new Date().toISOString(),
-      })
-    });
+    const resp = await fetch(API, { method:'POST', body: JSON.stringify(punto) });
     await resp.json();
     _envios++;
     document.getElementById('r-envios').textContent = _envios;
     const hora = new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-    agregarLogGPS(hora + ' OK ' + latitude.toFixed(4) + ',' + longitude.toFixed(4) + ' ' + velocidad + 'km/h', 'ok');
+    agregarLogGPS(hora + ' ✓ ' + latitude.toFixed(4) + ',' + longitude.toFixed(4) + ' ' + velocidad + 'km/h', 'ok');
+
+    // Aprovechar para vaciar cola si hay pendientes
+    const cola = colaCargar();
+    if(cola.length > 0 && !_enviandoCola) vaciarColaOffline();
+
   } catch(e) {
+    // El fetch falló aunque navigator.onLine decía true (edge case)
+    _hayRed = false;
+    colaAgregar(punto);
     _erroresGPS++;
     document.getElementById('r-errores').textContent = _erroresGPS;
-    agregarLogGPS('Error: ' + e.message, 'err');
+    agregarLogGPS('⚠ Falló envío — punto encolado', 'err');
+    actualizarEstadoRastreo('sinred');
   }
 }
 
@@ -1156,7 +1304,7 @@ function agregarLogGPS(msg, tipo){
   item.className = 'log-item ' + (tipo||'');
   item.textContent = msg;
   lista.insertBefore(item, lista.firstChild);
-  while(lista.children.length > 25) lista.removeChild(lista.lastChild);
+  while(lista.children.length > 30) lista.removeChild(lista.lastChild);
 }
 
 // ══ HISTORIAL LOCAL ══
