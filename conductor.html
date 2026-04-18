@@ -90,13 +90,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
 .progreso-fill.completo{background:var(--green);}
 .progreso-fill.advertencia{background:var(--amber);}
 
-/* ══ RESUMEN SECCION ══ */
-.sec-pills{display:flex;gap:4px;flex-wrap:wrap;padding:0 0 10px 14px;}
-.pill{font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;}
-.pill-bien{background:rgba(22,163,74,.15);color:#4ade80;}
-.pill-regular{background:rgba(217,119,6,.15);color:#fbbf24;}
-.pill-mal{background:rgba(220,38,38,.15);color:#f87171;}
-
 /* ══ INPUTS ══ */
 .fl{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;}
 .fl label{font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.4px;}
@@ -132,11 +125,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
 
 /* ══ LOGIN ══ */
 #pg-login{max-width:440px;margin:0 auto;padding:30px 16px;}
-.login-logo{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.login-logo{display:flex;align-items:center;gap:12px;margin-bottom:28px;}
 .login-logo-icon{width:48px;height:48px;border-radius:12px;background:var(--brand);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;}
 .login-logo-text{font-size:22px;font-weight:700;}
 .login-logo-text span{color:#58A6FF;}
 .login-logo-sub{font-size:12px;color:var(--t2);}
+.login-card{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--rl);padding:20px;}
+.login-card-title{font-size:14px;font-weight:700;margin-bottom:4px;}
+.login-card-sub{font-size:12px;color:var(--t2);margin-bottom:18px;}
 
 /* ══ GPS STATUS BAR ══ */
 .gps-bar{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:10px 13px;margin-bottom:12px;display:flex;align-items:center;gap:10px;}
@@ -191,6 +187,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
 .log-item{font-size:11px;color:var(--t2);padding:2px 0;border-bottom:1px solid var(--bg3);font-family:'Courier New',monospace;}
 .log-item.ok{color:#3FB950;}.log-item.err{color:#f87171;}
 
+/* ══ TURNO INICIADO BANNER ══ */
+.turno-banner{background:rgba(22,163,74,.12);border:1px solid rgba(22,163,74,.35);border-radius:var(--rl);padding:16px;margin-bottom:12px;text-align:center;}
+.turno-banner-title{font-size:16px;font-weight:700;color:#4ade80;margin-bottom:4px;}
+.turno-banner-sub{font-size:12px;color:var(--t2);}
+
 /* ══ FOOTER FIXED ══ */
 .footer-actions{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--bd);padding:10px 14px;display:flex;gap:8px;z-index:100;}
 
@@ -201,6 +202,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
 .modal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
 .modal-title{font-size:15px;font-weight:700;}
 .modal-x{background:none;border:none;cursor:pointer;color:var(--t2);font-size:22px;line-height:1;padding:4px;}
+
+/* ══ DIVIDER ══ */
+.divider{height:1px;background:var(--bd);margin:4px 0 16px;}
 </style>
 </head>
 <body>
@@ -215,12 +219,32 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
     </div>
   </div>
 
-  <div class="fg2">
-    <div class="fl"><label>Placa <span class="req">*</span></label><input id="l-placa" placeholder="ABC123" oninput="this.value=this.value.toUpperCase()" autocomplete="off"></div>
-    <div class="fl"><label>Conductor <span class="req">*</span></label><input id="l-conductor" placeholder="Tu nombre" autocomplete="name"></div>
-  </div>
-  <div class="fg2">
-    <div class="fl"><label>Ruta / Turno</label><input id="l-ruta" placeholder="Ruta Norte..."></div>
+  <div class="login-card">
+    <div class="login-card-title">Iniciar sesión</div>
+    <div class="login-card-sub">Ingresa con tu correo y contraseña registrados en el sistema.</div>
+
+    <div class="fl">
+      <label>Correo electrónico <span class="req">*</span></label>
+      <input type="email" id="l-email" placeholder="tu@correo.com" autocomplete="username" inputmode="email">
+    </div>
+    <div class="fl">
+      <label>Contraseña <span class="req">*</span></label>
+      <input type="password" id="l-pass" placeholder="••••••••" autocomplete="current-password">
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="login-card-title" style="margin-bottom:4px;">Datos del turno</div>
+    <div class="login-card-sub">Completa para registrar correctamente el checklist.</div>
+
+    <div class="fg2">
+      <div class="fl"><label>Placa <span class="req">*</span></label>
+        <input id="l-placa" placeholder="ABC123" oninput="this.value=this.value.toUpperCase()" autocomplete="off">
+      </div>
+      <div class="fl"><label>Ruta / Turno</label>
+        <input id="l-ruta" placeholder="Ruta Norte...">
+      </div>
+    </div>
     <div class="fl"><label>Tipo vehículo</label>
       <select id="l-tipoveh">
         <option value="liviano">Liviano (2 ejes)</option>
@@ -229,14 +253,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
         <option value="bus">Bus / Buseta</option>
       </select>
     </div>
-  </div>
 
-  <div id="l-err" style="display:none;" class="alert a-err"></div>
-  <button class="btn btn-pri btn-full" onclick="iniciarSesion()" style="margin-top:4px;">Ingresar</button>
-  <p style="font-size:11px;color:var(--t3);text-align:center;margin-top:14px;line-height:1.7;">
-    Completa el checklist preoperacional antes de iniciar el recorrido.<br>
-    Mantén la app abierta durante la conducción para el rastreo GPS.
-  </p>
+    <div id="l-err" style="display:none;" class="alert a-err"></div>
+    <button class="btn btn-pri btn-full" id="l-btn" onclick="iniciarSesion()">Ingresar y comenzar</button>
+    <p style="font-size:11px;color:var(--t3);text-align:center;margin-top:14px;line-height:1.7;">
+      Completa el checklist preoperacional antes de iniciar el recorrido.<br>
+      Mantén la app abierta durante la conducción para el rastreo GPS.
+    </p>
+  </div>
 </div>
 
 <!-- ══ APP ══ -->
@@ -272,9 +296,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
     <div class="sec-card" style="margin-top:12px;">
       <div class="sec-hd" onclick="toggleSec('s-datos')">
         <div class="sec-icon motor">📋</div>
-        <div>
-          <div class="sec-title">Datos generales <span id="st-datos"></span></div>
-        </div>
+        <div><div class="sec-title">Datos generales <span id="st-datos"></span></div></div>
         <span class="sec-chevron" id="ch-datos">▼</span>
       </div>
       <div class="sec-body open" id="s-datos">
@@ -286,13 +308,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
           <div class="fg2">
             <div class="fl"><label>Tipo inspección</label>
               <select id="ch-tipo">
-                <option>Pre-viaje</option>
-                <option>Post-viaje</option>
-                <option>Periódica</option>
-                <option>Aleatoria</option>
+                <option>Pre-viaje</option><option>Post-viaje</option>
+                <option>Periódica</option><option>Aleatoria</option>
               </select>
             </div>
-            <div class="fl"><label>Odómetro (km)</label><input type="number" id="ch-km" placeholder="0" style="font-family:'Courier New',monospace;"></div>
+            <div class="fl"><label>Odómetro (km)</label>
+              <input type="number" id="ch-km" placeholder="0" style="font-family:'Courier New',monospace;">
+            </div>
           </div>
         </div>
       </div>
@@ -302,9 +324,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
     <div class="sec-card">
       <div class="sec-hd" onclick="toggleSec('s-motor')">
         <div class="sec-icon motor">🔧</div>
-        <div>
-          <div class="sec-title">1. Motor <span id="st-motor"></span></div>
-        </div>
+        <div><div class="sec-title">1. Motor <span id="st-motor"></span></div></div>
         <div class="sec-status" id="ss-motor"></div>
         <span class="sec-chevron" id="ch-motor">▶</span>
       </div>
@@ -324,9 +344,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
     <div class="sec-card">
       <div class="sec-hd" onclick="toggleSec('s-frenos')">
         <div class="sec-icon frenos">🛑</div>
-        <div>
-          <div class="sec-title">2. Frenos <span id="st-frenos"></span></div>
-        </div>
+        <div><div class="sec-title">2. Frenos <span id="st-frenos"></span></div></div>
         <div class="sec-status" id="ss-frenos"></div>
         <span class="sec-chevron" id="ch-frenos">▶</span>
       </div>
@@ -346,9 +364,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
     <div class="sec-card">
       <div class="sec-hd" onclick="toggleSec('s-llantas')">
         <div class="sec-icon llantas">🛞</div>
-        <div>
-          <div class="sec-title">3. Llantas <span id="st-llantas"></span></div>
-        </div>
+        <div><div class="sec-title">3. Llantas <span id="st-llantas"></span></div></div>
         <div class="sec-status" id="ss-llantas"></div>
         <span class="sec-chevron" id="ch-llantas">▶</span>
       </div>
@@ -368,9 +384,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
     <div class="sec-card">
       <div class="sec-hd" onclick="toggleSec('s-luces')">
         <div class="sec-icon luces">💡</div>
-        <div>
-          <div class="sec-title">4. Luces <span id="st-luces"></span></div>
-        </div>
+        <div><div class="sec-title">4. Luces <span id="st-luces"></span></div></div>
         <div class="sec-status" id="ss-luces"></div>
         <span class="sec-chevron" id="ch-luces">▶</span>
       </div>
@@ -390,9 +404,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
     <div class="sec-card">
       <div class="sec-hd" onclick="toggleSec('s-fluidos')">
         <div class="sec-icon fluidos">🧴</div>
-        <div>
-          <div class="sec-title">5. Fluidos <span id="st-fluidos"></span></div>
-        </div>
+        <div><div class="sec-title">5. Fluidos <span id="st-fluidos"></span></div></div>
         <div class="sec-status" id="ss-fluidos"></div>
         <span class="sec-chevron" id="ch-fluidos">▶</span>
       </div>
@@ -412,9 +424,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
     <div class="sec-card">
       <div class="sec-hd" onclick="toggleSec('s-carroceria')">
         <div class="sec-icon carroceria">🚗</div>
-        <div>
-          <div class="sec-title">6. Carrocería <span id="st-carroceria"></span></div>
-        </div>
+        <div><div class="sec-title">6. Carrocería <span id="st-carroceria"></span></div></div>
         <div class="sec-status" id="ss-carroceria"></div>
         <span class="sec-chevron" id="ch-carroceria">▶</span>
       </div>
@@ -434,9 +444,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
     <div class="sec-card">
       <div class="sec-hd" onclick="toggleSec('s-electrico')">
         <div class="sec-icon electrico">🔌</div>
-        <div>
-          <div class="sec-title">7. Eléctrico <span id="st-electrico"></span></div>
-        </div>
+        <div><div class="sec-title">7. Eléctrico <span id="st-electrico"></span></div></div>
         <div class="sec-status" id="ss-electrico"></div>
         <span class="sec-chevron" id="ch-electrico">▶</span>
       </div>
@@ -461,8 +469,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
       </div>
       <div class="sec-body" id="s-obs">
         <div style="padding:12px 14px 0;">
-          <div class="fl"><label>Observaciones generales</label><textarea id="ch-obs-txt" placeholder="Notas adicionales, novedades encontradas..."></textarea></div>
-          <div class="fl"><label>Email para notificación (si hay novedad)</label><input type="email" id="ch-email-notif" placeholder="supervisor@empresa.com"></div>
+          <div class="fl"><label>Observaciones generales</label>
+            <textarea id="ch-obs-txt" placeholder="Notas adicionales, novedades encontradas..."></textarea>
+          </div>
+          <div class="fl"><label>Email para notificación (si hay novedad)</label>
+            <input type="email" id="ch-email-notif" placeholder="supervisor@empresa.com">
+          </div>
         </div>
         <div style="padding:0 14px 6px;font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;">Estado general del vehículo</div>
         <div class="est-general">
@@ -476,17 +488,22 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
 
     <div id="al-check" style="margin-top:4px;"></div>
     <div style="height:80px;"></div>
-
   </div>
 
   <!-- ══ TAB RASTREO ══ -->
   <div class="page" id="pg-rastreo-tab">
-
     <div style="margin-top:12px;">
+
+      <!-- Banner turno iniciado (se muestra tras enviar checklist) -->
+      <div class="turno-banner" id="turno-banner" style="display:none;">
+        <div class="turno-banner-title">🚀 ¡Turno iniciado!</div>
+        <div class="turno-banner-sub" id="turno-banner-sub">Checklist enviado correctamente. El rastreo GPS está activo.</div>
+      </div>
+
       <div class="rastreo-card" id="rastreo-card">
         <div class="rastreo-estado-icon" id="r-icono">📡</div>
         <div class="rastreo-estado-title" id="r-titulo">Listo para iniciar</div>
-        <div class="rastreo-estado-sub" id="r-sub">Completa el checklist primero</div>
+        <div class="rastreo-estado-sub" id="r-sub">Envía el checklist primero</div>
       </div>
 
       <div class="gps-bar" id="gps-bar">
@@ -546,76 +563,47 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbyTBx0onyXsVXYgKa7PorHOjrkk6Z3w4PNsWJcS83wn65YNZ8le70JaKC-0GkNp05M5/exec';
 
-// ══════════════════════════════════════════
-//  DEFINICIÓN DEL CHECKLIST
-// ══════════════════════════════════════════
+// ══ CHECKLIST ══
 const SECCIONES = {
   motor: [
-    'Nivel de aceite',
-    'Estado del aceite (color / consistencia)',
+    'Nivel de aceite','Estado del aceite (color / consistencia)',
     'Fugas visibles (aceite, refrigerante, combustible)',
     'Estado de correas (tensión, desgaste, grietas)',
     'Estado de mangueras (fugas, resequedad)',
-    'Nivel y estado del refrigerante',
-    'Ruido anormal del motor',
-    'Estado del filtro de aire',
+    'Nivel y estado del refrigerante','Ruido anormal del motor','Estado del filtro de aire',
   ],
   frenos: [
-    'Nivel de líquido de frenos',
-    'Estado del pedal (duro, suave, recorrido)',
-    'Funcionamiento del freno de mano',
-    'Ruidos al frenar',
-    'Desgaste de pastillas / bandas',
-    'Respuesta al frenar (vibraciones o desvío)',
+    'Nivel de líquido de frenos','Estado del pedal (duro, suave, recorrido)',
+    'Funcionamiento del freno de mano','Ruidos al frenar',
+    'Desgaste de pastillas / bandas','Respuesta al frenar (vibraciones o desvío)',
   ],
   llantas: [
-    'Presión de aire',
-    'Profundidad del labrado',
-    'Desgaste irregular',
+    'Presión de aire','Profundidad del labrado','Desgaste irregular',
     'Estado general (cortes, deformaciones, protuberancias)',
-    'Estado de los rines (golpes, fisuras)',
-    'Ajuste de pernos / tuercas',
+    'Estado de los rines (golpes, fisuras)','Ajuste de pernos / tuercas',
     'Llanta de repuesto (presión y estado)',
   ],
   luces: [
-    'Luces bajas',
-    'Luces altas',
-    'Direccionales',
-    'Luces de freno',
-    'Luces reversa',
-    'Luces exploradoras (si aplica)',
-    'Estado de faros (limpieza, fisuras)',
+    'Luces bajas','Luces altas','Direccionales','Luces de freno',
+    'Luces reversa','Luces exploradoras (si aplica)','Estado de faros (limpieza, fisuras)',
   ],
   fluidos: [
-    'Aceite de motor',
-    'Refrigerante',
-    'Líquido de frenos',
-    'Líquido de dirección (si aplica)',
-    'Líquido limpiaparabrisas',
-    'Nivel de combustible',
+    'Aceite de motor','Refrigerante','Líquido de frenos',
+    'Líquido de dirección (si aplica)','Líquido limpiaparabrisas','Nivel de combustible',
   ],
   carroceria: [
-    'Estado general (golpes, rayones)',
-    'Puertas (apertura / cierre correcto)',
-    'Vidrios (fisuras, limpieza)',
-    'Espejos (estado y ajuste)',
-    'Parachoques (fijación y estado)',
-    'Placa visible y en buen estado',
+    'Estado general (golpes, rayones)','Puertas (apertura / cierre correcto)',
+    'Vidrios (fisuras, limpieza)','Espejos (estado y ajuste)',
+    'Parachoques (fijación y estado)','Placa visible y en buen estado',
   ],
   electrico: [
-    'Estado de la batería (terminales limpias, ajuste)',
-    'Nivel de carga de la batería',
-    'Funcionamiento del tablero (testigos)',
-    'Bocina',
-    'Limpiaparabrisas',
-    'Aire acondicionado (si aplica)',
-    'Sistema de arranque',
+    'Estado de la batería (terminales limpias, ajuste)','Nivel de carga de la batería',
+    'Funcionamiento del tablero (testigos)','Bocina','Limpiaparabrisas',
+    'Aire acondicionado (si aplica)','Sistema de arranque',
   ],
 };
 
-// ══════════════════════════════════════════
-//  ESTADO
-// ══════════════════════════════════════════
+// ══ ESTADO ══
 let SESSION = null;
 let _respuestas = {};
 let _fotos = {};
@@ -627,66 +615,135 @@ let _ultimaPos = null;
 let _envios = 0;
 let _erroresGPS = 0;
 let _rastreando = false;
-let _fotoSec = null;
-let _fotoIdx = null;
+let _checklistEnviado = false;
 
-// ══════════════════════════════════════════
-//  INIT
-// ══════════════════════════════════════════
+// ══ INIT ══
 window.addEventListener('load', () => {
-  const pl = localStorage.getItem('fc_placa');
-  const cn = localStorage.getItem('fc_conductor');
-  const rt = localStorage.getItem('fc_ruta');
-  if(pl) document.getElementById('l-placa').value = pl;
-  if(cn) document.getElementById('l-conductor').value = cn;
-  if(rt) document.getElementById('l-ruta').value = rt;
+  const email = localStorage.getItem('fc_email');
+  const placa  = localStorage.getItem('fc_placa');
+  const ruta   = localStorage.getItem('fc_ruta');
+  if(email) document.getElementById('l-email').value = email;
+  if(placa) document.getElementById('l-placa').value = placa;
+  if(ruta)  document.getElementById('l-ruta').value  = ruta;
   mantenerPantallaActiva();
+  document.getElementById('l-pass').addEventListener('keydown', e => { if(e.key==='Enter') iniciarSesion(); });
 });
 
 function mantenerPantallaActiva(){
   try { if('wakeLock' in navigator) navigator.wakeLock.request('screen'); } catch(e){}
 }
 
-// ══════════════════════════════════════════
-//  LOGIN
-// ══════════════════════════════════════════
-function iniciarSesion(){
-  const placa = document.getElementById('l-placa').value.trim().toUpperCase();
-  const conductor = document.getElementById('l-conductor').value.trim();
-  if(!placa || !conductor){
-    const el = document.getElementById('l-err');
-    el.textContent = 'Ingresa la placa y tu nombre.';
-    el.style.display = 'block';
-    return;
-  }
-  SESSION = {
-    placa,
-    conductor,
-    ruta: document.getElementById('l-ruta').value.trim(),
-    tipo_veh: document.getElementById('l-tipoveh').value,
-  };
-  localStorage.setItem('fc_placa', placa);
-  localStorage.setItem('fc_conductor', conductor);
-  localStorage.setItem('fc_ruta', SESSION.ruta);
+// ══ LOGIN CON EMAIL + CLAVE ══
+async function iniciarSesion(){
+  const email    = document.getElementById('l-email').value.trim().toLowerCase();
+  const clave    = document.getElementById('l-pass').value.trim();
+  const placa    = document.getElementById('l-placa').value.trim().toUpperCase();
+  const ruta     = document.getElementById('l-ruta').value.trim();
+  const tipoVeh  = document.getElementById('l-tipoveh').value;
+  const errEl    = document.getElementById('l-err');
+  const btn      = document.getElementById('l-btn');
 
+  errEl.style.display = 'none';
+
+  if(!email || !clave){
+    errEl.textContent = 'Ingresa tu correo y contraseña.';
+    errEl.style.display = 'block'; return;
+  }
+  if(!placa){
+    errEl.textContent = 'Ingresa la placa del vehículo.';
+    errEl.style.display = 'block'; return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span>Verificando...';
+
+  // Verificar credenciales contra el backend (mismo endpoint que el panel admin)
+  try {
+    const params = new URLSearchParams({
+      accion: 'listar', modulo: 'conductores',
+      email, clave
+    });
+    const resp = await fetch(API + '?' + params);
+    const data = await resp.json();
+
+    if(!data.ok){
+      const msg = data.error || 'Error de autenticación';
+      const mensajes = {
+        'Clave incorrecta':      'Contraseña incorrecta.',
+        'Usuario no encontrado': 'Correo no registrado en el sistema.',
+        'Usuario inactivo':      'Tu cuenta está inactiva. Contacta al administrador.',
+        'Sin permiso':           'Tu rol no tiene acceso a esta función.',
+        'Credenciales requeridas': 'Ingresa correo y contraseña.',
+      };
+      errEl.textContent = mensajes[msg] || msg;
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Ingresar y comenzar';
+      return;
+    }
+
+    // Buscar el conductor en la lista retornada
+    const conductor = (data.data || []).find(
+      u => String(u.Email || '').toLowerCase() === email
+    );
+
+    if(!conductor){
+      errEl.textContent = 'Usuario no encontrado con ese correo.';
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Ingresar y comenzar';
+      return;
+    }
+    if(conductor.Estado !== 'Activo'){
+      errEl.textContent = 'Tu cuenta está inactiva. Contacta al administrador.';
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Ingresar y comenzar';
+      return;
+    }
+
+    // Autenticado ✅
+    SESSION = {
+      email, clave,
+      nombre: conductor.Nombre || email.split('@')[0],
+      rol:    conductor.Rol || 'conductor',
+      placa, ruta, tipoVeh,
+    };
+
+    localStorage.setItem('fc_email', email);
+    localStorage.setItem('fc_placa', placa);
+    localStorage.setItem('fc_ruta',  ruta);
+
+    btn.disabled = false;
+    btn.textContent = 'Ingresar y comenzar';
+    mostrarApp();
+
+  } catch(e) {
+    errEl.textContent = 'Error de conexión: ' + e.message;
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Ingresar y comenzar';
+  }
+}
+
+function mostrarApp(){
   document.getElementById('pg-login').style.display = 'none';
   document.getElementById('pg-app').style.display = 'block';
-  document.getElementById('h-placa').textContent = placa;
-  document.getElementById('h-conductor').textContent = conductor;
-  document.getElementById('r-placa').textContent = placa;
-  document.getElementById('r-conductor').textContent = conductor;
 
-  const hoy = new Date().toISOString().split('T')[0];
+  document.getElementById('h-placa').textContent     = SESSION.placa;
+  document.getElementById('h-conductor').textContent = SESSION.nombre;
+  document.getElementById('r-placa').textContent     = SESSION.placa;
+  document.getElementById('r-conductor').textContent = SESSION.nombre;
+
+  const hoy  = new Date().toISOString().split('T')[0];
   const hora = new Date().toTimeString().slice(0,5);
   document.getElementById('ch-fecha').value = hoy;
-  document.getElementById('ch-hora').value = hora;
+  document.getElementById('ch-hora').value  = hora;
 
   construirChecklist();
 }
 
-// ══════════════════════════════════════════
-//  CONSTRUIR CHECKLIST
-// ══════════════════════════════════════════
+// ══ CONSTRUIR CHECKLIST ══
 function construirChecklist(){
   Object.entries(SECCIONES).forEach(([sec, items]) => {
     _respuestas[sec] = {};
@@ -697,27 +754,25 @@ function construirChecklist(){
       <div class="item-row" id="row-${sec}-${i}">
         <span class="item-label">${label}</span>
         <div class="item-opts">
-          <button class="opt-btn" onclick="selOpt('${sec}',${i},'Bien')" id="opt-${sec}-${i}-bien">Bien</button>
+          <button class="opt-btn" onclick="selOpt('${sec}',${i},'Bien')"    id="opt-${sec}-${i}-bien">Bien</button>
           <button class="opt-btn" onclick="selOpt('${sec}',${i},'Regular')" id="opt-${sec}-${i}-regular">Reg.</button>
-          <button class="opt-btn" onclick="selOpt('${sec}',${i},'Mal')" id="opt-${sec}-${i}-mal">Mal</button>
-          <button class="opt-btn" onclick="selOpt('${sec}',${i},'N/A')" id="opt-${sec}-${i}-na">N/A</button>
+          <button class="opt-btn" onclick="selOpt('${sec}',${i},'Mal')"     id="opt-${sec}-${i}-mal">Mal</button>
+          <button class="opt-btn" onclick="selOpt('${sec}',${i},'N/A')"     id="opt-${sec}-${i}-na">N/A</button>
         </div>
       </div>`).join('');
   });
   actualizarProgreso();
 }
 
-// ══════════════════════════════════════════
-//  SELECCIÓN DE OPCIÓN
-// ══════════════════════════════════════════
+// ══ SELECCIÓN DE OPCIÓN ══
 function selOpt(sec, idx, val){
   _respuestas[sec][idx] = val;
-  const opts = ['Bien','Regular','Mal','N/A'];
-  const map = {'Bien':'bien','Regular':'regular','Mal':'mal','N/A':'na'};
-  opts.forEach(o => {
-    const btn = document.getElementById('opt-' + sec + '-' + idx + '-' + map[o].replace('/','').toLowerCase());
+  const map = {Bien:'bien',Regular:'regular',Mal:'mal','N/A':'na'};
+  ['Bien','Regular','Mal','N/A'].forEach(o => {
+    const btn = document.getElementById('opt-' + sec + '-' + idx + '-' + map[o]);
     if(!btn) return;
-    btn.className = 'opt-btn' + (o === val ? ' sel-' + map[o].replace('/','').toLowerCase().replace('n/a','na') : '');
+    const cls = map[o];
+    btn.className = 'opt-btn' + (o === val ? ' sel-' + cls : '');
   });
   actualizarSeccion(sec);
   actualizarProgreso();
@@ -725,20 +780,18 @@ function selOpt(sec, idx, val){
 }
 
 function actualizarSeccion(sec){
-  const items = SECCIONES[sec];
   const resp = _respuestas[sec] || {};
-  const total = items.length;
+  const total = SECCIONES[sec].length;
   const respondidos = Object.keys(resp).length;
-  const males = Object.values(resp).filter(v => v === 'Mal').length;
-  const regulares = Object.values(resp).filter(v => v === 'Regular').length;
-  const bien = Object.values(resp).filter(v => v === 'Bien').length;
+  const males    = Object.values(resp).filter(v=>v==='Mal').length;
+  const regulares= Object.values(resp).filter(v=>v==='Regular').length;
 
   const stEl = document.getElementById('st-' + sec);
   if(stEl) stEl.textContent = respondidos + '/' + total;
 
   const ssEl = document.getElementById('ss-' + sec);
   if(ssEl){
-    if(males > 0) ssEl.innerHTML = '<span style="color:#f87171;font-size:12px;font-weight:700;">' + males + ' MAL</span>';
+    if(males > 0)          ssEl.innerHTML = '<span style="color:#f87171;font-size:12px;font-weight:700;">' + males + ' MAL</span>';
     else if(regulares > 0) ssEl.innerHTML = '<span style="color:#fbbf24;font-size:12px;font-weight:700;">' + regulares + ' REG</span>';
     else if(respondidos === total) ssEl.innerHTML = '<span style="color:#4ade80;font-size:12px;font-weight:700;">OK</span>';
     else ssEl.innerHTML = '';
@@ -761,41 +814,34 @@ function actualizarProgreso(){
 
 function autoEstadoGeneral(){
   const allResp = Object.values(_respuestas).flatMap(r => Object.values(r));
-  const males = allResp.filter(v => v === 'Mal').length;
-  const regulares = allResp.filter(v => v === 'Regular').length;
-  if(males > 0) selEstGeneral('Rechazado');
+  const males    = allResp.filter(v=>v==='Mal').length;
+  const regulares= allResp.filter(v=>v==='Regular').length;
+  if(males > 0)          selEstGeneral('Rechazado');
   else if(regulares > 0) selEstGeneral('Aprobado con observaciones');
   else if(allResp.length > 0) selEstGeneral('Aprobado');
 }
 
-// ══════════════════════════════════════════
-//  ESTADO GENERAL
-// ══════════════════════════════════════════
+// ══ ESTADO GENERAL ══
 function selEstGeneral(val){
   _estGeneral = val;
-  document.getElementById('eg-aprobado').className = 'est-btn' + (val === 'Aprobado' ? ' sel-aprobado' : '');
-  document.getElementById('eg-obs').className = 'est-btn' + (val === 'Aprobado con observaciones' ? ' sel-obs' : '');
-  document.getElementById('eg-rechazado').className = 'est-btn' + (val === 'Rechazado' ? ' sel-rechazado' : '');
+  document.getElementById('eg-aprobado').className  = 'est-btn' + (val==='Aprobado' ? ' sel-aprobado' : '');
+  document.getElementById('eg-obs').className       = 'est-btn' + (val==='Aprobado con observaciones' ? ' sel-obs' : '');
+  document.getElementById('eg-rechazado').className = 'est-btn' + (val==='Rechazado' ? ' sel-rechazado' : '');
   const alEl = document.getElementById('alerta-est-general');
   if(val === 'Rechazado'){
-    alEl.innerHTML = '<div class="alert a-err" style="margin-top:8px;">Este vehículo NO debe salir a ruta. Notifica al supervisor de inmediato.</div>';
+    alEl.innerHTML = '<div class="alert a-err" style="margin-top:8px;">Este vehículo NO debe salir a ruta. Notifica al supervisor.</div>';
   } else if(val === 'Aprobado con observaciones'){
-    alEl.innerHTML = '<div class="alert a-warn" style="margin-top:8px;">El vehículo puede operar pero hay ítems en estado Regular. Repórtalos.</div>';
+    alEl.innerHTML = '<div class="alert a-warn" style="margin-top:8px;">El vehículo puede operar pero hay ítems en Regular. Repórtalos.</div>';
   } else {
     alEl.innerHTML = '';
   }
 }
 
-// ══════════════════════════════════════════
-//  FOTOS
-// ══════════════════════════════════════════
-function agregarFoto(sec){
-  document.getElementById('finput-' + sec).click();
-}
+// ══ FOTOS ══
+function agregarFoto(sec){ document.getElementById('finput-' + sec).click(); }
 
 function onFotoSelect(e, sec){
-  const files = Array.from(e.target.files);
-  files.forEach(file => {
+  Array.from(e.target.files).forEach(file => {
     const reader = new FileReader();
     reader.onload = ev => {
       _fotos[sec].push({ data: ev.target.result, name: file.name, type: file.type });
@@ -827,12 +873,10 @@ function eliminarFoto(){
   cerrarModalFoto();
 }
 
-// ══════════════════════════════════════════
-//  TOGGLE SECCIONES
-// ══════════════════════════════════════════
+// ══ TOGGLE SECCIONES ══
 function toggleSec(id){
   const body = document.getElementById(id);
-  const key = id.replace('s-','');
+  const key  = id.replace('s-','');
   const chev = document.getElementById('ch-' + key);
   if(body.classList.contains('open')){
     body.classList.remove('open');
@@ -843,18 +887,16 @@ function toggleSec(id){
   }
 }
 
-// ══════════════════════════════════════════
-//  ENVIAR CHECKLIST
-// ══════════════════════════════════════════
+// ══ ENVIAR CHECKLIST ══
 async function enviarChecklist(){
   if(!_estGeneral){ showAlertCheck('Selecciona el estado general del vehículo.','err'); return; }
 
-  const totalItems = Object.values(SECCIONES).reduce((s,v) => s + v.length, 0);
-  const respondidos = Object.values(_respuestas).reduce((s,r) => s + Object.keys(r).length, 0);
+  const totalItems  = Object.values(SECCIONES).reduce((s,v)=>s+v.length, 0);
+  const respondidos = Object.values(_respuestas).reduce((s,r)=>s+Object.keys(r).length, 0);
   const pct = Math.round(respondidos / totalItems * 100);
 
   if(pct < 50){
-    showAlertCheck('Debes responder al menos el 50% de los ítems (' + respondidos + '/' + totalItems + ' respondidos).','warn');
+    showAlertCheck('Responde al menos el 50% de los ítems (' + respondidos + '/' + totalItems + ').','warn');
     return;
   }
 
@@ -867,56 +909,75 @@ async function enviarChecklist(){
   const payload = {
     accion: 'crear',
     modulo: 'checklist',
-    ID_Check: chId,
-    Placa: SESSION.placa,
-    Conductor: SESSION.conductor,
-    Tipo: document.getElementById('ch-tipo').value,
-    Fecha: document.getElementById('ch-fecha').value,
-    Hora: document.getElementById('ch-hora').value,
-    Motor: resumenSeccion('motor'),
-    Frenos: resumenSeccion('frenos'),
-    Llantas: resumenSeccion('llantas'),
-    Luces: resumenSeccion('luces'),
-    Fluidos: resumenSeccion('fluidos'),
-    Carroceria: resumenSeccion('carroceria'),
-    Estado_General: _estGeneral,
-    Observaciones: document.getElementById('ch-obs-txt').value,
-    Motor_JSON: JSON.stringify(buildJSON('motor')),
-    Frenos_JSON: JSON.stringify(buildJSON('frenos')),
-    Llantas_JSON: JSON.stringify(buildJSON('llantas')),
-    Luces_JSON: JSON.stringify(buildJSON('luces')),
-    Fluidos_JSON: JSON.stringify(buildJSON('fluidos')),
+    // Credenciales del conductor autenticado
+    email: SESSION.email,
+    clave: SESSION.clave,
+    // Datos del checklist
+    ID_Check:        chId,
+    Placa:           SESSION.placa,
+    Conductor:       SESSION.nombre,
+    Tipo:            document.getElementById('ch-tipo').value,
+    Fecha:           document.getElementById('ch-fecha').value,
+    Hora:            document.getElementById('ch-hora').value,
+    Motor:           resumenSeccion('motor'),
+    Frenos:          resumenSeccion('frenos'),
+    Llantas:         resumenSeccion('llantas'),
+    Luces:           resumenSeccion('luces'),
+    Fluidos:         resumenSeccion('fluidos'),
+    Carroceria:      resumenSeccion('carroceria'),
+    Estado_General:  _estGeneral,
+    Observaciones:   document.getElementById('ch-obs-txt').value,
+    Motor_JSON:      JSON.stringify(buildJSON('motor')),
+    Frenos_JSON:     JSON.stringify(buildJSON('frenos')),
+    Llantas_JSON:    JSON.stringify(buildJSON('llantas')),
+    Luces_JSON:      JSON.stringify(buildJSON('luces')),
+    Fluidos_JSON:    JSON.stringify(buildJSON('fluidos')),
     Carroceria_JSON: JSON.stringify(buildJSON('carroceria')),
-    Electrico_JSON: JSON.stringify(buildJSON('electrico')),
-    Odometro: document.getElementById('ch-km').value || 0,
-    Email_Notif: document.getElementById('ch-email-notif').value,
-    Fotos_JSON: JSON.stringify(buildFotosResumen()),
-    Completado_Pct: pct,
-    email: 'sistema@fleetco.com',
-    clave: 'conductor_auto',
+    Electrico_JSON:  JSON.stringify(buildJSON('electrico')),
+    Odometro:        document.getElementById('ch-km').value || 0,
+    Email_Notif:     document.getElementById('ch-email-notif').value,
+    Fotos_JSON:      JSON.stringify(buildFotosResumen()),
+    Completado_Pct:  pct,
   };
 
   try {
-    const r = await fetch(API, { method:'POST', body: JSON.stringify(payload) });
+    const r    = await fetch(API, { method:'POST', body: JSON.stringify(payload) });
     const data = await r.json();
+
     btn.disabled = false;
     btn.textContent = 'Enviar checklist';
 
     if(data.ok){
-      showAlertCheck('Checklist ' + chId + ' enviado correctamente.', 'ok');
+      _checklistEnviado = true;
       guardarHistorialLocal(payload);
-      if(_estGeneral === 'Rechazado'){
-        const emailNotif = document.getElementById('ch-email-notif').value.trim();
-        if(emailNotif) showAlertCheck('El supervisor recibirá una notificación por email.','info');
-      }
+
+      // ✅ Mostrar alerta de éxito y navegar al rastreo
+      showAlertCheck('✅ Checklist ' + chId + ' enviado. ¡Tu turno ha iniciado!', 'ok');
+
       setTimeout(() => {
         irTab('rastreo');
-        showAlertRadical('Checklist enviado. Ahora puedes iniciar el rastreo GPS.','ok');
-      }, 2000);
+        // Mostrar banner de turno iniciado
+        const banner = document.getElementById('turno-banner');
+        const bannerSub = document.getElementById('turno-banner-sub');
+        banner.style.display = 'block';
+        bannerSub.textContent = 'Checklist ' + chId + ' enviado el ' +
+          document.getElementById('ch-fecha').value + ' a las ' +
+          document.getElementById('ch-hora').value + '. Estado: ' + _estGeneral;
+
+        // Iniciar rastreo automáticamente
+        iniciarRastreo();
+      }, 1800);
+
     } else {
-      showAlertCheck('Error al enviar: ' + (data.error || 'Error desconocido'), 'err');
+      const msg = data.error || 'Error desconocido';
+      const mensajes = {
+        'Sin permiso': 'Tu rol no tiene permiso para enviar checklists. Contacta al administrador.',
+        'Usuario inactivo': 'Tu cuenta está inactiva.',
+        'Clave incorrecta': 'Error de sesión. Cierra y vuelve a ingresar.',
+      };
+      showAlertCheck('❌ ' + (mensajes[msg] || msg), 'err');
     }
-  } catch(e){
+  } catch(e) {
     btn.disabled = false;
     btn.textContent = 'Enviar checklist';
     showAlertCheck('Error de red: ' + e.message, 'err');
@@ -924,17 +985,16 @@ async function enviarChecklist(){
 }
 
 function resumenSeccion(sec){
-  const resp = _respuestas[sec] || {};
-  const vals = Object.values(resp);
+  const vals = Object.values(_respuestas[sec] || {});
   if(!vals.length) return 'Sin revisar';
-  if(vals.includes('Mal')) return 'Mal';
+  if(vals.includes('Mal'))     return 'Mal';
   if(vals.includes('Regular')) return 'Regular';
   return 'Bien';
 }
 
 function buildJSON(sec){
   const items = SECCIONES[sec] || [];
-  const resp = _respuestas[sec] || {};
+  const resp  = _respuestas[sec] || {};
   const result = {};
   items.forEach((label, i) => { result[label] = resp[i] || '—'; });
   return result;
@@ -950,16 +1010,10 @@ function buildFotosResumen(){
 
 function showAlertCheck(msg, tipo){
   document.getElementById('al-check').innerHTML = '<div class="alert a-' + tipo + '">' + msg + '</div>';
-  document.getElementById('al-check').scrollIntoView({behavior:'smooth'});
+  document.getElementById('al-check').scrollIntoView({ behavior:'smooth' });
 }
 
-function showAlertRadical(msg, tipo){
-  document.getElementById('al-rastreo').innerHTML = '<div class="alert a-' + tipo + '">' + msg + '</div>';
-}
-
-// ══════════════════════════════════════════
-//  LIMPIAR CHECKLIST
-// ══════════════════════════════════════════
+// ══ LIMPIAR CHECKLIST ══
 function limpiarChecklist(){
   if(!confirm('¿Limpiar todas las respuestas?')) return;
   Object.keys(SECCIONES).forEach(sec => {
@@ -983,9 +1037,7 @@ function limpiarChecklist(){
   actualizarProgreso();
 }
 
-// ══════════════════════════════════════════
-//  RASTREO GPS
-// ══════════════════════════════════════════
+// ══ RASTREO GPS ══
 function iniciarRastreo(){
   if(!navigator.geolocation){
     document.getElementById('al-rastreo').innerHTML = '<div class="alert a-err">Tu dispositivo no soporta GPS.</div>';
@@ -996,7 +1048,7 @@ function iniciarRastreo(){
   document.getElementById('btn-iniciar-rastreo').style.display = 'none';
   document.getElementById('btn-detener-rastreo').style.display = 'block';
 
-  _watchId = navigator.geolocation.watchPosition(onPos, onErrGPS,
+  _watchId  = navigator.geolocation.watchPosition(onPos, onErrGPS,
     { enableHighAccuracy:true, timeout:15000, maximumAge:5000 });
   _interval = setInterval(enviarUbicacion, 15000);
 }
@@ -1009,20 +1061,23 @@ function detenerRastreo(){
   document.getElementById('btn-iniciar-rastreo').style.display = 'block';
   document.getElementById('btn-detener-rastreo').style.display = 'none';
   agregarLogGPS('Rastreo detenido.', '');
+  document.getElementById('gps-dot').className = 'gps-dot off';
+  document.getElementById('h-gps-badge').textContent = 'GPS off';
+  document.getElementById('h-gps-badge').className = 'header-badge badge-gps-off';
 }
 
 function onPos(pos){
   _ultimaPos = pos;
-  const lat = pos.coords.latitude;
-  const lng = pos.coords.longitude;
-  const vel = pos.coords.speed != null ? Math.round(pos.coords.speed * 3.6) : null;
+  const lat  = pos.coords.latitude;
+  const lng  = pos.coords.longitude;
+  const vel  = pos.coords.speed != null ? Math.round(pos.coords.speed * 3.6) : null;
   const prec = Math.round(pos.coords.accuracy);
   document.getElementById('gps-coords').textContent = lat.toFixed(5) + ', ' + lng.toFixed(5);
-  document.getElementById('gps-prec').textContent = 'Precisión: ' + prec + ' m' + (prec > 100 ? ' ⚠ baja' : '');
-  document.getElementById('gps-speed').textContent = vel !== null ? vel + ' km/h' : '— km/h';
-  document.getElementById('gps-dot').className = 'gps-dot on';
+  document.getElementById('gps-prec').textContent   = 'Precisión: ' + prec + ' m' + (prec > 100 ? ' ⚠ baja' : '');
+  document.getElementById('gps-speed').textContent  = vel !== null ? vel + ' km/h' : '— km/h';
+  document.getElementById('gps-dot').className      = 'gps-dot on';
   document.getElementById('h-gps-badge').textContent = 'GPS ON';
-  document.getElementById('h-gps-badge').className = 'header-badge badge-gps-on';
+  document.getElementById('h-gps-badge').className  = 'header-badge badge-gps-on';
   actualizarEstadoRastreo('activo');
 }
 
@@ -1032,11 +1087,11 @@ function onErrGPS(err){
 }
 
 function actualizarEstadoRastreo(tipo){
-  const card = document.getElementById('rastreo-card');
-  const icono = document.getElementById('r-icono');
+  const card   = document.getElementById('rastreo-card');
+  const icono  = document.getElementById('r-icono');
   const titulo = document.getElementById('r-titulo');
-  const sub = document.getElementById('r-sub');
-  card.className = 'rastreo-card' + (tipo === 'activo' ? ' activo' : '');
+  const sub    = document.getElementById('r-sub');
+  card.className = 'rastreo-card' + (tipo==='activo' ? ' activo' : '');
   if(tipo === 'activo'){
     icono.textContent = '📡'; titulo.textContent = '● Transmitiendo';
     titulo.style.color = 'var(--green)'; sub.textContent = 'Ubicación enviándose cada 15 segundos';
@@ -1055,7 +1110,10 @@ function actualizarEstadoRastreo(tipo){
     card.style.borderColor = 'var(--bd)';
   } else {
     icono.textContent = '📡'; titulo.textContent = 'Listo para iniciar';
-    titulo.style.color = 'var(--t)'; sub.textContent = 'Pulsa el botón para comenzar el rastreo';
+    titulo.style.color = 'var(--t)';
+    sub.textContent = _checklistEnviado
+      ? 'Checklist enviado. Pulsa el botón para comenzar el rastreo.'
+      : 'Envía el checklist primero para activar el rastreo.';
     card.style.borderColor = 'var(--bd)';
   }
 }
@@ -1066,15 +1124,16 @@ async function enviarUbicacion(){
   const velocidad = speed != null ? Math.round(speed * 3.6) : 0;
   try {
     const resp = await fetch(API, {
-      method:'POST',
+      method: 'POST',
       body: JSON.stringify({
-        accion:'crear', modulo:'ubicaciones',
-        Placa: SESSION.placa, Conductor: SESSION.conductor,
-        Ruta: SESSION.ruta,
-        Lat: parseFloat(latitude.toFixed(6)),
-        Lng: parseFloat(longitude.toFixed(6)),
+        accion: 'crear', modulo: 'ubicaciones',
+        Placa:     SESSION.placa,
+        Conductor: SESSION.nombre,
+        Ruta:      SESSION.ruta,
+        Lat:       parseFloat(latitude.toFixed(6)),
+        Lng:       parseFloat(longitude.toFixed(6)),
         Velocidad: velocidad,
-        Rumbo: heading ? Math.round(heading) : 0,
+        Rumbo:     heading ? Math.round(heading) : 0,
         Precision: Math.round(accuracy),
         Timestamp: new Date().toISOString(),
       })
@@ -1084,7 +1143,7 @@ async function enviarUbicacion(){
     document.getElementById('r-envios').textContent = _envios;
     const hora = new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
     agregarLogGPS(hora + ' OK ' + latitude.toFixed(4) + ',' + longitude.toFixed(4) + ' ' + velocidad + 'km/h', 'ok');
-  } catch(e){
+  } catch(e) {
     _erroresGPS++;
     document.getElementById('r-errores').textContent = _erroresGPS;
     agregarLogGPS('Error: ' + e.message, 'err');
@@ -1093,29 +1152,27 @@ async function enviarUbicacion(){
 
 function agregarLogGPS(msg, tipo){
   const lista = document.getElementById('log-gps');
-  const item = document.createElement('div');
+  const item  = document.createElement('div');
   item.className = 'log-item ' + (tipo||'');
   item.textContent = msg;
   lista.insertBefore(item, lista.firstChild);
   while(lista.children.length > 25) lista.removeChild(lista.lastChild);
 }
 
-// ══════════════════════════════════════════
-//  HISTORIAL LOCAL
-// ══════════════════════════════════════════
+// ══ HISTORIAL LOCAL ══
 function guardarHistorialLocal(payload){
   try {
     const hist = JSON.parse(localStorage.getItem('fc_historial') || '[]');
     hist.unshift({
-      id: payload.ID_Check,
-      placa: payload.Placa,
+      id:        payload.ID_Check,
+      placa:     payload.Placa,
       conductor: payload.Conductor,
-      fecha: payload.Fecha,
-      hora: payload.Hora,
-      tipo: payload.Tipo,
-      estado: payload.Estado_General,
-      pct: payload.Completado_Pct,
-      obs: payload.Observaciones,
+      fecha:     payload.Fecha,
+      hora:      payload.Hora,
+      tipo:      payload.Tipo,
+      estado:    payload.Estado_General,
+      pct:       payload.Completado_Pct,
+      obs:       payload.Observaciones,
     });
     localStorage.setItem('fc_historial', JSON.stringify(hist.slice(0, 50)));
   } catch(e){}
@@ -1128,17 +1185,18 @@ async function cargarHistorial(){
   let hist = [];
   try {
     const d = await fetch(API + '?' + new URLSearchParams({
-      accion:'buscar', modulo:'checklist',
-      campo:'Conductor', valor: SESSION.conductor,
-      email:'sistema@fleetco.com', clave:'conductor_auto'
+      accion: 'buscar', modulo: 'checklist',
+      campo: 'Conductor', valor: SESSION.nombre,
+      email: SESSION.email, clave: SESSION.clave
     }));
     const data = await d.json();
-    if(data.ok) hist = (data.data || []).filter(r =>
-      String(r.Conductor||'').toLowerCase() === SESSION.conductor.toLowerCase()
-    ).sort((a,b) => (b.Fecha + b.Hora) > (a.Fecha + a.Hora) ? 1 : -1).slice(0,30);
-  } catch(e){
-    const local = JSON.parse(localStorage.getItem('fc_historial')||'[]');
-    hist = local.filter(r => r.conductor === SESSION.conductor);
+    if(data.ok) hist = (data.data || [])
+      .filter(r => String(r.Conductor||'').toLowerCase() === SESSION.nombre.toLowerCase())
+      .sort((a,b) => ((b.Fecha+b.Hora) > (a.Fecha+a.Hora) ? 1 : -1))
+      .slice(0, 30);
+  } catch(e) {
+    const local = JSON.parse(localStorage.getItem('fc_historial') || '[]');
+    hist = local.filter(r => r.placa === SESSION.placa || r.conductor === SESSION.nombre);
   }
 
   if(!hist.length){
@@ -1149,8 +1207,7 @@ async function cargarHistorial(){
   wrap.innerHTML = hist.map(r => {
     const est = r.Estado_General || r.estado || '';
     const pct = r.Completado_Pct || r.pct || 0;
-    const estColor = est === 'Aprobado' ? 'ok' : est === 'Rechazado' ? 'err' : 'warn';
-    const males = contarMal(r);
+    const ec  = est === 'Aprobado' ? 'ok' : est === 'Rechazado' ? 'err' : 'warn';
     return `<div class="hist-card">
       <div class="hist-top">
         <span class="hist-placa">${r.Placa || r.placa || '—'}</span>
@@ -1158,40 +1215,26 @@ async function cargarHistorial(){
         <span class="hist-fecha">${r.Fecha || r.fecha || ''} ${r.Hora || r.hora || ''}</span>
       </div>
       <div class="hist-badges">
-        <span class="hbadge hb-${estColor}">${est || '—'}</span>
+        <span class="hbadge hb-${ec}">${est || '—'}</span>
         <span class="hbadge hb-gray">${pct}% completado</span>
-        ${males > 0 ? '<span class="hbadge hb-err">' + males + ' mal</span>' : ''}
       </div>
       ${(r.Observaciones || r.obs) ? '<div style="font-size:12px;color:var(--t2);margin-top:6px;line-height:1.5;">' + (r.Observaciones || r.obs) + '</div>' : ''}
     </div>`;
   }).join('');
 }
 
-function contarMal(r){
-  let c = 0;
-  ['Motor','Frenos','Llantas','Luces','Fluidos','Carroceria'].forEach(k => {
-    if(String(r[k]||'').toLowerCase() === 'mal') c++;
-  });
-  return c;
-}
-
-// ══════════════════════════════════════════
-//  NAVEGACIÓN TABS
-// ══════════════════════════════════════════
+// ══ NAVEGACIÓN TABS ══
 function irTab(tab){
   _tabActiva = tab;
-  ['checklist','rastreo','historial'].forEach(t => {
-    document.getElementById('tab-' + (t==='rastreo'?'rastreo':'check'==='rastreo'?'rastreo':t==='checklist'?'check':t)).className =
-      'tab-btn' + (t === tab ? ' active' : '');
-  });
-  document.getElementById('tab-check').className = 'tab-btn' + (tab === 'checklist' ? ' active' : '');
-  document.getElementById('tab-rastreo').className = 'tab-btn' + (tab === 'rastreo' ? ' active' : '');
-  document.getElementById('tab-hist').className = 'tab-btn' + (tab === 'historial' ? ' active' : '');
+  document.getElementById('tab-check').className   = 'tab-btn' + (tab==='checklist' ? ' active' : '');
+  document.getElementById('tab-rastreo').className = 'tab-btn' + (tab==='rastreo'   ? ' active' : '');
+  document.getElementById('tab-hist').className    = 'tab-btn' + (tab==='historial'  ? ' active' : '');
 
-  document.getElementById('pg-checklist').className = 'page' + (tab === 'checklist' ? ' active' : '');
-  document.getElementById('pg-rastreo-tab').className = 'page' + (tab === 'rastreo' ? ' active' : '');
-  document.getElementById('pg-historial').className = 'page' + (tab === 'historial' ? ' active' : '');
-  document.getElementById('footer-check').style.display = tab === 'checklist' ? 'flex' : 'none';
+  document.getElementById('pg-checklist').className   = 'page' + (tab==='checklist' ? ' active' : '');
+  document.getElementById('pg-rastreo-tab').className = 'page' + (tab==='rastreo'   ? ' active' : '');
+  document.getElementById('pg-historial').className   = 'page' + (tab==='historial'  ? ' active' : '');
+
+  document.getElementById('footer-check').style.display = tab==='checklist' ? 'flex' : 'none';
 
   if(tab === 'historial') cargarHistorial();
 }
