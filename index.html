@@ -359,6 +359,7 @@ tr:hover td{background:#FAFBFC;}
   .etab{padding:4px 8px;font-size:10.5px;}
 }
 </style>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0SUA8TpcWiH5WkwsMoMv-cGwlmN397AU&callback=initMapRastreo&loading=async" async defer></script>
 </head>
 <body>
 
@@ -404,6 +405,7 @@ tr:hover td{background:#FAFBFC;}
   <button class="sb-item" id="nav-conductores" onclick="goTo('conductores',this)"><span class="sb-icon">👤</span>Conductores<span class="sb-badge" id="sb-con">0</span></button>
 
   <div class="sb-sec">Operaciones</div>
+  <button class="sb-item" id="nav-rastreo" onclick="goTo('rastreo',this)"><span class="sb-icon">📡</span>Rastreo en vivo<span class="sb-badge" id="sb-rastreo" style="background:#16A34A;">●</span></button>
   <button class="sb-item" id="nav-mantenimiento" onclick="goTo('mantenimiento',this)"><span class="sb-icon">🔧</span>Mantenimiento<span class="sb-badge" id="sb-mant">0</span></button>
   <button class="sb-item" id="nav-combustible" onclick="goTo('combustible',this)"><span class="sb-icon">⛽</span>Combustible</button>
   <button class="sb-item" id="nav-neumaticos" onclick="goTo('neumaticos',this)"><span class="sb-icon">🛞</span>Neumáticos</button>
@@ -769,6 +771,38 @@ tr:hover td{background:#FAFBFC;}
         <div class="ffoot"><div id="al-inv" style="flex:1;"></div><button class="btn btn-sm" onclick="tp('finv')">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearINV()">Agregar al inventario</button></div>
       </div>
       <div class="tw"><table><thead><tr><th>Referencia</th><th>Nombre</th><th>Categoría</th><th>Stock</th><th>Mínimo</th><th>Costo unit.</th><th>Proveedor</th><th>Ubicación</th><th>Estado</th></tr></thead><tbody id="tbl-inv"><tr><td colspan="9" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
+    </div>
+  </div>
+
+  <!-- ══ RASTREO EN VIVO ══ -->
+  <div class="page" id="pg-rastreo">
+    <div style="display:flex;flex-direction:column;height:100%;gap:0;">
+      <!-- Topbar del mapa -->
+      <div style="background:var(--bg2);border-bottom:1px solid var(--bd);padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex-shrink:0;">
+        <div style="font-size:13px;font-weight:700;color:var(--t);">📡 Rastreo en tiempo real</div>
+        <div id="rastreo-estado" style="font-size:11px;padding:3px 10px;border-radius:20px;background:var(--bg3);color:var(--t3);">Cargando...</div>
+        <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
+          <span style="font-size:11px;color:var(--t3);">Actualiza cada</span>
+          <select id="rastreo-intervalo" onchange="cambiarIntervaloRastreo()" style="font-size:11px;padding:3px 7px;border:1px solid var(--bd);border-radius:var(--r);background:var(--bg);">
+            <option value="10000">10 seg</option>
+            <option value="20000" selected>20 seg</option>
+            <option value="30000">30 seg</option>
+            <option value="60000">1 min</option>
+          </select>
+          <button class="btn btn-xs btn-grn" onclick="centrarMapa()">⊙ Centrar</button>
+          <button class="btn btn-xs" onclick="abrirEnlaceConductor()">🔗 Link conductor</button>
+        </div>
+      </div>
+      <!-- Panel lateral + mapa -->
+      <div style="display:flex;flex:1;overflow:hidden;">
+        <!-- Lista de vehículos activos -->
+        <div id="rastreo-lista" style="width:240px;min-width:240px;background:var(--bg2);border-right:1px solid var(--bd);overflow-y:auto;padding:8px;">
+          <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;padding:4px 6px 8px;">Vehículos activos</div>
+          <div id="rastreo-vehiculos-lista"><div style="font-size:12px;color:var(--t3);padding:8px 6px;">Sin vehículos activos</div></div>
+        </div>
+        <!-- Mapa -->
+        <div id="mapa-rastreo" style="flex:1;background:var(--bg3);"></div>
+      </div>
     </div>
   </div>
 
@@ -1143,6 +1177,7 @@ const PAGE_META = {
   inventario:   {title:'Inventario de repuestos', sub:'Stock y almacén de piezas', load:loadINV},
   compras:      {title:'Compras', sub:'Órdenes de compra y proveedores', load:loadCP},
   proveedores:  {title:'Proveedores', sub:'Talleres, suministros y servicios', load:loadPROV},
+  rastreo:      {title:'Rastreo en vivo', sub:'Ubicación GPS de la flota en tiempo real', load:loadRastreo},
 };
 
 function goTo(pg, btn){
@@ -2751,6 +2786,278 @@ async function reporteV(placa){
     ${comb.length?`<div style="border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;">${comb.slice(-4).reverse().map(c=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 11px;border-bottom:1px solid var(--bg3);"><span style="font-size:11px;color:var(--t2);">${c.Fecha||'—'} · ${Number(c.Galones||0).toFixed(1)} gal · ${c.Estacion||'—'}</span><span style="font-size:11px;font-family:var(--mono);font-weight:600;">${fmtK(c.Costo_Total||0)}</span></div>`).join('')}</div>`:'<div style="font-size:12px;color:var(--t3);">Sin cargas</div>'}
   `;
 }
+
+
+// ══════════════════════════════════════════════════════════════
+//  MÓDULO RASTREO EN VIVO
+// ══════════════════════════════════════════════════════════════
+let _mapaRastreo = null;
+let _mapaListo = false;
+let _marcadores = {};
+let _infoWindows = {};
+let _rastreoInterval = null;
+let _ubicaciones = [];
+const RASTREO_CONDUCTOR_URL = location.href.replace('index.html','').replace(/\/[^/]*$/, '') + '/conductor.html';
+
+// Callback de Google Maps cuando carga
+function initMapRastreo(){
+  _mapaListo = true;
+  // Si ya estamos en la página de rastreo, inicializar
+  if(document.getElementById('pg-rastreo').classList.contains('active')){
+    _crearMapa();
+  }
+}
+
+function _crearMapa(){
+  if(_mapaRastreo) return; // ya existe
+  const el = document.getElementById('mapa-rastreo');
+  if(!el || !window.google) return;
+  _mapaRastreo = new google.maps.Map(el, {
+    center: { lat: 4.7110, lng: -74.0721 }, // Bogotá por defecto
+    zoom: 11,
+    mapTypeId: 'roadmap',
+    styles: [
+      {featureType:'poi',elementType:'labels',stylers:[{visibility:'off'}]},
+      {featureType:'transit',stylers:[{visibility:'off'}]}
+    ],
+    mapTypeControl: false,
+    streetViewControl: false,
+    fullscreenControl: true,
+  });
+}
+
+async function loadRastreo(){
+  if(!_mapaListo){
+    document.getElementById('rastreo-estado').textContent = 'Cargando mapa...';
+    document.getElementById('rastreo-estado').style.background = 'var(--amber-l)';
+    document.getElementById('rastreo-estado').style.color = 'var(--amber)';
+    // Esperar a que cargue Maps
+    let intentos = 0;
+    const esperar = setInterval(()=>{
+      intentos++;
+      if(_mapaListo){ clearInterval(esperar); _iniciarRastreo(); }
+      if(intentos > 20){ clearInterval(esperar); mostrarErrorMapa(); }
+    }, 500);
+    return;
+  }
+  _iniciarRastreo();
+}
+
+function _iniciarRastreo(){
+  _crearMapa();
+  actualizarUbicaciones();
+  // Limpiar intervalo anterior
+  if(_rastreoInterval) clearInterval(_rastreoInterval);
+  const intervalo = Number(document.getElementById('rastreo-intervalo').value) || 20000;
+  _rastreoInterval = setInterval(actualizarUbicaciones, intervalo);
+}
+
+function mostrarErrorMapa(){
+  document.getElementById('rastreo-estado').textContent = '❌ Error cargando mapa';
+  document.getElementById('rastreo-estado').style.background = 'var(--red-l)';
+  document.getElementById('rastreo-estado').style.color = 'var(--red)';
+}
+
+function cambiarIntervaloRastreo(){
+  if(_rastreoInterval) clearInterval(_rastreoInterval);
+  const intervalo = Number(document.getElementById('rastreo-intervalo').value) || 20000;
+  _rastreoInterval = setInterval(actualizarUbicaciones, intervalo);
+}
+
+async function actualizarUbicaciones(){
+  try {
+    const d = await apig({ accion:'listar', modulo:'ubicaciones' });
+    _ubicaciones = d.data || [];
+    renderUbicacionesMapa();
+    const ahora = new Date().toLocaleTimeString('es-CO');
+    const activos = _ubicaciones.filter(u => estaActivo(u)).length;
+    const estadoEl = document.getElementById('rastreo-estado');
+    if(estadoEl){
+      estadoEl.textContent = activos + ' vehículo(s) activo(s) · ' + ahora;
+      estadoEl.style.background = activos > 0 ? 'var(--green-l)' : 'var(--bg3)';
+      estadoEl.style.color = activos > 0 ? 'var(--green)' : 'var(--t3)';
+    }
+    // Badge en sidebar
+    const sb = document.getElementById('sb-rastreo');
+    if(sb){ sb.textContent = activos > 0 ? activos : '●'; }
+  } catch(e){
+    console.error('Error actualizando ubicaciones:', e);
+  }
+}
+
+function estaActivo(u){
+  // Activo si reportó en los últimos 5 minutos
+  if(!u.Timestamp) return false;
+  const ts = new Date(u.Timestamp).getTime();
+  return (Date.now() - ts) < 5 * 60 * 1000;
+}
+
+function tiempoDesde(ts){
+  if(!ts) return 'Sin datos';
+  const diff = Math.floor((Date.now() - new Date(ts).getTime()) / 1000);
+  if(diff < 60) return 'Hace ' + diff + ' seg';
+  if(diff < 3600) return 'Hace ' + Math.floor(diff/60) + ' min';
+  return 'Hace ' + Math.floor(diff/3600) + ' h';
+}
+
+const COLORES_VEHICULO = ['#0066CC','#16A34A','#D97706','#DC2626','#7C3AED','#0891B2','#EA580C','#65A30D'];
+
+function renderUbicacionesMapa(){
+  if(!_mapaRastreo || !window.google) return;
+
+  const lista = document.getElementById('rastreo-vehiculos-lista');
+
+  // Agrupar por placa — quedarse con la más reciente
+  const porPlaca = {};
+  _ubicaciones.forEach(u => {
+    const p = u.Placa;
+    if(!porPlaca[p] || new Date(u.Timestamp) > new Date(porPlaca[p].Timestamp)){
+      porPlaca[p] = u;
+    }
+  });
+
+  const placas = Object.keys(porPlaca);
+  if(!placas.length){
+    lista.innerHTML = '<div style="font-size:12px;color:var(--t3);padding:8px 6px;">Sin vehículos activos</div>';
+    return;
+  }
+
+  // Limpiar marcadores que ya no están
+  Object.keys(_marcadores).forEach(p => {
+    if(!porPlaca[p]){ _marcadores[p].setMap(null); delete _marcadores[p]; }
+  });
+
+  const bounds = new google.maps.LatLngBounds();
+  let htmlLista = '';
+
+  placas.forEach((placa, i) => {
+    const u = porPlaca[placa];
+    const lat = Number(u.Lat);
+    const lng = Number(u.Lng);
+    if(!lat || !lng) return;
+
+    const activo = estaActivo(u);
+    const color = COLORES_VEHICULO[i % COLORES_VEHICULO.length];
+    const pos = { lat, lng };
+
+    // Crear o actualizar marcador
+    if(!_marcadores[placa]){
+      const icono = {
+        path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+        scale: 5,
+        fillColor: activo ? color : '#9AA0AC',
+        fillOpacity: 1,
+        strokeColor: '#fff',
+        strokeWeight: 1.5,
+        rotation: Number(u.Rumbo) || 0,
+      };
+      _marcadores[placa] = new google.maps.Marker({
+        position: pos, map: _mapaRastreo,
+        icon: icono, title: placa,
+        animation: google.maps.Animation.DROP,
+      });
+      _infoWindows[placa] = new google.maps.InfoWindow();
+      _marcadores[placa].addListener('click', () => mostrarInfoVehiculo(placa, porPlaca[placa]));
+    } else {
+      _marcadores[placa].setPosition(pos);
+      _marcadores[placa].getIcon && _marcadores[placa].setIcon({
+        path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+        scale: 5,
+        fillColor: activo ? color : '#9AA0AC',
+        fillOpacity: 1,
+        strokeColor: '#fff',
+        strokeWeight: 1.5,
+        rotation: Number(u.Rumbo) || 0,
+      });
+    }
+
+    bounds.extend(pos);
+
+    // Card en lista lateral
+    const velocidad = u.Velocidad ? Math.round(Number(u.Velocidad)) + ' km/h' : '— km/h';
+    htmlLista += `
+      <div onclick="enfocarVehiculo('${placa}')"
+        style="padding:8px 10px;border-radius:var(--r);margin-bottom:4px;cursor:pointer;
+               border:1px solid ${activo?color+'40':'var(--bd)'};
+               background:${activo?color+'08':'var(--bg3)'};
+               transition:all .15s;">
+        <div style="display:flex;align-items:center;gap:7px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:${activo?color:'#9AA0AC'};flex-shrink:0;${activo?'box-shadow:0 0 6px '+color+';':''}"></div>
+          <span style="font-weight:700;font-size:12px;font-family:var(--mono);color:${activo?'var(--t)':'var(--t3)'};">${placa}</span>
+          <span style="margin-left:auto;font-size:10px;font-family:var(--mono);color:${activo?color:'var(--t3)'};">${velocidad}</span>
+        </div>
+        <div style="font-size:10px;color:var(--t3);margin-top:3px;padding-left:15px;">${u.Conductor||'Sin conductor'}</div>
+        <div style="font-size:10px;color:var(--t3);padding-left:15px;">${tiempoDesde(u.Timestamp)}</div>
+      </div>`;
+  });
+
+  lista.innerHTML = htmlLista;
+
+  // Ajustar bounds si hay marcadores
+  if(!bounds.isEmpty() && placas.length > 1) _mapaRastreo.fitBounds(bounds);
+  else if(placas.length === 1){
+    const u = porPlaca[placas[0]];
+    _mapaRastreo.setCenter({lat:Number(u.Lat),lng:Number(u.Lng)});
+    _mapaRastreo.setZoom(14);
+  }
+}
+
+function mostrarInfoVehiculo(placa, u){
+  if(!_infoWindows[placa] || !_marcadores[placa]) return;
+  const velocidad = u.Velocidad ? Math.round(Number(u.Velocidad)) + ' km/h' : '—';
+  const activo = estaActivo(u);
+  _infoWindows[placa].setContent(`
+    <div style="font-family:'Plus Jakarta Sans',sans-serif;min-width:160px;padding:4px;">
+      <div style="font-weight:700;font-size:13px;margin-bottom:6px;">🚗 ${placa}</div>
+      <div style="font-size:11px;color:#5C6370;margin-bottom:2px;">👤 ${u.Conductor||'Sin asignar'}</div>
+      <div style="font-size:11px;color:#5C6370;margin-bottom:2px;">⚡ ${velocidad}</div>
+      <div style="font-size:11px;color:#5C6370;margin-bottom:2px;">📍 ${Number(u.Lat).toFixed(5)}, ${Number(u.Lng).toFixed(5)}</div>
+      <div style="font-size:10px;color:${activo?'#16A34A':'#9AA0AC'};margin-top:4px;font-weight:600;">${activo?'● Activo':'○ Sin señal'} · ${tiempoDesde(u.Timestamp)}</div>
+      <a href="https://www.google.com/maps?q=${u.Lat},${u.Lng}" target="_blank"
+        style="display:block;margin-top:6px;font-size:11px;color:#0066CC;text-decoration:none;">
+        Ver en Google Maps ↗
+      </a>
+    </div>`);
+  _infoWindows[placa].open(_mapaRastreo, _marcadores[placa]);
+}
+
+function enfocarVehiculo(placa){
+  const u = _ubicaciones.find(x=>x.Placa===placa);
+  if(!u || !_marcadores[placa]) return;
+  _mapaRastreo.setCenter({lat:Number(u.Lat),lng:Number(u.Lng)});
+  _mapaRastreo.setZoom(15);
+  google.maps.event.trigger(_marcadores[placa], 'click');
+}
+
+function centrarMapa(){
+  if(!_mapaRastreo) return;
+  const activos = Object.keys(_marcadores);
+  if(!activos.length){ _mapaRastreo.setCenter({lat:4.7110,lng:-74.0721}); return; }
+  const bounds = new google.maps.LatLngBounds();
+  activos.forEach(p=>bounds.extend(_marcadores[p].getPosition()));
+  _mapaRastreo.fitBounds(bounds);
+}
+
+function abrirEnlaceConductor(){
+  const url = location.href.replace(/\/[^/]*$/, '') + '/conductor.html';
+  openModal('🔗 Enlace para conductores',`
+    <p style="font-size:12px;color:var(--t2);margin-bottom:12px;">
+      Comparte este enlace con los conductores. Lo abren en Chrome en su celular y listo — no necesitan instalar nada.
+    </p>
+    <div style="background:var(--bg3);border-radius:var(--r);padding:10px 12px;font-family:var(--mono);font-size:11px;word-break:break-all;color:var(--brand);border:1px solid var(--bd);">
+      ${url}
+    </div>
+    <button onclick="navigator.clipboard.writeText('${url}');this.textContent='✅ Copiado!';setTimeout(()=>this.textContent='📋 Copiar enlace',2000);"
+      class="btn btn-pri btn-sm" style="margin-top:10px;">📋 Copiar enlace</button>
+    <p style="font-size:11px;color:var(--t3);margin-top:10px;">
+      El conductor abre el link, ingresa su placa y nombre, y el sistema empieza a enviar su ubicación automáticamente.
+    </p>
+  `,'<button class="btn" onclick="closeModal()">Cerrar</button>');
+}
+
+// Detener rastreo al salir de la página
+const _origGoTo = window.goTo;
+
 </script>
 </body>
 </html>
