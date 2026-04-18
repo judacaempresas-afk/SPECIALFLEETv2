@@ -750,7 +750,7 @@ tr:hover td{background:#FAFBFC;}
         <div class="card-actions">
           <input class="sbox" placeholder="Buscar ref, nombre..." id="sinv" oninput="renderINV()">
           <button class="ftab active" onclick="sfINV('todos',this)">Todos</button>
-          <button class="ftab" onclick="sfINV('bajo',this)">Stock bajo</button>
+          <button class="ftab etab-abierta" id="btn-stock-bajo" onclick="sfINV('bajo',this)">⚠️ Stock bajo <span id="cnt-stock-bajo" style="background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px;margin-left:3px;">0</span></button>
           <button class="btn btn-pri btn-sm perm-write" onclick="tp('finv')">+ Agregar ítem</button>
         </div>
       </div>
@@ -1072,6 +1072,8 @@ function badge(e){
     'Mantenimiento':'bw','Vacaciones':'bt','Incapacidad':'bp',
     'Abierta':'bw','En proceso':'bb','En curso':'bb',
     'En espera repuesto':'bp',
+  'Devuelto':'br',
+  'Rechazado':'br',
     'Cerrada':'bg','Completado':'bg','Anulada':'br','Cancelado':'br',
     'Aprobado':'bg','Rechazado':'br','Aprobado con observaciones':'bw',
     'Pendiente':'bw','Recibido':'bg','Aprobada':'bb',
@@ -1505,7 +1507,10 @@ function renderM(){
           <option ${r.Estado==='Cerrada'?'selected':''}>Cerrada</option>
         </select>`
       :badge(r.Estado||'')}</td>
-    <td><button class="btn btn-xs" onclick="detalleM(${DB.m.indexOf(r)})">🔍</button></td>`).join('');
+    <td style="white-space:nowrap;">
+      <button class="btn btn-xs" onclick="detalleM(${DB.m.indexOf(r)})" title="Ver detalle">🔍</button>
+      ${r.Estado!=='Cerrada'&&r.Estado!=='Anulada'?`<button class="btn btn-xs" style="margin-left:3px;" onclick="editarOT(${DB.m.indexOf(r)})" title="Editar OT">✏</button>`:''}
+    </td>`).join('');
 }
 function sfM(f,b){
   F.m=f;
@@ -1565,6 +1570,165 @@ function detalleM(idx){
     ${r.Descripcion?`<div><div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;margin-bottom:4px;">Trabajo</div><div style="font-size:12px;line-height:1.6;color:var(--t2);">${r.Descripcion}</div></div>`:''}
     ${(()=>{try{const reps=r.Repuestos_Usados?JSON.parse(r.Repuestos_Usados):[];if(!reps.length)return '';return `<div style="margin-top:12px;"><div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;margin-bottom:6px;">Repuestos usados</div>${reps.map(x=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid var(--bg3);"><span>${x.nombre||x.ref}</span><span style="font-family:var(--mono);color:var(--t2);">x${x.qty} · $${Math.round(x.costo*x.qty).toLocaleString('es-CO')}</span></div>`).join('')}</div>`;}catch(e){return '';}})()} 
   `);
+}
+
+
+// ══════════════════════════════════════════════
+//  EDITAR OT (Abierta / En proceso / En espera)
+// ══════════════════════════════════════════════
+let _editOTId = '';
+let _editRepuestos = [];
+
+function editarOT(idx){
+  const r = DB.m[idx];
+  if(!r) return;
+  _editOTId = r.OT_ID;
+  // Cargar repuestos existentes
+  try { _editRepuestos = r.Repuestos_Usados ? JSON.parse(r.Repuestos_Usados).map(x=>({...x,id:'rp-'+Math.random().toString(36).slice(2)})) : []; }
+  catch(e){ _editRepuestos=[]; }
+
+  openModal('Editar OT: ' + r.OT_ID, `
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;">${badge(r.Tipo||'')} ${badge(r.Estado||'')}</div>
+    <div class="fg2" style="gap:10px;">
+      <div class="fl">
+        <label>Estado</label>
+        <select id="eot-estado">
+          <option ${r.Estado==='Abierta'?'selected':''}>Abierta</option>
+          <option ${r.Estado==='En proceso'?'selected':''}>En proceso</option>
+          <option ${r.Estado==='En espera repuesto'?'selected':''}>En espera repuesto</option>
+        </select>
+      </div>
+      <div class="fl">
+        <label>Costo total (COP)</label>
+        <input id="eot-costo" type="number" value="${r.Costo_Total||0}" style="font-family:var(--mono);font-weight:700;">
+      </div>
+      <div class="fl s2">
+        <label>Observaciones / Novedad</label>
+        <input id="eot-obs" placeholder="Trabajo realizado, novedades..." value="${r.Observaciones||''}">
+      </div>
+    </div>
+
+    <div style="margin-top:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.4px;">Repuestos utilizados</span>
+        <button type="button" class="btn btn-xs btn-pri" onclick="agregarRepOTEdit()">+ Agregar repuesto</button>
+      </div>
+      <div id="eot-reps-lista"></div>
+      <div id="eot-reps-total" style="font-size:12px;font-weight:700;color:var(--t2);text-align:right;margin-top:6px;"></div>
+    </div>
+    <div id="al-eot" style="margin-top:10px;"></div>
+  `,
+  `<button class="btn" onclick="closeModal();loadM()">Cancelar</button>
+   <button class="btn btn-grn" onclick="guardarEdicionOT()">💾 Guardar cambios</button>`
+  );
+  renderRepOTEdit();
+}
+
+function agregarRepOTEdit(){
+  if(!DB.inv.length){ alert('Carga el inventario primero'); return; }
+  _editRepuestos.push({id:'rp-'+Date.now(),ref:'',nombre:'',qty:1,costo:0,busq:''});
+  renderRepOTEdit();
+  setTimeout(()=>{ const ins=document.querySelectorAll('.eot-rep-busq'); if(ins.length) ins[ins.length-1].focus(); },50);
+}
+
+function renderRepOTEdit(){
+  const lista = document.getElementById('eot-reps-lista');
+  const totEl = document.getElementById('eot-reps-total');
+  if(!lista) return;
+  if(!_editRepuestos.length){
+    lista.innerHTML='<div style="font-size:12px;color:var(--t3);padding:4px 0;">Sin repuestos registrados</div>';
+    totEl.textContent=''; return;
+  }
+  lista.innerHTML = _editRepuestos.map((rp,i)=>`
+    <div style="background:var(--bg);border-radius:var(--r);padding:8px 10px;border:1px solid var(--bd);margin-bottom:6px;">
+      <div style="display:grid;grid-template-columns:1fr 80px 110px 24px;gap:6px;align-items:start;">
+        <div class="rep-search-wrap">
+          <input class="rep-search-input eot-rep-busq"
+            placeholder="Buscar repuesto..."
+            value="${rp.ref ? rp.nombre+' ('+rp.ref+')' : rp.busq||''}"
+            oninput="filtrarRepOTEdit(${i},this.value)"
+            onfocus="filtrarRepOTEdit(${i},this.value)"
+            autocomplete="off">
+          <div class="rep-dropdown" id="eot-dd-${i}"></div>
+        </div>
+        <input type="number" min="1" value="${rp.qty}" placeholder="Cant."
+          style="font-size:12px;padding:6px 8px;border:1px solid var(--bd);border-radius:var(--r);font-family:var(--mono);width:100%;"
+          onchange="_editRepuestos[${i}].qty=Number(this.value)||1;renderRepOTEdit()">
+        <span style="font-size:12px;font-family:var(--mono);color:var(--t2);padding:7px 0;display:block;text-align:right;">
+          ${rp.ref?'$'+Math.round(rp.costo*rp.qty).toLocaleString('es-CO'):'—'}
+        </span>
+        <button type="button" style="background:none;border:none;cursor:pointer;color:var(--red);font-size:18px;line-height:1;padding:4px 0;"
+          onclick="_editRepuestos.splice(${i},1);renderRepOTEdit()">×</button>
+      </div>
+      ${rp.ref?`<div style="font-size:10px;color:var(--t3);margin-top:4px;">${rp.ref} · $${Number(rp.costo).toLocaleString('es-CO')} c/u</div>`:''}
+    </div>`).join('');
+  const total = _editRepuestos.reduce((s,r)=>s+(r.costo*r.qty),0);
+  totEl.textContent = total>0 ? 'Total repuestos: $'+Math.round(total).toLocaleString('es-CO') : '';
+}
+
+function filtrarRepOTEdit(idx,q){
+  const dd=document.getElementById('eot-dd-'+idx);
+  if(!dd) return;
+  _editRepuestos[idx].busq=q;
+  const ql=q.trim().toLowerCase();
+  if(ql.length<1){dd.classList.remove('open');return;}
+  const res=DB.inv.filter(x=>String(x.Referencia||'').toLowerCase().includes(ql)||String(x.Nombre||'').toLowerCase().includes(ql)).slice(0,8);
+  if(!res.length){dd.innerHTML='<div class="rep-empty">Sin resultados</div>';dd.classList.add('open');return;}
+  dd.innerHTML=res.map(x=>{
+    const stock=Number(x.Stock||0);
+    const bajo=stock<=(Number(x.Stock_Minimo||0));
+    return`<div class="rep-opt" onclick="selRepOTEdit(${idx},'${x.Referencia}')">
+      <div><div class="rep-opt-name">${x.Nombre}</div><div class="rep-opt-meta">${x.Referencia} · ${fmtK(x.Costo_Unitario||0)}</div></div>
+      <span class="rep-opt-stock ${bajo?'low':'ok'}">Stock: ${stock}</span>
+    </div>`;
+  }).join('');
+  dd.classList.add('open');
+}
+
+function selRepOTEdit(idx,ref){
+  const item=DB.inv.find(x=>x.Referencia===ref);
+  if(!item) return;
+  _editRepuestos[idx].ref=item.Referencia;
+  _editRepuestos[idx].nombre=item.Nombre;
+  _editRepuestos[idx].costo=Number(item.Costo_Unitario)||0;
+  _editRepuestos[idx].busq='';
+  const dd=document.getElementById('eot-dd-'+idx);
+  if(dd) dd.classList.remove('open');
+  renderRepOTEdit();
+}
+
+async function guardarEdicionOT(){
+  const estado = document.getElementById('eot-estado').value;
+  const costo  = document.getElementById('eot-costo').value;
+  const obs    = document.getElementById('eot-obs').value;
+  const repsValidos = _editRepuestos.filter(r=>r.ref);
+  const btn = event.target; btn.disabled=true; btn.textContent='Guardando...';
+
+  // Calcular total si hay repuestos
+  const totalReps = repsValidos.reduce((s,r)=>s+(r.costo*r.qty),0);
+  const costoFinal = costo ? Number(costo) : totalReps;
+
+  const r = await apip({
+    accion:'actualizar', modulo:'mantenimiento',
+    buscarCampo:'OT_ID', buscarValor:_editOTId,
+    datos:{
+      Estado: estado,
+      Costo_Total: costoFinal,
+      Observaciones: obs,
+      Repuestos_Usados: repsValidos.length ? JSON.stringify(repsValidos.map(x=>({ref:x.ref,nombre:x.nombre,qty:x.qty,costo:x.costo}))) : ''
+    }
+  });
+  btn.disabled=false; btn.textContent='💾 Guardar cambios';
+  if(r.ok){
+    closeModal();
+    await loadM();
+    // Refrescar inventario (puede haber cambiado)
+    const di=await apig({accion:'listar',modulo:'inventario'});
+    DB.inv=di.data||[]; updateSB();
+  } else {
+    const al=document.getElementById('al-eot');
+    if(al) al.innerHTML='<div class="alert a-err">❌ Error al guardar</div>';
+  }
 }
 
 async function crearM(){
@@ -1836,19 +2000,36 @@ async function loadINV(){
 function renderINV(){
   const q=(document.getElementById('sinv')||{}).value||'';
   const bajo=F.inv==='bajo';
+  // Actualizar contador stock bajo
+  const totalBajo = DB.inv.filter(r=>Number(r.Stock)<=Number(r.Stock_Minimo)&&Number(r.Stock_Minimo)>0).length;
+  const cntEl = document.getElementById('cnt-stock-bajo');
+  if(cntEl){
+    cntEl.textContent = totalBajo;
+    cntEl.style.display = totalBajo>0 ? 'inline' : 'none';
+  }
   const rows=DB.inv.filter(r=>{
-    const esBajo=Number(r.Stock)<=Number(r.Stock_Minimo);
+    const esBajo=Number(r.Stock)<=Number(r.Stock_Minimo)&&Number(r.Stock_Minimo)>0;
     return(bajo?esBajo:true)&&(!q||String(r.Referencia||'').toLowerCase().includes(q.toLowerCase())||String(r.Nombre||'').toLowerCase().includes(q.toLowerCase()));
   });
   const tb=document.getElementById('tbl-inv');
-  if(!rows.length){tb.innerHTML='<tr><td colspan="9"><div class="empty"><div class="ei">📦</div><p>Sin ítems</p></div></td></tr>';return;}
+  if(!rows.length){tb.innerHTML=`<tr><td colspan="9"><div class="empty"><div class="ei">📦</div><p>${bajo?'Sin ítems con stock bajo 🎉':'Sin ítems en inventario'}</p></div></td></tr>`;return;}
   tb.innerHTML=rows.map(r=>{
-    const esBajo=Number(r.Stock)<=Number(r.Stock_Minimo);
-    return`<tr>
-      <td class="tmono" style="font-weight:700;">${r.Referencia||''}</td>
+    const esBajo=Number(r.Stock)<=Number(r.Stock_Minimo)&&Number(r.Stock_Minimo)>0;
+    const pct = Number(r.Stock_Minimo)>0 ? Math.min(100,Math.round(Number(r.Stock)/Number(r.Stock_Minimo)*100)) : 100;
+    return`<tr style="${esBajo?'background:rgba(220,38,38,.03);':''}">
+      <td class="tmono" style="font-weight:700;color:var(--brand);">${r.Referencia||''}</td>
       <td style="font-weight:500;">${r.Nombre||''}</td>
       <td><span class="badge bgr">${r.Categoria||''}</span></td>
-      <td><span style="font-family:var(--mono);font-weight:700;color:${esBajo?'var(--red)':'var(--t)'};">${r.Stock||0}</span> ${r.Unidad||''}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-family:var(--mono);font-weight:700;font-size:13px;color:${esBajo?'var(--red)':'var(--green)'};">${r.Stock||0}</span>
+          <span style="font-size:10px;color:var(--t3);">${r.Unidad||''}</span>
+          ${esBajo?`<span style="font-size:10px;background:var(--red-l);color:var(--red);padding:1px 5px;border-radius:4px;font-weight:700;">⚠ BAJO</span>`:''}
+        </div>
+        <div style="height:3px;background:var(--bg3);border-radius:2px;margin-top:3px;width:60px;">
+          <div style="height:3px;background:${esBajo?'var(--red)':'var(--green)'};border-radius:2px;width:${pct}%;max-width:100%;"></div>
+        </div>
+      </td>
       <td class="tmono tdim">${r.Stock_Minimo||0}</td>
       <td class="tmono">${fmtK(r.Costo_Unitario||0)}</td>
       <td class="tdim">${r.Proveedor||'—'}</td>
@@ -1943,7 +2124,7 @@ function renderCP(){
   const tb=document.getElementById('tbl-cp');
   if(!rows.length){tb.innerHTML='<tr><td colspan="12"><div class="empty"><div class="ei">🛒</div><p>Sin compras</p></div></td></tr>';return;}
   tb.innerHTML=rows.slice().reverse().map(r=>{
-    const puedeRecibir = r.Estado!=='Recibido' && r.Estado!=='Cancelada';
+    const puedeRecibir = r.Estado!=='Recibido' && r.Estado!=='Cancelada' && r.Estado!=='Devuelto' && r.Estado!=='Rechazado';
     const ref = r.Referencia||'';
     const qty = Number(r.Cantidad)||1;
     const actInv = r.Actualiza_Inventario||'No';
@@ -1960,44 +2141,193 @@ function renderCP(){
     <td class="tmono" style="font-size:11px;color:var(--brand);">${r.OT_Asociada||'—'}</td>
     <td style="text-align:center;">${actInv==='Si'?'<span class="badge bg">Sí</span>':'<span class="badge bgr">No</span>'}</td>
     <td>${badge(r.Estado||'')}</td>
-    <td style="white-space:nowrap;">${puedeRecibir?`<button class="btn btn-xs btn-grn" onclick="recibirCompra('${cpId}','${ref}',${qty},'${actInv}')" title="Marcar recibida y actualizar stock">✓ Recibir</button>`:''}</td>`;
+    <td style="white-space:nowrap;display:flex;gap:3px;padding:6px 8px;">
+      ${puedeRecibir?`<button class="btn btn-xs btn-grn" onclick="recibirCompra('${cpId}','${ref}',${qty},'${actInv}','${r.Proveedor||''}','${r.Descripcion||''}','${r.Factura||''}')" title="Marcar recibida">✓ Recibir</button>`:''}
+      ${puedeRecibir?`<button class="btn btn-xs" style="background:var(--red-l);color:var(--red);border-color:var(--red);" onclick="rechazarCompra('${cpId}','${ref}',${qty},'${r.Proveedor||''}','${r.Descripcion||''}')" title="Rechazar o devolver">✕ Rechazar</button>`:''}
+    </td>`;
   }).join('');
 }
 function sfCP(f,b){F.cp=f;document.querySelectorAll('#pg-compras .ftab').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderCP();}
 
-// ✅ RECIBIR COMPRA: cambia estado a Recibido y actualiza inventario
-async function recibirCompra(cpId, ref, qty, actualizaInv){
-  const confirmar = confirm('¿Confirmar recepción de '+cpId+'?\n' + (actualizaInv==='Si' && ref ? 'Se sumará '+qty+' unidad(es) de '+ref+' al inventario.' : 'No actualiza inventario.'));
-  if(!confirmar) return;
+// ✅ RECIBIR COMPRA: modal de confirmación + email al proveedor
+async function recibirCompra(cpId, ref, qty, actualizaInv, proveedor, descripcion, factura){
+  openModal('Confirmar recepción: '+cpId, `
+    <div style="background:var(--green-l);border:1px solid var(--green);border-radius:var(--r);padding:12px 14px;margin-bottom:14px;">
+      <div style="font-size:12px;font-weight:700;color:var(--green);">✓ Marcando como RECIBIDO</div>
+      <div style="font-size:12px;color:var(--t2);margin-top:4px;">${descripcion||cpId}${factura?' · Factura: '+factura:''}</div>
+      ${actualizaInv==='Si'&&ref?`<div style="font-size:11px;color:var(--green);margin-top:4px;">📦 Se sumará ${qty} unid. de <strong>${ref}</strong> al inventario</div>`:''}
+    </div>
+    <div class="fg2" style="gap:10px;">
+      <div class="fl s2">
+        <label>Notificar recepción al proveedor por correo</label>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+          <input type="checkbox" id="rec-notif-email" style="width:15px;height:15px;cursor:pointer;">
+          <label for="rec-notif-email" style="font-size:12px;color:var(--t2);cursor:pointer;">Enviar confirmación al proveedor</label>
+        </div>
+      </div>
+      <div class="fl s2">
+        <label>Email del proveedor (si aplica)</label>
+        <input id="rec-email-prov" type="email" placeholder="proveedor@empresa.com">
+      </div>
+      <div class="fl s2">
+        <label>Notas de recepción</label>
+        <input id="rec-notas" placeholder="Producto recibido completo, en buen estado...">
+      </div>
+    </div>
+    <div id="al-rec" style="margin-top:8px;"></div>
+  `,
+  `<button class="btn" onclick="closeModal()">Cancelar</button>
+   <button class="btn btn-grn" onclick="confirmarRecepcion('${cpId}','${ref}',${qty},'${actualizaInv}','${proveedor}')">✓ Confirmar recepción</button>`
+  );
+}
+
+async function confirmarRecepcion(cpId, ref, qty, actualizaInv, proveedor){
+  const notifEmail = document.getElementById('rec-notif-email').checked;
+  const emailProv  = document.getElementById('rec-email-prov').value.trim();
+  const notas      = document.getElementById('rec-notas').value.trim();
+  const btn = event.target; btn.disabled=true; btn.textContent='Procesando...';
+  const fecha = new Date().toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric'});
+  const usuario = SESSION.nombre || SESSION.email || 'Sistema';
+
   const r = await apip({
     accion:'actualizar', modulo:'compras',
     buscarCampo:'ID_Compra', buscarValor:cpId,
-    datos:{ Estado:'Recibido', Actualiza_Inventario: actualizaInv }
+    datos:{ Estado:'Recibido', Actualiza_Inventario: actualizaInv, Observaciones_Recepcion: notas }
   });
+
   if(r.ok){
-    // Si debe actualizar inventario y hay referencia, hacerlo explícitamente
+    // Actualizar inventario si aplica
     if(actualizaInv==='Si' && ref){
-      // Crear una "compra fantasma" de actualización o usar endpoint de stock
-      // El backend ya lo hace cuando Estado=Recibido en crear, pero en actualizar no.
-      // Entonces lo hacemos manualmente: crear un movimiento de inventario
       await apip({
         accion:'crear', modulo:'compras',
         ID_Compra: '_inv_'+cpId,
         Referencia: ref,
-        Descripcion: 'Actualización inventario por '+cpId,
-        Cantidad: qty,
-        Costo_Unit: 0, Total: 0,
-        Proveedor: 'Sistema',
+        Descripcion: 'Stock ingresado por '+cpId,
+        Cantidad: qty, Costo_Unit:0, Total:0,
+        Proveedor:'Sistema',
         Fecha: new Date().toISOString().split('T')[0],
-        Estado: 'Recibido',
-        Actualiza_Inventario: 'Si'
+        Estado:'Recibido', Actualiza_Inventario:'Si'
       });
-      const di = await apig({accion:'listar',modulo:'inventario'});
-      DB.inv = di.data||[]; updateSB();
+      const di=await apig({accion:'listar',modulo:'inventario'});
+      DB.inv=di.data||[]; updateSB(); renderINV();
     }
+    // Enviar email al proveedor si se marcó
+    if(notifEmail && emailProv){
+      await apip({
+        accion:'crear', modulo:'email',
+        para: emailProv,
+        asunto: 'Confirmación de recepción - Orden '+cpId,
+        cuerpo: `Estimado proveedor ${proveedor},
+
+Confirmamos la recepción del pedido ${cpId} el ${fecha}.
+Recibido por: ${usuario}.
+${notas?'Notas: '+notas+'
+':''}
+Gracias por su atención.
+
+FleetCO — Gestión de Flota`
+      });
+    }
+    closeModal();
     await loadCP();
   } else {
-    alert('Error al actualizar: ' + (r.error||'Error desconocido'));
+    btn.disabled=false; btn.textContent='✓ Confirmar recepción';
+    const al=document.getElementById('al-rec');
+    if(al) al.innerHTML='<div class="alert a-err">❌ Error al procesar</div>';
+  }
+}
+
+// ✅ RECHAZAR / DEVOLVER COMPRA
+async function rechazarCompra(cpId, ref, qty, proveedor, descripcion){
+  openModal('Rechazar / Devolver: '+cpId, `
+    <div style="background:var(--red-l);border:1px solid var(--red);border-radius:var(--r);padding:12px 14px;margin-bottom:14px;">
+      <div style="font-size:12px;font-weight:700;color:var(--red);">✕ Registrando RECHAZO o DEVOLUCIÓN</div>
+      <div style="font-size:12px;color:var(--t2);margin-top:4px;">${descripcion||cpId}</div>
+    </div>
+    <div class="fg2" style="gap:10px;">
+      <div class="fl">
+        <label>Tipo de novedad</label>
+        <select id="rech-tipo">
+          <option>Producto incorrecto</option>
+          <option>Producto defectuoso</option>
+          <option>Cantidad incorrecta</option>
+          <option>Devolución parcial</option>
+          <option>Devolución total</option>
+          <option>No llegó</option>
+          <option>Otro</option>
+        </select>
+      </div>
+      <div class="fl">
+        <label>Cantidad a devolver</label>
+        <input id="rech-qty" type="number" value="${qty}" min="1" max="${qty}" style="font-family:var(--mono);">
+      </div>
+      <div class="fl s2">
+        <label>Descripción de la novedad <span class="req">*</span></label>
+        <input id="rech-novedad" placeholder="Describa el motivo del rechazo o devolución..." required>
+      </div>
+      <div class="fl s2">
+        <label>Notificar al proveedor por correo</label>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+          <input type="checkbox" id="rech-email-chk" checked style="width:15px;height:15px;cursor:pointer;">
+          <label for="rech-email-chk" style="font-size:12px;color:var(--t2);cursor:pointer;">Enviar notificación al proveedor</label>
+        </div>
+      </div>
+      <div class="fl s2">
+        <label>Email del proveedor</label>
+        <input id="rech-email" type="email" placeholder="proveedor@empresa.com">
+      </div>
+    </div>
+    <div id="al-rech" style="margin-top:8px;"></div>
+  `,
+  `<button class="btn" onclick="closeModal()">Cancelar</button>
+   <button class="btn" style="background:var(--red);color:#fff;border-color:var(--red);" onclick="confirmarRechazo('${cpId}','${ref}','${proveedor}')">✕ Confirmar rechazo</button>`
+  );
+}
+
+async function confirmarRechazo(cpId, ref, proveedor){
+  const novedad = document.getElementById('rech-novedad').value.trim();
+  if(!novedad){ document.getElementById('al-rech').innerHTML='<div class="alert a-err">La descripción de la novedad es obligatoria</div>'; return; }
+  const tipo     = document.getElementById('rech-tipo').value;
+  const qtyDev   = Number(document.getElementById('rech-qty').value)||0;
+  const emailChk = document.getElementById('rech-email-chk').checked;
+  const emailProv= document.getElementById('rech-email').value.trim();
+  const btn = event.target; btn.disabled=true; btn.textContent='Procesando...';
+  const fecha = new Date().toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric'});
+  const usuario = SESSION.nombre || SESSION.email || 'Sistema';
+
+  const r = await apip({
+    accion:'actualizar', modulo:'compras',
+    buscarCampo:'ID_Compra', buscarValor:cpId,
+    datos:{ Estado: tipo.includes('Devoluci')? 'Devuelto':'Rechazado', Actualiza_Inventario:'No', Novedad_Rechazo: tipo+': '+novedad }
+  });
+
+  if(r.ok){
+    // Enviar email al proveedor si se marcó
+    if(emailChk && emailProv){
+      await apip({
+        accion:'crear', modulo:'email',
+        para: emailProv,
+        asunto: 'Notificación de rechazo/devolución - Orden '+cpId,
+        cuerpo: `Estimado proveedor ${proveedor},
+
+Le informamos que el pedido ${cpId} ha sido RECHAZADO / DEVUELTO el ${fecha}.
+
+Motivo: ${tipo}
+Descripción: ${novedad}
+Cantidad devuelta: ${qtyDev} unidades
+Gestionado por: ${usuario}
+
+Por favor tome las acciones correspondientes.
+
+FleetCO — Gestión de Flota`
+      });
+    }
+    closeModal();
+    await loadCP();
+  } else {
+    btn.disabled=false; btn.textContent='✕ Confirmar rechazo';
+    const al=document.getElementById('al-rech');
+    if(al) al.innerHTML='<div class="alert a-err">❌ Error al procesar</div>';
   }
 }
 
