@@ -11,341 +11,1066 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --brand:#0066CC;--brand2:#0052A3;
-  --green:#16A34A;--green-l:#DCFCE7;
-  --red:#DC2626;--red-l:#FEE2E2;
-  --amber:#D97706;--amber-l:#FEF3C7;
-  --bg:#0D1117;--bg2:#161B22;--bg3:#21262D;
-  --bd:#30363D;--t:#E6EDF3;--t2:#8B949E;--t3:#484F58;
+  --brand:#0066CC;--brand2:#0052A3;--brand-l:#1a4a7a;
+  --green:#16A34A;--green-l:#0d3d22;
+  --red:#DC2626;--red-l:#4a1515;
+  --amber:#D97706;--amber-l:#4a3008;
+  --bg:#0D1117;--bg2:#161B22;--bg3:#21262D;--bg4:#2d333b;
+  --bd:#30363D;--bd2:#444c56;
+  --t:#E6EDF3;--t2:#8B949E;--t3:#484F58;
   --font:'Segoe UI',system-ui,sans-serif;
-  --r:10px;
+  --r:10px;--rl:14px;
 }
-body{
-  font-family:var(--font);background:var(--bg);color:var(--t);
-  min-height:100vh;display:flex;flex-direction:column;align-items:center;
-  padding:0;font-size:14px;
-}
+body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100vh;font-size:14px;padding-bottom:80px;}
 
-/* ══ PANTALLA LOGIN ══ */
-#pantalla-login{
-  width:100%;max-width:420px;padding:32px 20px;
-  display:flex;flex-direction:column;gap:20px;
-}
-.logo{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
-.logo-icon{width:48px;height:48px;border-radius:12px;background:var(--brand);
-  display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;}
-.logo-text{font-size:22px;font-weight:700;color:var(--t);}
-.logo-text span{color:#58A6FF;}
-.logo-sub{font-size:12px;color:var(--t2);}
-.field{display:flex;flex-direction:column;gap:6px;}
-.field label{font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;}
-.field input, .field select{
-  padding:13px 14px;font-size:15px;font-family:var(--font);
+/* ══ HEADER ══ */
+.header{background:var(--bg2);border-bottom:1px solid var(--bd);padding:12px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100;}
+.header-logo{width:36px;height:36px;border-radius:8px;background:var(--brand);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0;}
+.header-title{font-size:15px;font-weight:700;}
+.header-sub{font-size:11px;color:var(--t2);}
+.header-badge{margin-left:auto;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+.badge-gps-on{background:rgba(22,163,74,.2);color:#4ade80;border:1px solid rgba(22,163,74,.3);}
+.badge-gps-off{background:rgba(107,114,128,.15);color:var(--t2);border:1px solid var(--bd);}
+
+/* ══ TAB NAV ══ */
+.tab-nav{display:flex;background:var(--bg2);border-bottom:1px solid var(--bd);position:sticky;top:61px;z-index:99;}
+.tab-btn{flex:1;padding:11px 4px;font-size:12px;font-weight:600;color:var(--t2);background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;font-family:var(--font);}
+.tab-btn.active{color:var(--brand);border-bottom-color:var(--brand);}
+.tab-btn:hover:not(.active){color:var(--t);}
+
+/* ══ PAGES ══ */
+.page{display:none;padding:14px 14px 0;}
+.page.active{display:block;}
+
+/* ══ SECTION CARD ══ */
+.sec-card{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--rl);margin-bottom:12px;overflow:hidden;}
+.sec-hd{padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;-webkit-user-select:none;}
+.sec-hd:hover{background:var(--bg3);}
+.sec-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.sec-icon.motor{background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.25);}
+.sec-icon.frenos{background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.25);}
+.sec-icon.llantas{background:rgba(107,114,128,.15);border:1px solid rgba(107,114,128,.25);}
+.sec-icon.luces{background:rgba(234,179,8,.15);border:1px solid rgba(234,179,8,.25);}
+.sec-icon.fluidos{background:rgba(14,165,233,.15);border:1px solid rgba(14,165,233,.25);}
+.sec-icon.carroceria{background:rgba(168,85,247,.15);border:1px solid rgba(168,85,247,.25);}
+.sec-icon.electrico{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.25);}
+.sec-title{font-size:13px;font-weight:700;}
+.sec-title span{font-size:11px;font-weight:400;color:var(--t2);margin-left:6px;}
+.sec-chevron{margin-left:auto;color:var(--t3);font-size:18px;transition:transform .2s;}
+.sec-body{display:none;border-top:1px solid var(--bd);}
+.sec-body.open{display:block;}
+.sec-status{margin-left:auto;display:flex;align-items:center;gap:6px;}
+
+/* ══ ITEM CHECK ══ */
+.item-row{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid rgba(48,54,61,.5);}
+.item-row:last-of-type{border-bottom:none;}
+.item-label{flex:1;font-size:13px;color:var(--t);}
+.item-opts{display:flex;gap:4px;flex-shrink:0;}
+.opt-btn{padding:4px 9px;font-size:11px;font-weight:600;border-radius:6px;border:1px solid var(--bd);background:transparent;color:var(--t2);cursor:pointer;transition:all .12s;font-family:var(--font);}
+.opt-btn:hover{border-color:var(--bd2);color:var(--t);}
+.opt-btn.sel-bien{background:rgba(22,163,74,.2);border-color:rgba(22,163,74,.5);color:#4ade80;}
+.opt-btn.sel-regular{background:rgba(217,119,6,.2);border-color:rgba(217,119,6,.5);color:#fbbf24;}
+.opt-btn.sel-mal{background:rgba(220,38,38,.2);border-color:rgba(220,38,38,.5);color:#f87171;}
+.opt-btn.sel-na{background:rgba(107,114,128,.2);border-color:rgba(107,114,128,.5);color:var(--t2);}
+
+/* ══ FOTO SECTION ══ */
+.foto-area{padding:10px 14px;border-top:1px solid rgba(48,54,61,.5);}
+.foto-label{font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;}
+.foto-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.foto-thumb{width:56px;height:56px;border-radius:8px;object-fit:cover;border:1px solid var(--bd);}
+.foto-add{width:56px;height:56px;border-radius:8px;border:1px dashed var(--bd2);background:var(--bg3);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:20px;color:var(--t3);transition:all .15s;}
+.foto-add:hover{border-color:var(--brand);color:var(--brand);}
+.foto-input{display:none;}
+
+/* ══ PROGRESS BAR ══ */
+.progreso-wrap{padding:12px 14px;background:var(--bg3);border-bottom:1px solid var(--bd);}
+.progreso-label{display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:6px;}
+.progreso-bar{height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;}
+.progreso-fill{height:100%;border-radius:3px;background:var(--brand);transition:width .4s;}
+.progreso-fill.completo{background:var(--green);}
+.progreso-fill.advertencia{background:var(--amber);}
+
+/* ══ RESUMEN SECCION ══ */
+.sec-pills{display:flex;gap:4px;flex-wrap:wrap;padding:0 0 10px 14px;}
+.pill{font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;}
+.pill-bien{background:rgba(22,163,74,.15);color:#4ade80;}
+.pill-regular{background:rgba(217,119,6,.15);color:#fbbf24;}
+.pill-mal{background:rgba(220,38,38,.15);color:#f87171;}
+
+/* ══ INPUTS ══ */
+.fl{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;}
+.fl label{font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.4px;}
+.fl label .req{color:var(--red);}
+.fl input,.fl select,.fl textarea{
+  padding:10px 12px;font-size:14px;font-family:var(--font);
   border:1px solid var(--bd);border-radius:var(--r);
-  background:var(--bg2);color:var(--t);outline:none;
+  background:var(--bg3);color:var(--t);outline:none;
   transition:border-color .15s;-webkit-appearance:none;
 }
-.field input:focus, .field select:focus{border-color:var(--brand);}
-.btn-main{
-  padding:15px;font-size:15px;font-weight:700;font-family:var(--font);
-  border-radius:var(--r);border:none;background:var(--brand);color:#fff;
-  cursor:pointer;transition:background .15s;width:100%;margin-top:4px;
-}
-.btn-main:hover{background:var(--brand2);}
-.btn-main:disabled{opacity:.5;cursor:not-allowed;}
-.err-box{
-  background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.3);
-  border-radius:var(--r);padding:11px 14px;font-size:13px;color:#F87171;
-  display:none;
-}
+.fl input:focus,.fl select:focus,.fl textarea:focus{border-color:var(--brand);}
+.fl textarea{resize:vertical;min-height:80px;line-height:1.5;}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 
-/* ══ PANTALLA ACTIVA ══ */
-#pantalla-activa{
-  width:100%;max-width:420px;padding:20px;
-  display:none;flex-direction:column;gap:16px;
-}
+/* ══ BUTTONS ══ */
+.btn{padding:11px 18px;font-size:14px;font-weight:700;font-family:var(--font);border-radius:var(--r);cursor:pointer;border:1px solid var(--bd);background:var(--bg3);color:var(--t);transition:all .15s;display:inline-flex;align-items:center;gap:7px;justify-content:center;}
+.btn:hover{background:var(--bg4);}
+.btn:active{transform:scale(.98);}
+.btn-pri{background:var(--brand);color:#fff;border-color:var(--brand);}
+.btn-pri:hover{background:var(--brand2);}
+.btn-grn{background:rgba(22,163,74,.15);color:#4ade80;border-color:rgba(22,163,74,.3);}
+.btn-grn:hover{background:rgba(22,163,74,.25);}
+.btn-red{background:rgba(220,38,38,.15);color:#f87171;border-color:rgba(220,38,38,.3);}
+.btn-full{width:100%;}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
 
-/* Estado principal */
-.estado-card{
-  background:var(--bg2);border:1px solid var(--bd);border-radius:16px;
-  padding:20px;text-align:center;
-}
-.estado-icono{font-size:56px;margin-bottom:8px;line-height:1;}
-.estado-titulo{font-size:18px;font-weight:700;margin-bottom:4px;}
-.estado-sub{font-size:13px;color:var(--t2);}
+/* ══ ALERT ══ */
+.alert{padding:10px 13px;border-radius:var(--r);font-size:13px;border:1px solid;margin-bottom:10px;line-height:1.5;}
+.a-ok{background:rgba(22,163,74,.1);border-color:rgba(22,163,74,.3);color:#4ade80;}
+.a-err{background:rgba(220,38,38,.1);border-color:rgba(220,38,38,.3);color:#f87171;}
+.a-warn{background:rgba(217,119,6,.1);border-color:rgba(217,119,6,.3);color:#fbbf24;}
+.a-info{background:rgba(0,102,204,.1);border-color:rgba(0,102,204,.3);color:#60a5fa;}
 
-/* Pulso animado cuando está activo */
-@keyframes pulso{0%{transform:scale(1);opacity:1;}50%{transform:scale(1.05);opacity:.85;}100%{transform:scale(1);opacity:1;}}
-.activo .estado-card{border-color:var(--green);animation:pulso 2s ease-in-out infinite;}
-.activo .estado-titulo{color:var(--green);}
+/* ══ LOGIN ══ */
+#pg-login{max-width:440px;margin:0 auto;padding:30px 16px;}
+.login-logo{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.login-logo-icon{width:48px;height:48px;border-radius:12px;background:var(--brand);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;}
+.login-logo-text{font-size:22px;font-weight:700;}
+.login-logo-text span{color:#58A6FF;}
+.login-logo-sub{font-size:12px;color:var(--t2);}
 
-/* Info cards */
-.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.info-card{
-  background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);
-  padding:14px;
-}
-.info-label{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;}
-.info-val{font-size:16px;font-weight:700;color:var(--t);}
-.info-val.mono{font-family:'Courier New',monospace;font-size:13px;}
+/* ══ GPS STATUS BAR ══ */
+.gps-bar{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:10px 13px;margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+.gps-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.gps-dot.on{background:var(--green);box-shadow:0 0 8px rgba(22,163,74,.5);}
+.gps-dot.off{background:var(--t3);}
+.gps-info{flex:1;font-size:12px;color:var(--t2);}
+.gps-info strong{color:var(--t);}
+.gps-speed{font-size:16px;font-weight:700;color:var(--t);font-family:'Courier New',monospace;}
 
-/* Botón parar */
-.btn-parar{
-  padding:15px;font-size:15px;font-weight:700;font-family:var(--font);
-  border-radius:var(--r);border:2px solid var(--red);
-  background:rgba(220,38,38,.1);color:var(--red);
-  cursor:pointer;width:100%;
-}
-.btn-parar:hover{background:rgba(220,38,38,.2);}
+/* ══ HISTORIAL ══ */
+.hist-card{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:12px 14px;margin-bottom:10px;}
+.hist-top{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.hist-placa{font-family:'Courier New',monospace;font-size:13px;font-weight:700;color:var(--brand);}
+.hist-fecha{font-size:11px;color:var(--t2);margin-left:auto;}
+.hist-badges{display:flex;gap:5px;flex-wrap:wrap;}
+.hbadge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;}
+.hb-ok{background:rgba(22,163,74,.15);color:#4ade80;}
+.hb-warn{background:rgba(217,119,6,.15);color:#fbbf24;}
+.hb-err{background:rgba(220,38,38,.15);color:#f87171;}
+.hb-gray{background:rgba(107,114,128,.15);color:var(--t2);}
 
-/* Log de envíos */
-.log-box{
-  background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);
-  padding:12px;max-height:140px;overflow-y:auto;
-}
-.log-title{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;}
-.log-item{font-size:11px;color:var(--t2);padding:2px 0;border-bottom:1px solid var(--bg3);font-family:'Courier New',monospace;}
-.log-item.ok{color:#3FB950;}
-.log-item.err{color:#F87171;}
-
-/* Alerta de GPS */
-.gps-alert{
-  background:var(--amber-l);border:1px solid var(--amber);
-  border-radius:var(--r);padding:12px 14px;
-  font-size:13px;color:#92400E;display:none;
-}
-
-/* Spinner */
-.spin{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);
-  border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
+/* ══ LOADER ══ */
+.loader{text-align:center;padding:28px;color:var(--t3);font-size:13px;}
+.spin{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.2);border-top-color:var(--brand);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
 @keyframes spin{to{transform:rotate(360deg);}}
+.empty{text-align:center;padding:36px 16px;color:var(--t3);}
+.empty .ei{font-size:32px;margin-bottom:8px;}
+
+/* ══ ESTADO GENERAL ══ */
+.est-general{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:12px 14px;}
+.est-btn{padding:12px 8px;border-radius:var(--r);border:1px solid var(--bd);background:var(--bg3);color:var(--t2);font-size:12px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s;font-family:var(--font);}
+.est-btn:hover{border-color:var(--bd2);color:var(--t);}
+.est-btn.sel-aprobado{background:rgba(22,163,74,.2);border-color:rgba(22,163,74,.4);color:#4ade80;}
+.est-btn.sel-obs{background:rgba(217,119,6,.2);border-color:rgba(217,119,6,.4);color:#fbbf24;}
+.est-btn.sel-rechazado{background:rgba(220,38,38,.2);border-color:rgba(220,38,38,.4);color:#f87171;}
+
+/* ══ RASTREO ══ */
+.rastreo-card{background:var(--bg2);border-radius:var(--rl);border:1px solid var(--bd);padding:20px;text-align:center;margin-bottom:12px;}
+.rastreo-estado-icon{font-size:52px;line-height:1;margin-bottom:8px;}
+.rastreo-estado-title{font-size:17px;font-weight:700;margin-bottom:4px;}
+.rastreo-estado-sub{font-size:12px;color:var(--t2);}
+@keyframes pulso{0%{transform:scale(1);}50%{transform:scale(1.03);}100%{transform:scale(1);}}
+.rastreo-card.activo{border-color:var(--green);animation:pulso 2s ease-in-out infinite;}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.info-c{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:12px;}
+.info-c .lbl{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px;}
+.info-c .val{font-size:15px;font-weight:700;}
+.info-c .val.mono{font-family:'Courier New',monospace;font-size:12px;}
+.log-box{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:10px 12px;max-height:130px;overflow-y:auto;margin-bottom:12px;}
+.log-title{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;}
+.log-item{font-size:11px;color:var(--t2);padding:2px 0;border-bottom:1px solid var(--bg3);font-family:'Courier New',monospace;}
+.log-item.ok{color:#3FB950;}.log-item.err{color:#f87171;}
+
+/* ══ FOOTER FIXED ══ */
+.footer-actions{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--bd);padding:10px 14px;display:flex;gap:8px;z-index:100;}
+
+/* ══ MODAL ══ */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(1,4,9,.75);z-index:200;align-items:flex-end;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:var(--bg2);border-radius:16px 16px 0 0;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;padding:20px 16px 32px;}
+.modal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.modal-title{font-size:15px;font-weight:700;}
+.modal-x{background:none;border:none;cursor:pointer;color:var(--t2);font-size:22px;line-height:1;padding:4px;}
 </style>
 </head>
 <body>
 
-<!-- ══ PANTALLA LOGIN ══ -->
-<div id="pantalla-login">
-  <div class="logo">
-    <div class="logo-icon">FC</div>
+<!-- ══ LOGIN ══ -->
+<div id="pg-login">
+  <div class="login-logo">
+    <div class="login-logo-icon">FC</div>
     <div>
-      <div class="logo-text">Fleet<span>CO</span></div>
-      <div class="logo-sub">App del conductor</div>
+      <div class="login-logo-text">Fleet<span>CO</span></div>
+      <div class="login-logo-sub">App del conductor</div>
     </div>
   </div>
 
-  <div class="field">
-    <label>Placa del vehículo</label>
-    <input id="inp-placa" placeholder="ABC-123" maxlength="8"
-      oninput="this.value=this.value.toUpperCase()" autocomplete="off" spellcheck="false">
+  <div class="fg2">
+    <div class="fl"><label>Placa <span class="req">*</span></label><input id="l-placa" placeholder="ABC123" oninput="this.value=this.value.toUpperCase()" autocomplete="off"></div>
+    <div class="fl"><label>Conductor <span class="req">*</span></label><input id="l-conductor" placeholder="Tu nombre" autocomplete="name"></div>
+  </div>
+  <div class="fg2">
+    <div class="fl"><label>Ruta / Turno</label><input id="l-ruta" placeholder="Ruta Norte..."></div>
+    <div class="fl"><label>Tipo vehículo</label>
+      <select id="l-tipoveh">
+        <option value="liviano">Liviano (2 ejes)</option>
+        <option value="pesado">Pesado (3+ ejes)</option>
+        <option value="moto">Motocicleta</option>
+        <option value="bus">Bus / Buseta</option>
+      </select>
+    </div>
   </div>
 
-  <div class="field">
-    <label>Tu nombre</label>
-    <input id="inp-conductor" placeholder="Nombre completo" autocomplete="name">
-  </div>
-
-  <div class="field">
-    <label>Plataforma / Ruta (opcional)</label>
-    <input id="inp-ruta" placeholder="Ej: Ruta Bogotá - Medellín">
-  </div>
-
-  <div class="err-box" id="err-login"></div>
-
-  <button class="btn-main" onclick="iniciarRastreo()">
-    📍 Iniciar rastreo
-  </button>
-
-  <p style="font-size:11px;color:var(--t3);text-align:center;line-height:1.6;">
-    Al iniciar, tu ubicación GPS se enviará automáticamente cada 15 segundos.<br>
-    Mantén esta página abierta mientras conduces.
+  <div id="l-err" style="display:none;" class="alert a-err"></div>
+  <button class="btn btn-pri btn-full" onclick="iniciarSesion()" style="margin-top:4px;">Ingresar</button>
+  <p style="font-size:11px;color:var(--t3);text-align:center;margin-top:14px;line-height:1.7;">
+    Completa el checklist preoperacional antes de iniciar el recorrido.<br>
+    Mantén la app abierta durante la conducción para el rastreo GPS.
   </p>
 </div>
 
-<!-- ══ PANTALLA ACTIVA ══ -->
-<div id="pantalla-activa">
+<!-- ══ APP ══ -->
+<div id="pg-app" style="display:none;">
 
-  <div class="estado-card" id="estado-card">
-    <div class="estado-icono" id="estado-icono">📡</div>
-    <div class="estado-titulo" id="estado-titulo">Conectando...</div>
-    <div class="estado-sub" id="estado-sub">Obteniendo señal GPS</div>
+  <div class="header">
+    <div class="header-logo">FC</div>
+    <div>
+      <div class="header-title" id="h-placa">—</div>
+      <div class="header-sub" id="h-conductor">—</div>
+    </div>
+    <div class="header-badge badge-gps-off" id="h-gps-badge">GPS off</div>
   </div>
 
-  <div class="gps-alert" id="gps-alert">
-    ⚠️ GPS con baja precisión. Muévete a un lugar con mejor señal o activa el GPS de alta precisión en tu teléfono.
+  <div class="tab-nav">
+    <button class="tab-btn active" id="tab-check" onclick="irTab('checklist')">Checklist</button>
+    <button class="tab-btn" id="tab-rastreo" onclick="irTab('rastreo')">Rastreo GPS</button>
+    <button class="tab-btn" id="tab-hist" onclick="irTab('historial')">Historial</button>
   </div>
 
-  <div class="info-grid">
-    <div class="info-card">
-      <div class="info-label">Placa</div>
-      <div class="info-val mono" id="inf-placa">—</div>
+  <!-- ══ TAB CHECKLIST ══ -->
+  <div class="page active" id="pg-checklist">
+
+    <div class="progreso-wrap">
+      <div class="progreso-label">
+        <span>Progreso del checklist</span>
+        <span id="prog-pct" style="color:var(--brand);">0%</span>
+      </div>
+      <div class="progreso-bar"><div class="progreso-fill" id="prog-fill" style="width:0%"></div></div>
     </div>
-    <div class="info-card">
-      <div class="info-label">Conductor</div>
-      <div class="info-val" id="inf-conductor" style="font-size:13px;">—</div>
+
+    <!-- Datos generales -->
+    <div class="sec-card" style="margin-top:12px;">
+      <div class="sec-hd" onclick="toggleSec('s-datos')">
+        <div class="sec-icon motor">📋</div>
+        <div>
+          <div class="sec-title">Datos generales <span id="st-datos"></span></div>
+        </div>
+        <span class="sec-chevron" id="ch-datos">▼</span>
+      </div>
+      <div class="sec-body open" id="s-datos">
+        <div style="padding:12px 14px;">
+          <div class="fg2">
+            <div class="fl"><label>Fecha <span class="req">*</span></label><input type="date" id="ch-fecha"></div>
+            <div class="fl"><label>Hora <span class="req">*</span></label><input type="time" id="ch-hora"></div>
+          </div>
+          <div class="fg2">
+            <div class="fl"><label>Tipo inspección</label>
+              <select id="ch-tipo">
+                <option>Pre-viaje</option>
+                <option>Post-viaje</option>
+                <option>Periódica</option>
+                <option>Aleatoria</option>
+              </select>
+            </div>
+            <div class="fl"><label>Odómetro (km)</label><input type="number" id="ch-km" placeholder="0" style="font-family:'Courier New',monospace;"></div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="info-card">
-      <div class="info-label">Velocidad</div>
-      <div class="info-val" id="inf-velocidad">— km/h</div>
+
+    <!-- 1. MOTOR -->
+    <div class="sec-card">
+      <div class="sec-hd" onclick="toggleSec('s-motor')">
+        <div class="sec-icon motor">🔧</div>
+        <div>
+          <div class="sec-title">1. Motor <span id="st-motor"></span></div>
+        </div>
+        <div class="sec-status" id="ss-motor"></div>
+        <span class="sec-chevron" id="ch-motor">▶</span>
+      </div>
+      <div class="sec-body" id="s-motor">
+        <div id="items-motor"></div>
+        <div class="foto-area">
+          <div class="foto-label">Fotos de evidencia (opcional)</div>
+          <div class="foto-row" id="fotos-motor">
+            <div class="foto-add" onclick="agregarFoto('motor')">+<span style="font-size:9px;margin-top:2px;">Foto</span></div>
+          </div>
+          <input class="foto-input" id="finput-motor" type="file" accept="image/*" capture="environment" onchange="onFotoSelect(event,'motor')">
+        </div>
+      </div>
     </div>
-    <div class="info-card">
-      <div class="info-label">Precisión GPS</div>
-      <div class="info-val" id="inf-precision">—</div>
+
+    <!-- 2. FRENOS -->
+    <div class="sec-card">
+      <div class="sec-hd" onclick="toggleSec('s-frenos')">
+        <div class="sec-icon frenos">🛑</div>
+        <div>
+          <div class="sec-title">2. Frenos <span id="st-frenos"></span></div>
+        </div>
+        <div class="sec-status" id="ss-frenos"></div>
+        <span class="sec-chevron" id="ch-frenos">▶</span>
+      </div>
+      <div class="sec-body" id="s-frenos">
+        <div id="items-frenos"></div>
+        <div class="foto-area">
+          <div class="foto-label">Fotos de evidencia (opcional)</div>
+          <div class="foto-row" id="fotos-frenos">
+            <div class="foto-add" onclick="agregarFoto('frenos')">+<span style="font-size:9px;margin-top:2px;">Foto</span></div>
+          </div>
+          <input class="foto-input" id="finput-frenos" type="file" accept="image/*" capture="environment" onchange="onFotoSelect(event,'frenos')">
+        </div>
+      </div>
     </div>
-    <div class="info-card">
-      <div class="info-label">Latitud</div>
-      <div class="info-val mono" id="inf-lat">—</div>
+
+    <!-- 3. LLANTAS -->
+    <div class="sec-card">
+      <div class="sec-hd" onclick="toggleSec('s-llantas')">
+        <div class="sec-icon llantas">🛞</div>
+        <div>
+          <div class="sec-title">3. Llantas <span id="st-llantas"></span></div>
+        </div>
+        <div class="sec-status" id="ss-llantas"></div>
+        <span class="sec-chevron" id="ch-llantas">▶</span>
+      </div>
+      <div class="sec-body" id="s-llantas">
+        <div id="items-llantas"></div>
+        <div class="foto-area">
+          <div class="foto-label">Fotos de evidencia (opcional)</div>
+          <div class="foto-row" id="fotos-llantas">
+            <div class="foto-add" onclick="agregarFoto('llantas')">+<span style="font-size:9px;margin-top:2px;">Foto</span></div>
+          </div>
+          <input class="foto-input" id="finput-llantas" type="file" accept="image/*" capture="environment" onchange="onFotoSelect(event,'llantas')">
+        </div>
+      </div>
     </div>
-    <div class="info-card">
-      <div class="info-label">Longitud</div>
-      <div class="info-val mono" id="inf-lng">—</div>
+
+    <!-- 4. LUCES -->
+    <div class="sec-card">
+      <div class="sec-hd" onclick="toggleSec('s-luces')">
+        <div class="sec-icon luces">💡</div>
+        <div>
+          <div class="sec-title">4. Luces <span id="st-luces"></span></div>
+        </div>
+        <div class="sec-status" id="ss-luces"></div>
+        <span class="sec-chevron" id="ch-luces">▶</span>
+      </div>
+      <div class="sec-body" id="s-luces">
+        <div id="items-luces"></div>
+        <div class="foto-area">
+          <div class="foto-label">Fotos de evidencia (opcional)</div>
+          <div class="foto-row" id="fotos-luces">
+            <div class="foto-add" onclick="agregarFoto('luces')">+<span style="font-size:9px;margin-top:2px;">Foto</span></div>
+          </div>
+          <input class="foto-input" id="finput-luces" type="file" accept="image/*" capture="environment" onchange="onFotoSelect(event,'luces')">
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. FLUIDOS -->
+    <div class="sec-card">
+      <div class="sec-hd" onclick="toggleSec('s-fluidos')">
+        <div class="sec-icon fluidos">🧴</div>
+        <div>
+          <div class="sec-title">5. Fluidos <span id="st-fluidos"></span></div>
+        </div>
+        <div class="sec-status" id="ss-fluidos"></div>
+        <span class="sec-chevron" id="ch-fluidos">▶</span>
+      </div>
+      <div class="sec-body" id="s-fluidos">
+        <div id="items-fluidos"></div>
+        <div class="foto-area">
+          <div class="foto-label">Fotos de evidencia (opcional)</div>
+          <div class="foto-row" id="fotos-fluidos">
+            <div class="foto-add" onclick="agregarFoto('fluidos')">+<span style="font-size:9px;margin-top:2px;">Foto</span></div>
+          </div>
+          <input class="foto-input" id="finput-fluidos" type="file" accept="image/*" capture="environment" onchange="onFotoSelect(event,'fluidos')">
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. CARROCERÍA -->
+    <div class="sec-card">
+      <div class="sec-hd" onclick="toggleSec('s-carroceria')">
+        <div class="sec-icon carroceria">🚗</div>
+        <div>
+          <div class="sec-title">6. Carrocería <span id="st-carroceria"></span></div>
+        </div>
+        <div class="sec-status" id="ss-carroceria"></div>
+        <span class="sec-chevron" id="ch-carroceria">▶</span>
+      </div>
+      <div class="sec-body" id="s-carroceria">
+        <div id="items-carroceria"></div>
+        <div class="foto-area">
+          <div class="foto-label">Fotos de evidencia (opcional)</div>
+          <div class="foto-row" id="fotos-carroceria">
+            <div class="foto-add" onclick="agregarFoto('carroceria')">+<span style="font-size:9px;margin-top:2px;">Foto</span></div>
+          </div>
+          <input class="foto-input" id="finput-carroceria" type="file" accept="image/*" capture="environment" onchange="onFotoSelect(event,'carroceria')">
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. SISTEMA ELÉCTRICO -->
+    <div class="sec-card">
+      <div class="sec-hd" onclick="toggleSec('s-electrico')">
+        <div class="sec-icon electrico">🔌</div>
+        <div>
+          <div class="sec-title">7. Eléctrico <span id="st-electrico"></span></div>
+        </div>
+        <div class="sec-status" id="ss-electrico"></div>
+        <span class="sec-chevron" id="ch-electrico">▶</span>
+      </div>
+      <div class="sec-body" id="s-electrico">
+        <div id="items-electrico"></div>
+        <div class="foto-area">
+          <div class="foto-label">Fotos de evidencia (opcional)</div>
+          <div class="foto-row" id="fotos-electrico">
+            <div class="foto-add" onclick="agregarFoto('electrico')">+<span style="font-size:9px;margin-top:2px;">Foto</span></div>
+          </div>
+          <input class="foto-input" id="finput-electrico" type="file" accept="image/*" capture="environment" onchange="onFotoSelect(event,'electrico')">
+        </div>
+      </div>
+    </div>
+
+    <!-- OBSERVACIONES + ESTADO GENERAL -->
+    <div class="sec-card">
+      <div class="sec-hd" onclick="toggleSec('s-obs')">
+        <div class="sec-icon motor">📝</div>
+        <div><div class="sec-title">Observaciones y estado general</div></div>
+        <span class="sec-chevron" id="ch-obs">▶</span>
+      </div>
+      <div class="sec-body" id="s-obs">
+        <div style="padding:12px 14px 0;">
+          <div class="fl"><label>Observaciones generales</label><textarea id="ch-obs-txt" placeholder="Notas adicionales, novedades encontradas..."></textarea></div>
+          <div class="fl"><label>Email para notificación (si hay novedad)</label><input type="email" id="ch-email-notif" placeholder="supervisor@empresa.com"></div>
+        </div>
+        <div style="padding:0 14px 6px;font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;">Estado general del vehículo</div>
+        <div class="est-general">
+          <button class="est-btn" id="eg-aprobado" onclick="selEstGeneral('Aprobado')">✓ Aprobado</button>
+          <button class="est-btn" id="eg-obs" onclick="selEstGeneral('Aprobado con observaciones')">⚠ Con obs.</button>
+          <button class="est-btn" id="eg-rechazado" onclick="selEstGeneral('Rechazado')">✕ Rechazado</button>
+        </div>
+        <div style="padding:0 14px 14px;" id="alerta-est-general"></div>
+      </div>
+    </div>
+
+    <div id="al-check" style="margin-top:4px;"></div>
+    <div style="height:80px;"></div>
+
+  </div>
+
+  <!-- ══ TAB RASTREO ══ -->
+  <div class="page" id="pg-rastreo-tab">
+
+    <div style="margin-top:12px;">
+      <div class="rastreo-card" id="rastreo-card">
+        <div class="rastreo-estado-icon" id="r-icono">📡</div>
+        <div class="rastreo-estado-title" id="r-titulo">Listo para iniciar</div>
+        <div class="rastreo-estado-sub" id="r-sub">Completa el checklist primero</div>
+      </div>
+
+      <div class="gps-bar" id="gps-bar">
+        <div class="gps-dot off" id="gps-dot"></div>
+        <div class="gps-info"><strong id="gps-coords">Sin señal GPS</strong><br><span id="gps-prec">Precisión: —</span></div>
+        <span class="gps-speed" id="gps-speed">— km/h</span>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-c"><div class="lbl">Placa</div><div class="val mono" id="r-placa">—</div></div>
+        <div class="info-c"><div class="lbl">Conductor</div><div class="val" id="r-conductor" style="font-size:13px;">—</div></div>
+        <div class="info-c"><div class="lbl">Envíos OK</div><div class="val" id="r-envios" style="color:#4ade80;">0</div></div>
+        <div class="info-c"><div class="lbl">Errores</div><div class="val" id="r-errores" style="color:#f87171;">0</div></div>
+      </div>
+
+      <div class="log-box">
+        <div class="log-title">Registro de transmisión</div>
+        <div id="log-gps"></div>
+      </div>
+
+      <div id="btn-rastreo-wrap">
+        <button class="btn btn-grn btn-full" id="btn-iniciar-rastreo" onclick="iniciarRastreo()" style="margin-bottom:8px;">Iniciar rastreo GPS</button>
+        <button class="btn btn-red btn-full" id="btn-detener-rastreo" onclick="detenerRastreo()" style="display:none;">Detener rastreo</button>
+      </div>
+
+      <div id="al-rastreo" style="margin-top:8px;"></div>
     </div>
   </div>
 
-  <div class="log-box">
-    <div class="log-title">📋 Registro de envíos</div>
-    <div id="log-lista"></div>
+  <!-- ══ TAB HISTORIAL ══ -->
+  <div class="page" id="pg-historial">
+    <div style="margin-top:12px;" id="hist-wrap">
+      <div class="loader"><span class="spin"></span>Cargando historial...</div>
+    </div>
   </div>
 
-  <button class="btn-parar" onclick="detenerRastreo()">
-    ⏹ Detener rastreo
-  </button>
+</div>
+
+<!-- FOOTER ACTIONS (solo en tab checklist) -->
+<div class="footer-actions" id="footer-check">
+  <button class="btn btn-full" onclick="limpiarChecklist()" style="flex:.6;">Limpiar</button>
+  <button class="btn btn-pri btn-full" onclick="enviarChecklist()" style="flex:1.4;">Enviar checklist</button>
+</div>
+
+<!-- MODAL FOTO -->
+<div class="modal-overlay" id="modal-foto" onclick="if(event.target===this)cerrarModalFoto()">
+  <div class="modal-box">
+    <div class="modal-hd">
+      <span class="modal-title">Foto de evidencia</span>
+      <button class="modal-x" onclick="cerrarModalFoto()">×</button>
+    </div>
+    <img id="modal-foto-img" style="width:100%;border-radius:var(--r);max-height:60vh;object-fit:contain;background:var(--bg3);" src="">
+    <button class="btn btn-red btn-full" style="margin-top:12px;" onclick="eliminarFoto()">Eliminar foto</button>
+  </div>
 </div>
 
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbyTBx0onyXsVXYgKa7PorHOjrkk6Z3w4PNsWJcS83wn65YNZ8le70JaKC-0GkNp05M5/exec';
-const INTERVALO_MS = 15000; // 15 segundos
 
+// ══════════════════════════════════════════
+//  DEFINICIÓN DEL CHECKLIST
+// ══════════════════════════════════════════
+const SECCIONES = {
+  motor: [
+    'Nivel de aceite',
+    'Estado del aceite (color / consistencia)',
+    'Fugas visibles (aceite, refrigerante, combustible)',
+    'Estado de correas (tensión, desgaste, grietas)',
+    'Estado de mangueras (fugas, resequedad)',
+    'Nivel y estado del refrigerante',
+    'Ruido anormal del motor',
+    'Estado del filtro de aire',
+  ],
+  frenos: [
+    'Nivel de líquido de frenos',
+    'Estado del pedal (duro, suave, recorrido)',
+    'Funcionamiento del freno de mano',
+    'Ruidos al frenar',
+    'Desgaste de pastillas / bandas',
+    'Respuesta al frenar (vibraciones o desvío)',
+  ],
+  llantas: [
+    'Presión de aire',
+    'Profundidad del labrado',
+    'Desgaste irregular',
+    'Estado general (cortes, deformaciones, protuberancias)',
+    'Estado de los rines (golpes, fisuras)',
+    'Ajuste de pernos / tuercas',
+    'Llanta de repuesto (presión y estado)',
+  ],
+  luces: [
+    'Luces bajas',
+    'Luces altas',
+    'Direccionales',
+    'Luces de freno',
+    'Luces reversa',
+    'Luces exploradoras (si aplica)',
+    'Estado de faros (limpieza, fisuras)',
+  ],
+  fluidos: [
+    'Aceite de motor',
+    'Refrigerante',
+    'Líquido de frenos',
+    'Líquido de dirección (si aplica)',
+    'Líquido limpiaparabrisas',
+    'Nivel de combustible',
+  ],
+  carroceria: [
+    'Estado general (golpes, rayones)',
+    'Puertas (apertura / cierre correcto)',
+    'Vidrios (fisuras, limpieza)',
+    'Espejos (estado y ajuste)',
+    'Parachoques (fijación y estado)',
+    'Placa visible y en buen estado',
+  ],
+  electrico: [
+    'Estado de la batería (terminales limpias, ajuste)',
+    'Nivel de carga de la batería',
+    'Funcionamiento del tablero (testigos)',
+    'Bocina',
+    'Limpiaparabrisas',
+    'Aire acondicionado (si aplica)',
+    'Sistema de arranque',
+  ],
+};
+
+// ══════════════════════════════════════════
+//  ESTADO
+// ══════════════════════════════════════════
+let SESSION = null;
+let _respuestas = {};
+let _fotos = {};
+let _estGeneral = '';
+let _tabActiva = 'checklist';
 let _watchId = null;
-let _intervalo = null;
+let _interval = null;
 let _ultimaPos = null;
-let _placa = '';
-let _conductor = '';
-let _ruta = '';
-let _enviando = false;
-let _totalEnvios = 0;
-let _errores = 0;
+let _envios = 0;
+let _erroresGPS = 0;
+let _rastreando = false;
+let _fotoSec = null;
+let _fotoIdx = null;
 
-function mostrarError(msg){
-  const el = document.getElementById('err-login');
-  el.textContent = msg;
-  el.style.display = 'block';
+// ══════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════
+window.addEventListener('load', () => {
+  const pl = localStorage.getItem('fc_placa');
+  const cn = localStorage.getItem('fc_conductor');
+  const rt = localStorage.getItem('fc_ruta');
+  if(pl) document.getElementById('l-placa').value = pl;
+  if(cn) document.getElementById('l-conductor').value = cn;
+  if(rt) document.getElementById('l-ruta').value = rt;
+  mantenerPantallaActiva();
+});
+
+function mantenerPantallaActiva(){
+  try { if('wakeLock' in navigator) navigator.wakeLock.request('screen'); } catch(e){}
 }
 
-function iniciarRastreo(){
-  const placa = document.getElementById('inp-placa').value.trim();
-  const conductor = document.getElementById('inp-conductor').value.trim();
-  if(!placa){ mostrarError('Ingresa la placa del vehículo'); return; }
-  if(!conductor){ mostrarError('Ingresa tu nombre'); return; }
+// ══════════════════════════════════════════
+//  LOGIN
+// ══════════════════════════════════════════
+function iniciarSesion(){
+  const placa = document.getElementById('l-placa').value.trim().toUpperCase();
+  const conductor = document.getElementById('l-conductor').value.trim();
+  if(!placa || !conductor){
+    const el = document.getElementById('l-err');
+    el.textContent = 'Ingresa la placa y tu nombre.';
+    el.style.display = 'block';
+    return;
+  }
+  SESSION = {
+    placa,
+    conductor,
+    ruta: document.getElementById('l-ruta').value.trim(),
+    tipo_veh: document.getElementById('l-tipoveh').value,
+  };
+  localStorage.setItem('fc_placa', placa);
+  localStorage.setItem('fc_conductor', conductor);
+  localStorage.setItem('fc_ruta', SESSION.ruta);
 
-  if(!navigator.geolocation){
-    mostrarError('Tu dispositivo no tiene GPS o el navegador no lo permite.');
+  document.getElementById('pg-login').style.display = 'none';
+  document.getElementById('pg-app').style.display = 'block';
+  document.getElementById('h-placa').textContent = placa;
+  document.getElementById('h-conductor').textContent = conductor;
+  document.getElementById('r-placa').textContent = placa;
+  document.getElementById('r-conductor').textContent = conductor;
+
+  const hoy = new Date().toISOString().split('T')[0];
+  const hora = new Date().toTimeString().slice(0,5);
+  document.getElementById('ch-fecha').value = hoy;
+  document.getElementById('ch-hora').value = hora;
+
+  construirChecklist();
+}
+
+// ══════════════════════════════════════════
+//  CONSTRUIR CHECKLIST
+// ══════════════════════════════════════════
+function construirChecklist(){
+  Object.entries(SECCIONES).forEach(([sec, items]) => {
+    _respuestas[sec] = {};
+    _fotos[sec] = [];
+    const cont = document.getElementById('items-' + sec);
+    if(!cont) return;
+    cont.innerHTML = items.map((label, i) => `
+      <div class="item-row" id="row-${sec}-${i}">
+        <span class="item-label">${label}</span>
+        <div class="item-opts">
+          <button class="opt-btn" onclick="selOpt('${sec}',${i},'Bien')" id="opt-${sec}-${i}-bien">Bien</button>
+          <button class="opt-btn" onclick="selOpt('${sec}',${i},'Regular')" id="opt-${sec}-${i}-regular">Reg.</button>
+          <button class="opt-btn" onclick="selOpt('${sec}',${i},'Mal')" id="opt-${sec}-${i}-mal">Mal</button>
+          <button class="opt-btn" onclick="selOpt('${sec}',${i},'N/A')" id="opt-${sec}-${i}-na">N/A</button>
+        </div>
+      </div>`).join('');
+  });
+  actualizarProgreso();
+}
+
+// ══════════════════════════════════════════
+//  SELECCIÓN DE OPCIÓN
+// ══════════════════════════════════════════
+function selOpt(sec, idx, val){
+  _respuestas[sec][idx] = val;
+  const opts = ['Bien','Regular','Mal','N/A'];
+  const map = {'Bien':'bien','Regular':'regular','Mal':'mal','N/A':'na'};
+  opts.forEach(o => {
+    const btn = document.getElementById('opt-' + sec + '-' + idx + '-' + map[o].replace('/','').toLowerCase());
+    if(!btn) return;
+    btn.className = 'opt-btn' + (o === val ? ' sel-' + map[o].replace('/','').toLowerCase().replace('n/a','na') : '');
+  });
+  actualizarSeccion(sec);
+  actualizarProgreso();
+  autoEstadoGeneral();
+}
+
+function actualizarSeccion(sec){
+  const items = SECCIONES[sec];
+  const resp = _respuestas[sec] || {};
+  const total = items.length;
+  const respondidos = Object.keys(resp).length;
+  const males = Object.values(resp).filter(v => v === 'Mal').length;
+  const regulares = Object.values(resp).filter(v => v === 'Regular').length;
+  const bien = Object.values(resp).filter(v => v === 'Bien').length;
+
+  const stEl = document.getElementById('st-' + sec);
+  if(stEl) stEl.textContent = respondidos + '/' + total;
+
+  const ssEl = document.getElementById('ss-' + sec);
+  if(ssEl){
+    if(males > 0) ssEl.innerHTML = '<span style="color:#f87171;font-size:12px;font-weight:700;">' + males + ' MAL</span>';
+    else if(regulares > 0) ssEl.innerHTML = '<span style="color:#fbbf24;font-size:12px;font-weight:700;">' + regulares + ' REG</span>';
+    else if(respondidos === total) ssEl.innerHTML = '<span style="color:#4ade80;font-size:12px;font-weight:700;">OK</span>';
+    else ssEl.innerHTML = '';
+  }
+}
+
+function actualizarProgreso(){
+  const secs = Object.keys(SECCIONES);
+  let totalItems = 0, respondidos = 0;
+  secs.forEach(sec => {
+    totalItems += SECCIONES[sec].length;
+    respondidos += Object.keys(_respuestas[sec] || {}).length;
+  });
+  const pct = totalItems > 0 ? Math.round(respondidos / totalItems * 100) : 0;
+  document.getElementById('prog-pct').textContent = pct + '%';
+  const fill = document.getElementById('prog-fill');
+  fill.style.width = pct + '%';
+  fill.className = 'progreso-fill' + (pct === 100 ? ' completo' : pct >= 60 ? '' : ' advertencia');
+}
+
+function autoEstadoGeneral(){
+  const allResp = Object.values(_respuestas).flatMap(r => Object.values(r));
+  const males = allResp.filter(v => v === 'Mal').length;
+  const regulares = allResp.filter(v => v === 'Regular').length;
+  if(males > 0) selEstGeneral('Rechazado');
+  else if(regulares > 0) selEstGeneral('Aprobado con observaciones');
+  else if(allResp.length > 0) selEstGeneral('Aprobado');
+}
+
+// ══════════════════════════════════════════
+//  ESTADO GENERAL
+// ══════════════════════════════════════════
+function selEstGeneral(val){
+  _estGeneral = val;
+  document.getElementById('eg-aprobado').className = 'est-btn' + (val === 'Aprobado' ? ' sel-aprobado' : '');
+  document.getElementById('eg-obs').className = 'est-btn' + (val === 'Aprobado con observaciones' ? ' sel-obs' : '');
+  document.getElementById('eg-rechazado').className = 'est-btn' + (val === 'Rechazado' ? ' sel-rechazado' : '');
+  const alEl = document.getElementById('alerta-est-general');
+  if(val === 'Rechazado'){
+    alEl.innerHTML = '<div class="alert a-err" style="margin-top:8px;">Este vehículo NO debe salir a ruta. Notifica al supervisor de inmediato.</div>';
+  } else if(val === 'Aprobado con observaciones'){
+    alEl.innerHTML = '<div class="alert a-warn" style="margin-top:8px;">El vehículo puede operar pero hay ítems en estado Regular. Repórtalos.</div>';
+  } else {
+    alEl.innerHTML = '';
+  }
+}
+
+// ══════════════════════════════════════════
+//  FOTOS
+// ══════════════════════════════════════════
+function agregarFoto(sec){
+  document.getElementById('finput-' + sec).click();
+}
+
+function onFotoSelect(e, sec){
+  const files = Array.from(e.target.files);
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      _fotos[sec].push({ data: ev.target.result, name: file.name, type: file.type });
+      renderFotos(sec);
+    };
+    reader.readAsDataURL(file);
+  });
+  e.target.value = '';
+}
+
+function renderFotos(sec){
+  const cont = document.getElementById('fotos-' + sec);
+  if(!cont) return;
+  cont.innerHTML = _fotos[sec].map((f, i) =>
+    `<img class="foto-thumb" src="${f.data}" alt="Foto ${i+1}" onclick="verFoto('${sec}',${i})">`
+  ).join('') + `<div class="foto-add" onclick="agregarFoto('${sec}')">+<span style="font-size:9px;margin-top:2px;">Foto</span></div>`;
+}
+
+let _modalFotoSec = null, _modalFotoIdx = null;
+function verFoto(sec, idx){
+  _modalFotoSec = sec; _modalFotoIdx = idx;
+  document.getElementById('modal-foto-img').src = _fotos[sec][idx].data;
+  document.getElementById('modal-foto').classList.add('open');
+}
+function cerrarModalFoto(){ document.getElementById('modal-foto').classList.remove('open'); }
+function eliminarFoto(){
+  _fotos[_modalFotoSec].splice(_modalFotoIdx, 1);
+  renderFotos(_modalFotoSec);
+  cerrarModalFoto();
+}
+
+// ══════════════════════════════════════════
+//  TOGGLE SECCIONES
+// ══════════════════════════════════════════
+function toggleSec(id){
+  const body = document.getElementById(id);
+  const key = id.replace('s-','');
+  const chev = document.getElementById('ch-' + key);
+  if(body.classList.contains('open')){
+    body.classList.remove('open');
+    if(chev) chev.textContent = '▶';
+  } else {
+    body.classList.add('open');
+    if(chev) chev.textContent = '▼';
+  }
+}
+
+// ══════════════════════════════════════════
+//  ENVIAR CHECKLIST
+// ══════════════════════════════════════════
+async function enviarChecklist(){
+  if(!_estGeneral){ showAlertCheck('Selecciona el estado general del vehículo.','err'); return; }
+
+  const totalItems = Object.values(SECCIONES).reduce((s,v) => s + v.length, 0);
+  const respondidos = Object.values(_respuestas).reduce((s,r) => s + Object.keys(r).length, 0);
+  const pct = Math.round(respondidos / totalItems * 100);
+
+  if(pct < 50){
+    showAlertCheck('Debes responder al menos el 50% de los ítems (' + respondidos + '/' + totalItems + ' respondidos).','warn');
     return;
   }
 
-  _placa = placa;
-  _conductor = conductor;
-  _ruta = document.getElementById('inp-ruta').value.trim();
+  const btn = document.querySelector('.footer-actions .btn-pri');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span>Enviando...';
 
-  // Guardar en localStorage para no repetir
-  localStorage.setItem('fc_placa', placa);
-  localStorage.setItem('fc_conductor', conductor);
+  const chId = 'CH-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random()*9000)+1000);
 
-  // Cambiar pantalla
-  document.getElementById('pantalla-login').style.display = 'none';
-  document.getElementById('pantalla-activa').style.display = 'flex';
-  document.getElementById('inf-placa').textContent = placa;
-  document.getElementById('inf-conductor').textContent = conductor;
+  const payload = {
+    accion: 'crear',
+    modulo: 'checklist',
+    ID_Check: chId,
+    Placa: SESSION.placa,
+    Conductor: SESSION.conductor,
+    Tipo: document.getElementById('ch-tipo').value,
+    Fecha: document.getElementById('ch-fecha').value,
+    Hora: document.getElementById('ch-hora').value,
+    Motor: resumenSeccion('motor'),
+    Frenos: resumenSeccion('frenos'),
+    Llantas: resumenSeccion('llantas'),
+    Luces: resumenSeccion('luces'),
+    Fluidos: resumenSeccion('fluidos'),
+    Carroceria: resumenSeccion('carroceria'),
+    Estado_General: _estGeneral,
+    Observaciones: document.getElementById('ch-obs-txt').value,
+    Motor_JSON: JSON.stringify(buildJSON('motor')),
+    Frenos_JSON: JSON.stringify(buildJSON('frenos')),
+    Llantas_JSON: JSON.stringify(buildJSON('llantas')),
+    Luces_JSON: JSON.stringify(buildJSON('luces')),
+    Fluidos_JSON: JSON.stringify(buildJSON('fluidos')),
+    Carroceria_JSON: JSON.stringify(buildJSON('carroceria')),
+    Electrico_JSON: JSON.stringify(buildJSON('electrico')),
+    Odometro: document.getElementById('ch-km').value || 0,
+    Email_Notif: document.getElementById('ch-email-notif').value,
+    Fotos_JSON: JSON.stringify(buildFotosResumen()),
+    Completado_Pct: pct,
+    email: 'sistema@fleetco.com',
+    clave: 'conductor_auto',
+  };
 
-  actualizarEstado('conectando');
+  try {
+    const r = await fetch(API, { method:'POST', body: JSON.stringify(payload) });
+    const data = await r.json();
+    btn.disabled = false;
+    btn.textContent = 'Enviar checklist';
 
-  // Pedir GPS
-  _watchId = navigator.geolocation.watchPosition(
-    onPosicion,
-    onErrorGPS,
-    { enableHighAccuracy: true, timeout: 15000, maximumAge: 5000 }
-  );
-
-  // Enviar cada INTERVALO_MS
-  _intervalo = setInterval(enviarUbicacion, INTERVALO_MS);
+    if(data.ok){
+      showAlertCheck('Checklist ' + chId + ' enviado correctamente.', 'ok');
+      guardarHistorialLocal(payload);
+      if(_estGeneral === 'Rechazado'){
+        const emailNotif = document.getElementById('ch-email-notif').value.trim();
+        if(emailNotif) showAlertCheck('El supervisor recibirá una notificación por email.','info');
+      }
+      setTimeout(() => {
+        irTab('rastreo');
+        showAlertRadical('Checklist enviado. Ahora puedes iniciar el rastreo GPS.','ok');
+      }, 2000);
+    } else {
+      showAlertCheck('Error al enviar: ' + (data.error || 'Error desconocido'), 'err');
+    }
+  } catch(e){
+    btn.disabled = false;
+    btn.textContent = 'Enviar checklist';
+    showAlertCheck('Error de red: ' + e.message, 'err');
+  }
 }
 
-function onPosicion(pos){
+function resumenSeccion(sec){
+  const resp = _respuestas[sec] || {};
+  const vals = Object.values(resp);
+  if(!vals.length) return 'Sin revisar';
+  if(vals.includes('Mal')) return 'Mal';
+  if(vals.includes('Regular')) return 'Regular';
+  return 'Bien';
+}
+
+function buildJSON(sec){
+  const items = SECCIONES[sec] || [];
+  const resp = _respuestas[sec] || {};
+  const result = {};
+  items.forEach((label, i) => { result[label] = resp[i] || '—'; });
+  return result;
+}
+
+function buildFotosResumen(){
+  const resumen = {};
+  Object.entries(_fotos).forEach(([sec, arr]) => {
+    if(arr.length) resumen[sec] = arr.length + ' foto(s)';
+  });
+  return resumen;
+}
+
+function showAlertCheck(msg, tipo){
+  document.getElementById('al-check').innerHTML = '<div class="alert a-' + tipo + '">' + msg + '</div>';
+  document.getElementById('al-check').scrollIntoView({behavior:'smooth'});
+}
+
+function showAlertRadical(msg, tipo){
+  document.getElementById('al-rastreo').innerHTML = '<div class="alert a-' + tipo + '">' + msg + '</div>';
+}
+
+// ══════════════════════════════════════════
+//  LIMPIAR CHECKLIST
+// ══════════════════════════════════════════
+function limpiarChecklist(){
+  if(!confirm('¿Limpiar todas las respuestas?')) return;
+  Object.keys(SECCIONES).forEach(sec => {
+    _respuestas[sec] = {};
+    _fotos[sec] = [];
+    renderFotos(sec);
+    SECCIONES[sec].forEach((_, i) => {
+      ['bien','regular','mal','na'].forEach(o => {
+        const b = document.getElementById('opt-' + sec + '-' + i + '-' + o);
+        if(b) b.className = 'opt-btn';
+      });
+    });
+    actualizarSeccion(sec);
+  });
+  _estGeneral = '';
+  ['eg-aprobado','eg-obs','eg-rechazado'].forEach(id => {
+    document.getElementById(id).className = 'est-btn';
+  });
+  document.getElementById('alerta-est-general').innerHTML = '';
+  document.getElementById('al-check').innerHTML = '';
+  actualizarProgreso();
+}
+
+// ══════════════════════════════════════════
+//  RASTREO GPS
+// ══════════════════════════════════════════
+function iniciarRastreo(){
+  if(!navigator.geolocation){
+    document.getElementById('al-rastreo').innerHTML = '<div class="alert a-err">Tu dispositivo no soporta GPS.</div>';
+    return;
+  }
+  _rastreando = true;
+  actualizarEstadoRastreo('conectando');
+  document.getElementById('btn-iniciar-rastreo').style.display = 'none';
+  document.getElementById('btn-detener-rastreo').style.display = 'block';
+
+  _watchId = navigator.geolocation.watchPosition(onPos, onErrGPS,
+    { enableHighAccuracy:true, timeout:15000, maximumAge:5000 });
+  _interval = setInterval(enviarUbicacion, 15000);
+}
+
+function detenerRastreo(){
+  if(_watchId !== null){ navigator.geolocation.clearWatch(_watchId); _watchId = null; }
+  if(_interval){ clearInterval(_interval); _interval = null; }
+  _rastreando = false;
+  actualizarEstadoRastreo('detenido');
+  document.getElementById('btn-iniciar-rastreo').style.display = 'block';
+  document.getElementById('btn-detener-rastreo').style.display = 'none';
+  agregarLogGPS('Rastreo detenido.', '');
+}
+
+function onPos(pos){
   _ultimaPos = pos;
-  const lat = pos.coords.latitude.toFixed(5);
-  const lng = pos.coords.longitude.toFixed(5);
+  const lat = pos.coords.latitude;
+  const lng = pos.coords.longitude;
   const vel = pos.coords.speed != null ? Math.round(pos.coords.speed * 3.6) : null;
   const prec = Math.round(pos.coords.accuracy);
-
-  document.getElementById('inf-lat').textContent = lat;
-  document.getElementById('inf-lng').textContent = lng;
-  document.getElementById('inf-velocidad').textContent = vel !== null ? vel + ' km/h' : '— km/h';
-  document.getElementById('inf-precision').textContent = prec + ' m';
-
-  // Alerta de baja precisión
-  document.getElementById('gps-alert').style.display = prec > 100 ? 'block' : 'none';
-
-  actualizarEstado('activo');
+  document.getElementById('gps-coords').textContent = lat.toFixed(5) + ', ' + lng.toFixed(5);
+  document.getElementById('gps-prec').textContent = 'Precisión: ' + prec + ' m' + (prec > 100 ? ' ⚠ baja' : '');
+  document.getElementById('gps-speed').textContent = vel !== null ? vel + ' km/h' : '— km/h';
+  document.getElementById('gps-dot').className = 'gps-dot on';
+  document.getElementById('h-gps-badge').textContent = 'GPS ON';
+  document.getElementById('h-gps-badge').className = 'header-badge badge-gps-on';
+  actualizarEstadoRastreo('activo');
 }
 
-function onErrorGPS(err){
-  actualizarEstado('error');
-  agregarLog('GPS: ' + err.message, 'err');
+function onErrGPS(err){
+  actualizarEstadoRastreo('error');
+  agregarLogGPS('Error GPS: ' + err.message, 'err');
 }
 
-function actualizarEstado(tipo){
-  const card = document.getElementById('estado-card');
-  const icono = document.getElementById('estado-icono');
-  const titulo = document.getElementById('estado-titulo');
-  const sub = document.getElementById('estado-sub');
-  const wrap = document.getElementById('pantalla-activa');
-
-  wrap.className = tipo === 'activo' ? 'activo' : '';
-  card.className = 'estado-card';
-
+function actualizarEstadoRastreo(tipo){
+  const card = document.getElementById('rastreo-card');
+  const icono = document.getElementById('r-icono');
+  const titulo = document.getElementById('r-titulo');
+  const sub = document.getElementById('r-sub');
+  card.className = 'rastreo-card' + (tipo === 'activo' ? ' activo' : '');
   if(tipo === 'activo'){
-    icono.textContent = '📡';
-    titulo.textContent = '● Transmitiendo';
-    titulo.style.color = 'var(--green)';
-    sub.textContent = 'Ubicación enviándose cada 15 segundos';
+    icono.textContent = '📡'; titulo.textContent = '● Transmitiendo';
+    titulo.style.color = 'var(--green)'; sub.textContent = 'Ubicación enviándose cada 15 segundos';
     card.style.borderColor = 'var(--green)';
   } else if(tipo === 'conectando'){
-    icono.textContent = '🔍';
-    titulo.textContent = 'Buscando GPS...';
-    titulo.style.color = 'var(--amber)';
-    sub.textContent = 'Activa el GPS y espera unos segundos';
+    icono.textContent = '🔍'; titulo.textContent = 'Buscando GPS...';
+    titulo.style.color = 'var(--amber)'; sub.textContent = 'Activa el GPS de tu dispositivo';
     card.style.borderColor = 'var(--amber)';
   } else if(tipo === 'error'){
-    icono.textContent = '📵';
-    titulo.textContent = 'Sin señal GPS';
-    titulo.style.color = 'var(--red)';
-    sub.textContent = 'Comprueba los permisos de ubicación';
+    icono.textContent = '📵'; titulo.textContent = 'Sin señal GPS';
+    titulo.style.color = 'var(--red)'; sub.textContent = 'Revisa los permisos de ubicación';
     card.style.borderColor = 'var(--red)';
   } else if(tipo === 'detenido'){
-    icono.textContent = '⏹';
-    titulo.textContent = 'Rastreo detenido';
-    titulo.style.color = 'var(--t2)';
-    sub.textContent = 'Puedes cerrar esta página';
+    icono.textContent = '⏹'; titulo.textContent = 'Rastreo detenido';
+    titulo.style.color = 'var(--t2)'; sub.textContent = 'Pulsa el botón para reanudar';
+    card.style.borderColor = 'var(--bd)';
+  } else {
+    icono.textContent = '📡'; titulo.textContent = 'Listo para iniciar';
+    titulo.style.color = 'var(--t)'; sub.textContent = 'Pulsa el botón para comenzar el rastreo';
     card.style.borderColor = 'var(--bd)';
   }
 }
 
 async function enviarUbicacion(){
-  if(!_ultimaPos || _enviando) return;
-  _enviando = true;
-
+  if(!_ultimaPos || !_rastreando) return;
   const { latitude, longitude, speed, heading, accuracy } = _ultimaPos.coords;
   const velocidad = speed != null ? Math.round(speed * 3.6) : 0;
-
   try {
     const resp = await fetch(API, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
+      method:'POST',
       body: JSON.stringify({
-        accion: 'crear',
-        modulo: 'ubicaciones',
-        Placa: _placa,
-        Conductor: _conductor,
-        Ruta: _ruta,
+        accion:'crear', modulo:'ubicaciones',
+        Placa: SESSION.placa, Conductor: SESSION.conductor,
+        Ruta: SESSION.ruta,
         Lat: parseFloat(latitude.toFixed(6)),
         Lng: parseFloat(longitude.toFixed(6)),
         Velocidad: velocidad,
@@ -354,52 +1079,122 @@ async function enviarUbicacion(){
         Timestamp: new Date().toISOString(),
       })
     });
-    const data = await resp.json();
-    _totalEnvios++;
+    await resp.json();
+    _envios++;
+    document.getElementById('r-envios').textContent = _envios;
     const hora = new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-    agregarLog(`${hora} ✓ ${latitude.toFixed(4)}, ${longitude.toFixed(4)} · ${velocidad}km/h`, 'ok');
+    agregarLogGPS(hora + ' OK ' + latitude.toFixed(4) + ',' + longitude.toFixed(4) + ' ' + velocidad + 'km/h', 'ok');
   } catch(e){
-    _errores++;
-    agregarLog('Error de red: ' + e.message, 'err');
-  } finally {
-    _enviando = false;
+    _erroresGPS++;
+    document.getElementById('r-errores').textContent = _erroresGPS;
+    agregarLogGPS('Error: ' + e.message, 'err');
   }
 }
 
-function agregarLog(msg, tipo){
-  const lista = document.getElementById('log-lista');
+function agregarLogGPS(msg, tipo){
+  const lista = document.getElementById('log-gps');
   const item = document.createElement('div');
   item.className = 'log-item ' + (tipo||'');
   item.textContent = msg;
   lista.insertBefore(item, lista.firstChild);
-  // Máximo 20 entradas
-  while(lista.children.length > 20) lista.removeChild(lista.lastChild);
+  while(lista.children.length > 25) lista.removeChild(lista.lastChild);
 }
 
-function detenerRastreo(){
-  if(_watchId !== null){ navigator.geolocation.clearWatch(_watchId); _watchId = null; }
-  if(_intervalo){ clearInterval(_intervalo); _intervalo = null; }
-  actualizarEstado('detenido');
-  agregarLog('Rastreo detenido por el conductor.', '');
-}
-
-// Restaurar datos del localStorage si existen
-window.addEventListener('load', ()=>{
-  const placa = localStorage.getItem('fc_placa');
-  const conductor = localStorage.getItem('fc_conductor');
-  if(placa) document.getElementById('inp-placa').value = placa;
-  if(conductor) document.getElementById('inp-conductor').value = conductor;
-});
-
-// Evitar que la pantalla se apague (Wake Lock API)
-async function mantenerPantallaActiva(){
+// ══════════════════════════════════════════
+//  HISTORIAL LOCAL
+// ══════════════════════════════════════════
+function guardarHistorialLocal(payload){
   try {
-    if('wakeLock' in navigator){
-      await navigator.wakeLock.request('screen');
-    }
-  } catch(e){ /* no soportado */ }
+    const hist = JSON.parse(localStorage.getItem('fc_historial') || '[]');
+    hist.unshift({
+      id: payload.ID_Check,
+      placa: payload.Placa,
+      conductor: payload.Conductor,
+      fecha: payload.Fecha,
+      hora: payload.Hora,
+      tipo: payload.Tipo,
+      estado: payload.Estado_General,
+      pct: payload.Completado_Pct,
+      obs: payload.Observaciones,
+    });
+    localStorage.setItem('fc_historial', JSON.stringify(hist.slice(0, 50)));
+  } catch(e){}
 }
-mantenerPantallaActiva();
+
+async function cargarHistorial(){
+  const wrap = document.getElementById('hist-wrap');
+  wrap.innerHTML = '<div class="loader"><span class="spin"></span>Cargando...</div>';
+
+  let hist = [];
+  try {
+    const d = await fetch(API + '?' + new URLSearchParams({
+      accion:'buscar', modulo:'checklist',
+      campo:'Conductor', valor: SESSION.conductor,
+      email:'sistema@fleetco.com', clave:'conductor_auto'
+    }));
+    const data = await d.json();
+    if(data.ok) hist = (data.data || []).filter(r =>
+      String(r.Conductor||'').toLowerCase() === SESSION.conductor.toLowerCase()
+    ).sort((a,b) => (b.Fecha + b.Hora) > (a.Fecha + a.Hora) ? 1 : -1).slice(0,30);
+  } catch(e){
+    const local = JSON.parse(localStorage.getItem('fc_historial')||'[]');
+    hist = local.filter(r => r.conductor === SESSION.conductor);
+  }
+
+  if(!hist.length){
+    wrap.innerHTML = '<div class="empty"><div class="ei">📋</div><p>Sin checklists registrados</p></div>';
+    return;
+  }
+
+  wrap.innerHTML = hist.map(r => {
+    const est = r.Estado_General || r.estado || '';
+    const pct = r.Completado_Pct || r.pct || 0;
+    const estColor = est === 'Aprobado' ? 'ok' : est === 'Rechazado' ? 'err' : 'warn';
+    const males = contarMal(r);
+    return `<div class="hist-card">
+      <div class="hist-top">
+        <span class="hist-placa">${r.Placa || r.placa || '—'}</span>
+        <span style="font-size:11px;color:var(--t2);">${r.Tipo || r.tipo || ''}</span>
+        <span class="hist-fecha">${r.Fecha || r.fecha || ''} ${r.Hora || r.hora || ''}</span>
+      </div>
+      <div class="hist-badges">
+        <span class="hbadge hb-${estColor}">${est || '—'}</span>
+        <span class="hbadge hb-gray">${pct}% completado</span>
+        ${males > 0 ? '<span class="hbadge hb-err">' + males + ' mal</span>' : ''}
+      </div>
+      ${(r.Observaciones || r.obs) ? '<div style="font-size:12px;color:var(--t2);margin-top:6px;line-height:1.5;">' + (r.Observaciones || r.obs) + '</div>' : ''}
+    </div>`;
+  }).join('');
+}
+
+function contarMal(r){
+  let c = 0;
+  ['Motor','Frenos','Llantas','Luces','Fluidos','Carroceria'].forEach(k => {
+    if(String(r[k]||'').toLowerCase() === 'mal') c++;
+  });
+  return c;
+}
+
+// ══════════════════════════════════════════
+//  NAVEGACIÓN TABS
+// ══════════════════════════════════════════
+function irTab(tab){
+  _tabActiva = tab;
+  ['checklist','rastreo','historial'].forEach(t => {
+    document.getElementById('tab-' + (t==='rastreo'?'rastreo':'check'==='rastreo'?'rastreo':t==='checklist'?'check':t)).className =
+      'tab-btn' + (t === tab ? ' active' : '');
+  });
+  document.getElementById('tab-check').className = 'tab-btn' + (tab === 'checklist' ? ' active' : '');
+  document.getElementById('tab-rastreo').className = 'tab-btn' + (tab === 'rastreo' ? ' active' : '');
+  document.getElementById('tab-hist').className = 'tab-btn' + (tab === 'historial' ? ' active' : '');
+
+  document.getElementById('pg-checklist').className = 'page' + (tab === 'checklist' ? ' active' : '');
+  document.getElementById('pg-rastreo-tab').className = 'page' + (tab === 'rastreo' ? ' active' : '');
+  document.getElementById('pg-historial').className = 'page' + (tab === 'historial' ? ' active' : '');
+  document.getElementById('footer-check').style.display = tab === 'checklist' ? 'flex' : 'none';
+
+  if(tab === 'historial') cargarHistorial();
+}
 </script>
 </body>
 </html>
