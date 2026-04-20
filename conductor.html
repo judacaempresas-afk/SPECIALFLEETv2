@@ -36,7 +36,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
 .tab-nav{display:flex;background:var(--bg2);border-bottom:1px solid var(--bd);position:sticky;top:61px;z-index:99;}
 .tab-btn{flex:1;padding:11px 4px;font-size:12px;font-weight:600;color:var(--t2);background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;font-family:var(--font);}
 .tab-btn.active{color:var(--brand);border-bottom-color:var(--brand);}
-.tab-btn:hover:not(.active){color:var(--t);}
 
 /* ══ PAGES ══ */
 .page{display:none;padding:14px 14px 0;}
@@ -165,7 +164,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
 /* ══ ESTADO GENERAL ══ */
 .est-general{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:12px 14px;}
 .est-btn{padding:12px 8px;border-radius:var(--r);border:1px solid var(--bd);background:var(--bg3);color:var(--t2);font-size:12px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s;font-family:var(--font);}
-.est-btn:hover{border-color:var(--bd2);color:var(--t);}
 .est-btn.sel-aprobado{background:rgba(22,163,74,.2);border-color:rgba(22,163,74,.4);color:#4ade80;}
 .est-btn.sel-obs{background:rgba(217,119,6,.2);border-color:rgba(217,119,6,.4);color:#fbbf24;}
 .est-btn.sel-rechazado{background:rgba(220,38,38,.2);border-color:rgba(220,38,38,.4);color:#f87171;}
@@ -185,7 +183,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
 .log-box{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:10px 12px;max-height:130px;overflow-y:auto;margin-bottom:12px;}
 .log-title{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;}
 .log-item{font-size:11px;color:var(--t2);padding:2px 0;border-bottom:1px solid var(--bg3);font-family:'Courier New',monospace;}
-.log-item.ok{color:#3FB950;}.log-item.err{color:#f87171;}
+.log-item.ok{color:#3FB950;}.log-item.err{color:#f87171;}.log-item.warn{color:#fbbf24;}
 
 /* ══ TURNO INICIADO BANNER ══ */
 .turno-banner{background:rgba(22,163,74,.12);border:1px solid rgba(22,163,74,.35);border-radius:var(--rl);padding:16px;margin-bottom:12px;text-align:center;}
@@ -214,7 +212,27 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
 .cola-dot{width:8px;height:8px;border-radius:50%;background:var(--amber);flex-shrink:0;animation:parpadeo 1.2s ease-in-out infinite;}
 .cola-txt{flex:1;font-size:12px;color:#fbbf24;font-weight:600;}
 .cola-btn{font-size:11px;font-weight:700;color:#fbbf24;background:rgba(217,119,6,.2);border:1px solid rgba(217,119,6,.4);border-radius:6px;padding:3px 9px;cursor:pointer;font-family:var(--font);}
-.cola-btn:hover{background:rgba(217,119,6,.35);}
+
+/* ══ RUTA PROGRESS ══ */
+.ruta-progress-card{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--rl);padding:14px;margin-bottom:12px;}
+.ruta-progress-title{font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
+.ruta-pct{font-size:22px;font-weight:700;color:var(--brand);font-family:'Courier New',monospace;}
+.ruta-bar-wrap{height:8px;background:var(--bg4);border-radius:4px;overflow:hidden;margin-bottom:8px;}
+.ruta-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--brand),#4ade80);transition:width .6s ease;}
+.ruta-puntos-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;max-height:200px;overflow-y:auto;}
+.ruta-punto-item{background:var(--bg3);border:1px solid var(--bd);border-radius:8px;padding:8px 10px;font-size:11px;}
+.ruta-punto-item.visitado{background:rgba(22,163,74,.12);border-color:rgba(22,163,74,.3);}
+.ruta-punto-item.actual{background:rgba(0,102,204,.15);border-color:rgba(0,102,204,.4);animation:pulso 1.5s ease-in-out infinite;}
+.ruta-punto-num{font-size:10px;font-weight:700;color:var(--t3);margin-bottom:2px;}
+.ruta-punto-hora{font-size:10px;color:#4ade80;font-family:'Courier New',monospace;}
+
+/* ══ SELECTOR RUTA ══ */
+.ruta-selector{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--rl);padding:14px;margin-bottom:12px;}
+.ruta-selector-title{font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px;}
+.ruta-btns{display:flex;gap:8px;flex-wrap:wrap;}
+.ruta-btn{padding:8px 16px;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--t2);font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;font-family:var(--font);}
+.ruta-btn.active{background:rgba(0,102,204,.2);border-color:var(--brand);color:var(--brand);}
+.ruta-btn:hover{border-color:var(--bd2);color:var(--t);}
 </style>
 </head>
 <body>
@@ -288,6 +306,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
   <div class="tab-nav">
     <button class="tab-btn active" id="tab-check" onclick="irTab('checklist')">Checklist</button>
     <button class="tab-btn" id="tab-rastreo" onclick="irTab('rastreo')">Rastreo GPS</button>
+    <button class="tab-btn" id="tab-ruta" onclick="irTab('ruta')">Mi Ruta</button>
     <button class="tab-btn" id="tab-hist" onclick="irTab('historial')">Historial</button>
   </div>
 
@@ -361,7 +380,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
       <div class="sec-body" id="s-frenos">
         <div id="items-frenos"></div>
         <div class="foto-area">
-          <div class="foto-label">Fotos de evidencia (opcional)</div>
+          <div class="foto-label">Fotos de evidencia</div>
           <div class="foto-row" id="fotos-frenos">
             <div class="foto-add" onclick="agregarFoto('frenos')">+<span style="font-size:9px;margin-top:2px;">Foto</span></div>
           </div>
@@ -381,7 +400,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
       <div class="sec-body" id="s-llantas">
         <div id="items-llantas"></div>
         <div class="foto-area">
-          <div class="foto-label">Fotos de evidencia (opcional)</div>
+          <div class="foto-label">Fotos de evidencia</div>
           <div class="foto-row" id="fotos-llantas">
             <div class="foto-add" onclick="agregarFoto('llantas')">+<span style="font-size:9px;margin-top:2px;">Foto</span></div>
           </div>
@@ -401,7 +420,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
       <div class="sec-body" id="s-luces">
         <div id="items-luces"></div>
         <div class="foto-area">
-          <div class="foto-label">Fotos de evidencia (opcional)</div>
+          <div class="foto-label">Fotos de evidencia</div>
           <div class="foto-row" id="fotos-luces">
             <div class="foto-add" onclick="agregarFoto('luces')">+<span style="font-size:9px;margin-top:2px;">Foto</span></div>
           </div>
@@ -421,7 +440,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
       <div class="sec-body" id="s-fluidos">
         <div id="items-fluidos"></div>
         <div class="foto-area">
-          <div class="foto-label">Fotos de evidencia (opcional)</div>
+          <div class="foto-label">Fotos de evidencia</div>
           <div class="foto-row" id="fotos-fluidos">
             <div class="foto-add" onclick="agregarFoto('fluidos')">+<span style="font-size:9px;margin-top:2px;">Foto</span></div>
           </div>
@@ -441,7 +460,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
       <div class="sec-body" id="s-carroceria">
         <div id="items-carroceria"></div>
         <div class="foto-area">
-          <div class="foto-label">Fotos de evidencia (opcional)</div>
+          <div class="foto-label">Fotos de evidencia</div>
           <div class="foto-row" id="fotos-carroceria">
             <div class="foto-add" onclick="agregarFoto('carroceria')">+<span style="font-size:9px;margin-top:2px;">Foto</span></div>
           </div>
@@ -461,7 +480,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
       <div class="sec-body" id="s-electrico">
         <div id="items-electrico"></div>
         <div class="foto-area">
-          <div class="foto-label">Fotos de evidencia (opcional)</div>
+          <div class="foto-label">Fotos de evidencia</div>
           <div class="foto-row" id="fotos-electrico">
             <div class="foto-add" onclick="agregarFoto('electrico')">+<span style="font-size:9px;margin-top:2px;">Foto</span></div>
           </div>
@@ -470,7 +489,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
       </div>
     </div>
 
-    <!-- OBSERVACIONES + ESTADO GENERAL -->
+    <!-- OBSERVACIONES -->
     <div class="sec-card">
       <div class="sec-hd" onclick="toggleSec('s-obs')">
         <div class="sec-icon motor">📝</div>
@@ -480,9 +499,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
       <div class="sec-body" id="s-obs">
         <div style="padding:12px 14px 0;">
           <div class="fl"><label>Observaciones generales</label>
-            <textarea id="ch-obs-txt" placeholder="Notas adicionales, novedades encontradas..."></textarea>
+            <textarea id="ch-obs-txt" placeholder="Notas adicionales, novedades..."></textarea>
           </div>
-          <div class="fl"><label>Email para notificación (si hay novedad)</label>
+          <div class="fl"><label>Email para notificación</label>
             <input type="email" id="ch-email-notif" placeholder="supervisor@empresa.com">
           </div>
         </div>
@@ -504,13 +523,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
   <div class="page" id="pg-rastreo-tab">
     <div style="margin-top:12px;">
 
-      <!-- Banner turno iniciado (se muestra tras enviar checklist) -->
       <div class="turno-banner" id="turno-banner" style="display:none;">
         <div class="turno-banner-title">🚀 ¡Turno iniciado!</div>
-        <div class="turno-banner-sub" id="turno-banner-sub">Checklist enviado correctamente. El rastreo GPS está activo.</div>
+        <div class="turno-banner-sub" id="turno-banner-sub">Checklist enviado. El rastreo GPS está activo.</div>
       </div>
 
-      <!-- Indicador de cola offline -->
       <div class="cola-row" id="cola-row">
         <div class="cola-dot"></div>
         <span class="cola-txt" id="cola-contador">0 puntos en cola</span>
@@ -536,6 +553,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
         <div class="info-c"><div class="lbl">En cola</div><div class="val" id="r-cola" style="color:#fbbf24;">0</div></div>
       </div>
 
+      <!-- Estado del GPS keepalive -->
+      <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:10px 13px;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+        <div id="keepalive-dot" style="width:8px;height:8px;border-radius:50%;background:var(--t3);flex-shrink:0;"></div>
+        <span style="font-size:11px;color:var(--t2);" id="keepalive-txt">GPS inactivo</span>
+        <span style="margin-left:auto;font-size:10px;font-family:'Courier New',monospace;color:var(--t3);" id="proximo-envio">—</span>
+      </div>
+
       <div class="log-box">
         <div class="log-title">Registro de transmisión</div>
         <div id="log-gps"></div>
@@ -547,6 +571,57 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
       </div>
 
       <div id="al-rastreo" style="margin-top:8px;"></div>
+    </div>
+  </div>
+
+  <!-- ══ TAB MI RUTA ══ -->
+  <div class="page" id="pg-ruta-tab">
+    <div style="margin-top:12px;">
+
+      <!-- Selector de ruta -->
+      <div class="ruta-selector">
+        <div class="ruta-selector-title">Seleccionar ruta activa</div>
+        <div class="ruta-btns" id="ruta-btns-wrap">
+          <button class="ruta-btn active" id="ruta-btn-1" onclick="seleccionarRuta(1,this)">🗺 Ruta 1</button>
+          <button class="ruta-btn" id="ruta-btn-2" onclick="seleccionarRuta(2,this)">🗺 Ruta 2</button>
+          <button class="ruta-btn" id="ruta-btn-none" onclick="seleccionarRuta(0,this)">Sin ruta</button>
+        </div>
+        <div style="margin-top:10px;font-size:11px;color:var(--t3);" id="ruta-info-label">
+          Selecciona la ruta que realizarás hoy. El sistema registrará automáticamente cuando pases por cada punto.
+        </div>
+      </div>
+
+      <!-- Progress de la ruta -->
+      <div class="ruta-progress-card" id="ruta-progress-card" style="display:none;">
+        <div class="ruta-progress-title">
+          <span id="ruta-progress-nombre">Ruta 1</span>
+          <span class="ruta-pct" id="ruta-pct-txt">0%</span>
+        </div>
+        <div class="ruta-bar-wrap">
+          <div class="ruta-bar-fill" id="ruta-bar-fill" style="width:0%"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--t3);margin-bottom:10px;">
+          <span id="ruta-puntos-visitados">0 puntos visitados</span>
+          <span id="ruta-puntos-total">0 puntos totales</span>
+        </div>
+
+        <!-- Próximo punto -->
+        <div id="ruta-proximo-wrap" style="background:rgba(0,102,204,.1);border:1px solid rgba(0,102,204,.3);border-radius:var(--r);padding:10px 12px;margin-bottom:10px;">
+          <div style="font-size:10px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">📍 Próximo punto</div>
+          <div style="font-size:13px;font-weight:700;" id="ruta-proximo-nombre">—</div>
+          <div style="font-size:11px;color:var(--t2);margin-top:2px;" id="ruta-proximo-dist">—</div>
+        </div>
+
+        <!-- Lista de puntos -->
+        <div style="font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;">Puntos de paso</div>
+        <div class="ruta-puntos-grid" id="ruta-puntos-lista"></div>
+      </div>
+
+      <div id="ruta-sin-seleccion" style="text-align:center;padding:32px 16px;color:var(--t3);">
+        <div style="font-size:36px;margin-bottom:8px;">🗺</div>
+        <p style="font-size:13px;">Selecciona una ruta para ver el progreso</p>
+      </div>
+
     </div>
   </div>
 
@@ -577,10 +652,77 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
   </div>
 </div>
 
+<!-- MODAL PUNTO DE PASO -->
+<div class="modal-overlay" id="modal-punto" onclick="if(event.target===this)cerrarModalPunto()">
+  <div class="modal-box">
+    <div class="modal-hd">
+      <span class="modal-title">📍 Punto de paso detectado</span>
+      <button class="modal-x" onclick="cerrarModalPunto()">×</button>
+    </div>
+    <div id="modal-punto-body" style="text-align:center;padding:10px 0;">
+      <div style="font-size:48px;margin-bottom:12px;">✅</div>
+      <div style="font-size:16px;font-weight:700;" id="mpunto-nombre">Punto 1</div>
+      <div style="font-size:13px;color:var(--t2);margin-top:6px;" id="mpunto-hora">00:00</div>
+      <div style="font-size:12px;color:var(--t3);margin-top:4px;" id="mpunto-ruta">Ruta 1</div>
+    </div>
+  </div>
+</div>
+
 <script>
+// ══════════════════════════════════════════════
+//  CONFIG
+// ══════════════════════════════════════════════
 const API = 'https://script.google.com/macros/s/AKfycbyTBx0onyXsVXYgKa7PorHOjrkk6Z3w4PNsWJcS83wn65YNZ8le70JaKC-0GkNp05M5/exec';
 
-// ══ CHECKLIST ══
+// Radio de detección de puntos de paso en metros
+const RADIO_DETECCION = 80;
+
+// ══════════════════════════════════════════════
+//  PUNTOS DE PASO POR RUTA
+//  Cada punto: { lat, lng, nombre, id }
+//  Se agruparon los puntos muy cercanos (< 50m entre sí) 
+//  manteniendo uno representativo por zona.
+// ══════════════════════════════════════════════
+const RUTAS_PUNTOS = {
+  1: [
+    {id:'R1-P01', nombre:'Zona Norte A',      lat:6.172979, lng:-75.591563},
+    {id:'R1-P02', nombre:'Sector Central',     lat:6.169650, lng:-75.585345},
+    {id:'R1-P03', nombre:'Cruce Occidental',   lat:6.165685, lng:-75.589418},
+    {id:'R1-P04', nombre:'Zona Sur',           lat:6.163346, lng:-75.596569},
+    {id:'R1-P05', nombre:'Barrio El Poblado',  lat:6.159087, lng:-75.593175},
+    {id:'R1-P06', nombre:'Cruce Sur-Este',     lat:6.158459, lng:-75.595164},
+    {id:'R1-P07', nombre:'Sector Industrial',  lat:6.160412, lng:-75.595223},
+    {id:'R1-P08', nombre:'Puente Principal',   lat:6.162162, lng:-75.594430},
+    {id:'R1-P09', nombre:'Av. Central',        lat:6.164373, lng:-75.596297},
+    {id:'R1-P10', nombre:'Parque Norte',       lat:6.167709, lng:-75.587454},
+    {id:'R1-P11', nombre:'Terminal Bus',       lat:6.165512, lng:-75.579734},
+    {id:'R1-P12', nombre:'Bodega Central',     lat:6.150840, lng:-75.577757},
+    {id:'R1-P13', nombre:'Zona Comercial',     lat:6.162937, lng:-75.602489},
+    {id:'R1-P14', nombre:'Sector Residencial', lat:6.166558, lng:-75.579127},
+    {id:'R1-P15', nombre:'Fin de Ruta',        lat:6.168393, lng:-75.597081},
+  ],
+  2: [
+    {id:'R2-P01', nombre:'Inicio Ruta 2',     lat:6.172519, lng:-75.578995},
+    {id:'R2-P02', nombre:'Sector Norte',       lat:6.178978, lng:-75.583935},
+    {id:'R2-P03', nombre:'Av. Laureles',       lat:6.177895, lng:-75.586640},
+    {id:'R2-P04', nombre:'Cruce Principal',    lat:6.175458, lng:-75.584604},
+    {id:'R2-P05', nombre:'Parque Laureles',    lat:6.175929, lng:-75.584288},
+    {id:'R2-P06', nombre:'Sector Estadio',     lat:6.173650, lng:-75.584935},
+    {id:'R2-P07', nombre:'Calle 70',           lat:6.172182, lng:-75.581150},
+    {id:'R2-P08', nombre:'Cruce Occidental',   lat:6.170791, lng:-75.583157},
+    {id:'R2-P09', nombre:'Barrio Floresta',    lat:6.174947, lng:-75.587551},
+    {id:'R2-P10', nombre:'Sector San Joaquín', lat:6.169833, lng:-75.587755},
+    {id:'R2-P11', nombre:'Av. El Poblado',     lat:6.168613, lng:-75.588836},
+    {id:'R2-P12', nombre:'Terminal Sur',       lat:6.166533, lng:-75.589519},
+    {id:'R2-P13', nombre:'Zona Comercial',     lat:6.175743, lng:-75.580961},
+    {id:'R2-P14', nombre:'Bodega Norte',       lat:6.165785, lng:-75.581015},
+    {id:'R2-P15', nombre:'Fin de Ruta 2',      lat:6.170389, lng:-75.579598},
+  ]
+};
+
+// ══════════════════════════════════════════════
+//  CHECKLIST
+// ══════════════════════════════════════════════
 const SECCIONES = {
   motor: [
     'Nivel de aceite','Estado del aceite (color / consistencia)',
@@ -620,21 +762,41 @@ const SECCIONES = {
   ],
 };
 
-// ══ ESTADO ══
+// ══════════════════════════════════════════════
+//  ESTADO GLOBAL
+// ══════════════════════════════════════════════
 let SESSION = null;
 let _respuestas = {};
 let _fotos = {};
 let _estGeneral = '';
 let _tabActiva = 'checklist';
+
+// GPS
 let _watchId = null;
-let _interval = null;
+let _intervalEnvio = null;
+let _intervalCountdown = null;
 let _ultimaPos = null;
 let _envios = 0;
-let _erroresGPS = 0;
 let _rastreando = false;
 let _checklistEnviado = false;
+let _hayRed = navigator.onLine;
+let _enviandoCola = false;
+let _contadorProximo = 15; // segundos hasta próximo envío
 
-// ══ INIT ══
+// Ruta
+let _rutaActiva = 0; // 0 = sin ruta, 1 o 2
+let _puntosVisitados = {}; // id -> {hora, fecha}
+let _puntoNotificado = {}; // evitar notificar 2 veces el mismo punto
+
+// Wake Lock
+let _wakeLock = null;
+
+const COLA_KEY  = 'fc_gps_cola';
+const COLA_MAX  = 500;
+
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
 window.addEventListener('load', () => {
   const email = localStorage.getItem('fc_email');
   const placa  = localStorage.getItem('fc_placa');
@@ -642,44 +804,49 @@ window.addEventListener('load', () => {
   if(email) document.getElementById('l-email').value = email;
   if(placa) document.getElementById('l-placa').value = placa;
   if(ruta)  document.getElementById('l-ruta').value  = ruta;
-  mantenerPantallaActiva();
   document.getElementById('l-pass').addEventListener('keydown', e => { if(e.key==='Enter') iniciarSesion(); });
+  pedirWakeLock();
+  // Recuperar estado de ruta desde localStorage
+  const rutaGuardada = Number(localStorage.getItem('fc_ruta_activa') || '0');
+  const visitadosGuardados = localStorage.getItem('fc_puntos_visitados');
+  if(rutaGuardada) _rutaActiva = rutaGuardada;
+  if(visitadosGuardados){ try{ _puntosVisitados = JSON.parse(visitadosGuardados); }catch(e){} }
 });
 
-function mantenerPantallaActiva(){
-  try { if('wakeLock' in navigator) navigator.wakeLock.request('screen'); } catch(e){}
+async function pedirWakeLock(){
+  try {
+    if('wakeLock' in navigator){
+      _wakeLock = await navigator.wakeLock.request('screen');
+      _wakeLock.addEventListener('release', () => {
+        // Intentar reconectar si la pantalla se apaga
+        pedirWakeLock();
+      });
+    }
+  } catch(e){}
 }
 
-// ══ LOGIN CON EMAIL + CLAVE ══
+// ══════════════════════════════════════════════
+//  LOGIN
+// ══════════════════════════════════════════════
 async function iniciarSesion(){
-  const email    = document.getElementById('l-email').value.trim().toLowerCase();
-  const clave    = document.getElementById('l-pass').value.trim();
-  const placa    = document.getElementById('l-placa').value.trim().toUpperCase();
-  const ruta     = document.getElementById('l-ruta').value.trim();
-  const tipoVeh  = document.getElementById('l-tipoveh').value;
-  const errEl    = document.getElementById('l-err');
-  const btn      = document.getElementById('l-btn');
+  const email   = document.getElementById('l-email').value.trim().toLowerCase();
+  const clave   = document.getElementById('l-pass').value.trim();
+  const placa   = document.getElementById('l-placa').value.trim().toUpperCase();
+  const ruta    = document.getElementById('l-ruta').value.trim();
+  const tipoVeh = document.getElementById('l-tipoveh').value;
+  const errEl   = document.getElementById('l-err');
+  const btn     = document.getElementById('l-btn');
 
   errEl.style.display = 'none';
 
-  if(!email || !clave){
-    errEl.textContent = 'Ingresa tu correo y contraseña.';
-    errEl.style.display = 'block'; return;
-  }
-  if(!placa){
-    errEl.textContent = 'Ingresa la placa del vehículo.';
-    errEl.style.display = 'block'; return;
-  }
+  if(!email || !clave){ errEl.textContent='Ingresa tu correo y contraseña.'; errEl.style.display='block'; return; }
+  if(!placa){ errEl.textContent='Ingresa la placa del vehículo.'; errEl.style.display='block'; return; }
 
   btn.disabled = true;
   btn.innerHTML = '<span class="spin"></span>Verificando...';
 
-  // Verificar credenciales contra el backend (mismo endpoint que el panel admin)
   try {
-    const params = new URLSearchParams({
-      accion: 'listar', modulo: 'conductores',
-      email, clave
-    });
+    const params = new URLSearchParams({ accion:'listar', modulo:'conductores', email, clave });
     const resp = await fetch(API + '?' + params);
     const data = await resp.json();
 
@@ -687,84 +854,57 @@ async function iniciarSesion(){
       const msg = data.error || 'Error de autenticación';
       const mensajes = {
         'Clave incorrecta':      'Contraseña incorrecta.',
-        'Usuario no encontrado': 'Correo no registrado en el sistema.',
-        'Usuario inactivo':      'Tu cuenta está inactiva. Contacta al administrador.',
-        'Sin permiso':           'Tu rol no tiene acceso a esta función.',
+        'Usuario no encontrado': 'Correo no registrado.',
+        'Usuario inactivo':      'Tu cuenta está inactiva.',
+        'Sin permiso':           'Sin acceso.',
         'Credenciales requeridas': 'Ingresa correo y contraseña.',
       };
       errEl.textContent = mensajes[msg] || msg;
       errEl.style.display = 'block';
-      btn.disabled = false;
-      btn.textContent = 'Ingresar y comenzar';
-      return;
+      btn.disabled = false; btn.textContent = 'Ingresar y comenzar'; return;
     }
 
-    // Buscar el conductor en la lista retornada
-    const conductor = (data.data || []).find(
-      u => String(u.Email || '').toLowerCase() === email
-    );
+    const conductor = (data.data||[]).find(u => String(u.Email||'').toLowerCase() === email);
+    if(!conductor){ errEl.textContent='Usuario no encontrado.'; errEl.style.display='block'; btn.disabled=false; btn.textContent='Ingresar y comenzar'; return; }
+    if(conductor.Estado !== 'Activo'){ errEl.textContent='Tu cuenta está inactiva.'; errEl.style.display='block'; btn.disabled=false; btn.textContent='Ingresar y comenzar'; return; }
 
-    if(!conductor){
-      errEl.textContent = 'Usuario no encontrado con ese correo.';
-      errEl.style.display = 'block';
-      btn.disabled = false;
-      btn.textContent = 'Ingresar y comenzar';
-      return;
-    }
-    if(conductor.Estado !== 'Activo'){
-      errEl.textContent = 'Tu cuenta está inactiva. Contacta al administrador.';
-      errEl.style.display = 'block';
-      btn.disabled = false;
-      btn.textContent = 'Ingresar y comenzar';
-      return;
-    }
-
-    // Autenticado ✅
-    SESSION = {
-      email, clave,
-      nombre: conductor.Nombre || email.split('@')[0],
-      rol:    conductor.Rol || 'conductor',
-      placa, ruta, tipoVeh,
-    };
-
+    SESSION = { email, clave, nombre: conductor.Nombre||email.split('@')[0], rol: conductor.Rol||'conductor', placa, ruta, tipoVeh };
     localStorage.setItem('fc_email', email);
     localStorage.setItem('fc_placa', placa);
     localStorage.setItem('fc_ruta',  ruta);
 
-    btn.disabled = false;
-    btn.textContent = 'Ingresar y comenzar';
+    btn.disabled = false; btn.textContent = 'Ingresar y comenzar';
     mostrarApp();
 
   } catch(e) {
     errEl.textContent = 'Error de conexión: ' + e.message;
     errEl.style.display = 'block';
-    btn.disabled = false;
-    btn.textContent = 'Ingresar y comenzar';
+    btn.disabled = false; btn.textContent = 'Ingresar y comenzar';
   }
 }
 
 function mostrarApp(){
   document.getElementById('pg-login').style.display = 'none';
   document.getElementById('pg-app').style.display = 'block';
-
   document.getElementById('h-placa').textContent     = SESSION.placa;
   document.getElementById('h-conductor').textContent = SESSION.nombre;
   document.getElementById('r-placa').textContent     = SESSION.placa;
   document.getElementById('r-conductor').textContent = SESSION.nombre;
-
   const hoy  = new Date().toISOString().split('T')[0];
   const hora = new Date().toTimeString().slice(0,5);
   document.getElementById('ch-fecha').value = hoy;
   document.getElementById('ch-hora').value  = hora;
-
   construirChecklist();
+  // Si ya había una ruta seleccionada hoy, renderizarla
+  if(_rutaActiva) renderRuta(_rutaActiva);
 }
 
-// ══ CONSTRUIR CHECKLIST ══
+// ══════════════════════════════════════════════
+//  CHECKLIST — igual que antes
+// ══════════════════════════════════════════════
 function construirChecklist(){
   Object.entries(SECCIONES).forEach(([sec, items]) => {
-    _respuestas[sec] = {};
-    _fotos[sec] = [];
+    _respuestas[sec] = {}; _fotos[sec] = [];
     const cont = document.getElementById('items-' + sec);
     if(!cont) return;
     cont.innerHTML = items.map((label, i) => `
@@ -781,345 +921,228 @@ function construirChecklist(){
   actualizarProgreso();
 }
 
-// ══ SELECCIÓN DE OPCIÓN ══
 function selOpt(sec, idx, val){
   _respuestas[sec][idx] = val;
   const map = {Bien:'bien',Regular:'regular',Mal:'mal','N/A':'na'};
   ['Bien','Regular','Mal','N/A'].forEach(o => {
     const btn = document.getElementById('opt-' + sec + '-' + idx + '-' + map[o]);
-    if(!btn) return;
-    const cls = map[o];
-    btn.className = 'opt-btn' + (o === val ? ' sel-' + cls : '');
+    if(btn) btn.className = 'opt-btn' + (o===val?' sel-'+map[o]:'');
   });
-  actualizarSeccion(sec);
-  actualizarProgreso();
-  autoEstadoGeneral();
+  actualizarSeccion(sec); actualizarProgreso(); autoEstadoGeneral();
 }
 
 function actualizarSeccion(sec){
   const resp = _respuestas[sec] || {};
   const total = SECCIONES[sec].length;
   const respondidos = Object.keys(resp).length;
-  const males    = Object.values(resp).filter(v=>v==='Mal').length;
-  const regulares= Object.values(resp).filter(v=>v==='Regular').length;
-
-  const stEl = document.getElementById('st-' + sec);
-  if(stEl) stEl.textContent = respondidos + '/' + total;
-
-  const ssEl = document.getElementById('ss-' + sec);
+  const males = Object.values(resp).filter(v=>v==='Mal').length;
+  const regulares = Object.values(resp).filter(v=>v==='Regular').length;
+  const stEl = document.getElementById('st-'+sec);
+  if(stEl) stEl.textContent = respondidos+'/'+total;
+  const ssEl = document.getElementById('ss-'+sec);
   if(ssEl){
-    if(males > 0)          ssEl.innerHTML = '<span style="color:#f87171;font-size:12px;font-weight:700;">' + males + ' MAL</span>';
-    else if(regulares > 0) ssEl.innerHTML = '<span style="color:#fbbf24;font-size:12px;font-weight:700;">' + regulares + ' REG</span>';
-    else if(respondidos === total) ssEl.innerHTML = '<span style="color:#4ade80;font-size:12px;font-weight:700;">OK</span>';
-    else ssEl.innerHTML = '';
+    if(males>0) ssEl.innerHTML='<span style="color:#f87171;font-size:12px;font-weight:700;">'+males+' MAL</span>';
+    else if(regulares>0) ssEl.innerHTML='<span style="color:#fbbf24;font-size:12px;font-weight:700;">'+regulares+' REG</span>';
+    else if(respondidos===total) ssEl.innerHTML='<span style="color:#4ade80;font-size:12px;font-weight:700;">OK</span>';
+    else ssEl.innerHTML='';
   }
 }
 
 function actualizarProgreso(){
   const secs = Object.keys(SECCIONES);
-  let totalItems = 0, respondidos = 0;
-  secs.forEach(sec => {
-    totalItems += SECCIONES[sec].length;
-    respondidos += Object.keys(_respuestas[sec] || {}).length;
-  });
-  const pct = totalItems > 0 ? Math.round(respondidos / totalItems * 100) : 0;
-  document.getElementById('prog-pct').textContent = pct + '%';
+  let totalItems=0, respondidos=0;
+  secs.forEach(sec=>{ totalItems+=SECCIONES[sec].length; respondidos+=Object.keys(_respuestas[sec]||{}).length; });
+  const pct = totalItems>0 ? Math.round(respondidos/totalItems*100) : 0;
+  document.getElementById('prog-pct').textContent = pct+'%';
   const fill = document.getElementById('prog-fill');
-  fill.style.width = pct + '%';
-  fill.className = 'progreso-fill' + (pct === 100 ? ' completo' : pct >= 60 ? '' : ' advertencia');
+  fill.style.width = pct+'%';
+  fill.className = 'progreso-fill'+(pct===100?' completo':pct>=60?'':' advertencia');
 }
 
 function autoEstadoGeneral(){
-  const allResp = Object.values(_respuestas).flatMap(r => Object.values(r));
-  const males    = allResp.filter(v=>v==='Mal').length;
-  const regulares= allResp.filter(v=>v==='Regular').length;
-  if(males > 0)          selEstGeneral('Rechazado');
-  else if(regulares > 0) selEstGeneral('Aprobado con observaciones');
-  else if(allResp.length > 0) selEstGeneral('Aprobado');
+  const allResp = Object.values(_respuestas).flatMap(r=>Object.values(r));
+  const males = allResp.filter(v=>v==='Mal').length;
+  const regulares = allResp.filter(v=>v==='Regular').length;
+  if(males>0) selEstGeneral('Rechazado');
+  else if(regulares>0) selEstGeneral('Aprobado con observaciones');
+  else if(allResp.length>0) selEstGeneral('Aprobado');
 }
 
-// ══ ESTADO GENERAL ══
 function selEstGeneral(val){
   _estGeneral = val;
-  document.getElementById('eg-aprobado').className  = 'est-btn' + (val==='Aprobado' ? ' sel-aprobado' : '');
-  document.getElementById('eg-obs').className       = 'est-btn' + (val==='Aprobado con observaciones' ? ' sel-obs' : '');
-  document.getElementById('eg-rechazado').className = 'est-btn' + (val==='Rechazado' ? ' sel-rechazado' : '');
+  document.getElementById('eg-aprobado').className  = 'est-btn'+(val==='Aprobado'?' sel-aprobado':'');
+  document.getElementById('eg-obs').className       = 'est-btn'+(val==='Aprobado con observaciones'?' sel-obs':'');
+  document.getElementById('eg-rechazado').className = 'est-btn'+(val==='Rechazado'?' sel-rechazado':'');
   const alEl = document.getElementById('alerta-est-general');
-  if(val === 'Rechazado'){
-    alEl.innerHTML = '<div class="alert a-err" style="margin-top:8px;">Este vehículo NO debe salir a ruta. Notifica al supervisor.</div>';
-  } else if(val === 'Aprobado con observaciones'){
-    alEl.innerHTML = '<div class="alert a-warn" style="margin-top:8px;">El vehículo puede operar pero hay ítems en Regular. Repórtalos.</div>';
-  } else {
-    alEl.innerHTML = '';
-  }
+  if(val==='Rechazado') alEl.innerHTML='<div class="alert a-err" style="margin-top:8px;">Este vehículo NO debe salir a ruta. Notifica al supervisor.</div>';
+  else if(val==='Aprobado con observaciones') alEl.innerHTML='<div class="alert a-warn" style="margin-top:8px;">El vehículo puede operar pero hay ítems en Regular.</div>';
+  else alEl.innerHTML='';
 }
 
-// ══ FOTOS ══
-function agregarFoto(sec){ document.getElementById('finput-' + sec).click(); }
-
+// ══════════════════════════════════════════════
+//  FOTOS
+// ══════════════════════════════════════════════
+function agregarFoto(sec){ document.getElementById('finput-'+sec).click(); }
 function onFotoSelect(e, sec){
-  Array.from(e.target.files).forEach(file => {
+  Array.from(e.target.files).forEach(file=>{
     const reader = new FileReader();
-    reader.onload = ev => {
-      _fotos[sec].push({ data: ev.target.result, name: file.name, type: file.type });
-      renderFotos(sec);
-    };
+    reader.onload = ev => { _fotos[sec].push({data:ev.target.result,name:file.name,type:file.type}); renderFotos(sec); };
     reader.readAsDataURL(file);
   });
-  e.target.value = '';
+  e.target.value='';
 }
-
 function renderFotos(sec){
-  const cont = document.getElementById('fotos-' + sec);
-  if(!cont) return;
-  cont.innerHTML = _fotos[sec].map((f, i) =>
-    `<img class="foto-thumb" src="${f.data}" alt="Foto ${i+1}" onclick="verFoto('${sec}',${i})">`
-  ).join('') + `<div class="foto-add" onclick="agregarFoto('${sec}')">+<span style="font-size:9px;margin-top:2px;">Foto</span></div>`;
+  const cont = document.getElementById('fotos-'+sec); if(!cont) return;
+  cont.innerHTML = _fotos[sec].map((f,i)=>`<img class="foto-thumb" src="${f.data}" alt="Foto ${i+1}" onclick="verFoto('${sec}',${i})">`).join('') +
+    `<div class="foto-add" onclick="agregarFoto('${sec}')">+<span style="font-size:9px;margin-top:2px;">Foto</span></div>`;
 }
-
-let _modalFotoSec = null, _modalFotoIdx = null;
-function verFoto(sec, idx){
-  _modalFotoSec = sec; _modalFotoIdx = idx;
-  document.getElementById('modal-foto-img').src = _fotos[sec][idx].data;
+let _modalFotoSec=null,_modalFotoIdx=null;
+function verFoto(sec,idx){
+  _modalFotoSec=sec; _modalFotoIdx=idx;
+  document.getElementById('modal-foto-img').src=_fotos[sec][idx].data;
   document.getElementById('modal-foto').classList.add('open');
 }
 function cerrarModalFoto(){ document.getElementById('modal-foto').classList.remove('open'); }
-function eliminarFoto(){
-  _fotos[_modalFotoSec].splice(_modalFotoIdx, 1);
-  renderFotos(_modalFotoSec);
-  cerrarModalFoto();
-}
+function eliminarFoto(){ _fotos[_modalFotoSec].splice(_modalFotoIdx,1); renderFotos(_modalFotoSec); cerrarModalFoto(); }
 
-// ══ TOGGLE SECCIONES ══
+// ══════════════════════════════════════════════
+//  TOGGLE SECCIONES
+// ══════════════════════════════════════════════
 function toggleSec(id){
-  const body = document.getElementById(id);
-  const key  = id.replace('s-','');
-  const chev = document.getElementById('ch-' + key);
-  if(body.classList.contains('open')){
-    body.classList.remove('open');
-    if(chev) chev.textContent = '▶';
-  } else {
-    body.classList.add('open');
-    if(chev) chev.textContent = '▼';
-  }
+  const body=document.getElementById(id);
+  const key=id.replace('s-','');
+  const chev=document.getElementById('ch-'+key);
+  if(body.classList.contains('open')){ body.classList.remove('open'); if(chev) chev.textContent='▶'; }
+  else{ body.classList.add('open'); if(chev) chev.textContent='▼'; }
 }
 
-// ══ ENVIAR CHECKLIST ══
+// ══════════════════════════════════════════════
+//  ENVIAR CHECKLIST
+// ══════════════════════════════════════════════
 async function enviarChecklist(){
   if(!_estGeneral){ showAlertCheck('Selecciona el estado general del vehículo.','err'); return; }
-
-  const totalItems  = Object.values(SECCIONES).reduce((s,v)=>s+v.length, 0);
-  const respondidos = Object.values(_respuestas).reduce((s,r)=>s+Object.keys(r).length, 0);
-  const pct = Math.round(respondidos / totalItems * 100);
-
-  if(pct < 50){
-    showAlertCheck('Responde al menos el 50% de los ítems (' + respondidos + '/' + totalItems + ').','warn');
-    return;
-  }
+  const totalItems = Object.values(SECCIONES).reduce((s,v)=>s+v.length,0);
+  const respondidos = Object.values(_respuestas).reduce((s,r)=>s+Object.keys(r).length,0);
+  const pct = Math.round(respondidos/totalItems*100);
+  if(pct<50){ showAlertCheck('Responde al menos el 50% de los ítems ('+respondidos+'/'+totalItems+').','warn'); return; }
 
   const btn = document.querySelector('.footer-actions .btn-pri');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spin"></span>Enviando...';
+  btn.disabled=true; btn.innerHTML='<span class="spin"></span>Enviando...';
 
-  const chId = 'CH-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random()*9000)+1000);
-
+  const chId = 'CH-'+new Date().getFullYear()+'-'+String(Math.floor(Math.random()*9000)+1000);
   const payload = {
-    accion: 'crear',
-    modulo: 'checklist',
-    // Credenciales del conductor autenticado
-    email: SESSION.email,
-    clave: SESSION.clave,
-    // Datos del checklist
-    ID_Check:        chId,
-    Placa:           SESSION.placa,
-    Conductor:       SESSION.nombre,
-    Tipo:            document.getElementById('ch-tipo').value,
-    Fecha:           document.getElementById('ch-fecha').value,
-    Hora:            document.getElementById('ch-hora').value,
-    Motor:           resumenSeccion('motor'),
-    Frenos:          resumenSeccion('frenos'),
-    Llantas:         resumenSeccion('llantas'),
-    Luces:           resumenSeccion('luces'),
-    Fluidos:         resumenSeccion('fluidos'),
-    Carroceria:      resumenSeccion('carroceria'),
-    Estado_General:  _estGeneral,
-    Observaciones:   document.getElementById('ch-obs-txt').value,
-    Motor_JSON:      JSON.stringify(buildJSON('motor')),
-    Frenos_JSON:     JSON.stringify(buildJSON('frenos')),
-    Llantas_JSON:    JSON.stringify(buildJSON('llantas')),
-    Luces_JSON:      JSON.stringify(buildJSON('luces')),
-    Fluidos_JSON:    JSON.stringify(buildJSON('fluidos')),
-    Carroceria_JSON: JSON.stringify(buildJSON('carroceria')),
-    Electrico_JSON:  JSON.stringify(buildJSON('electrico')),
-    Odometro:        document.getElementById('ch-km').value || 0,
-    Email_Notif:     document.getElementById('ch-email-notif').value,
-    Fotos_JSON:      JSON.stringify(buildFotosResumen()),
-    Completado_Pct:  pct,
+    accion:'crear', modulo:'checklist',
+    email:SESSION.email, clave:SESSION.clave,
+    ID_Check:chId, Placa:SESSION.placa, Conductor:SESSION.nombre,
+    Tipo:document.getElementById('ch-tipo').value,
+    Fecha:document.getElementById('ch-fecha').value,
+    Hora:document.getElementById('ch-hora').value,
+    Motor:resumenSeccion('motor'), Frenos:resumenSeccion('frenos'),
+    Llantas:resumenSeccion('llantas'), Luces:resumenSeccion('luces'),
+    Fluidos:resumenSeccion('fluidos'), Carroceria:resumenSeccion('carroceria'),
+    Estado_General:_estGeneral,
+    Observaciones:document.getElementById('ch-obs-txt').value,
+    Odometro:document.getElementById('ch-km').value||0,
+    Email_Notif:document.getElementById('ch-email-notif').value,
+    Completado_Pct:pct,
   };
 
   try {
-    const r    = await fetch(API, { method:'POST', body: JSON.stringify(payload) });
+    const r = await fetch(API, {method:'POST', body:JSON.stringify(payload)});
     const data = await r.json();
-
-    btn.disabled = false;
-    btn.textContent = 'Enviar checklist';
-
+    btn.disabled=false; btn.textContent='Enviar checklist';
     if(data.ok){
       _checklistEnviado = true;
       guardarHistorialLocal(payload);
-
-      // ✅ Mostrar alerta de éxito y navegar al rastreo
-      showAlertCheck('✅ Checklist ' + chId + ' enviado. ¡Tu turno ha iniciado!', 'ok');
-
-      setTimeout(() => {
+      showAlertCheck('✅ Checklist '+chId+' enviado correctamente.','ok');
+      setTimeout(()=>{
         irTab('rastreo');
-        // Mostrar banner de turno iniciado
         const banner = document.getElementById('turno-banner');
-        const bannerSub = document.getElementById('turno-banner-sub');
-        banner.style.display = 'block';
-        bannerSub.textContent = 'Checklist ' + chId + ' enviado el ' +
-          document.getElementById('ch-fecha').value + ' a las ' +
-          document.getElementById('ch-hora').value + '. Estado: ' + _estGeneral;
-
-        // Iniciar rastreo automáticamente
+        banner.style.display='block';
+        document.getElementById('turno-banner-sub').textContent = 'Checklist '+chId+' enviado el '+payload.Fecha+' a las '+payload.Hora+'. Estado: '+_estGeneral;
         iniciarRastreo();
       }, 1800);
-
     } else {
-      const msg = data.error || 'Error desconocido';
-      const mensajes = {
-        'Sin permiso': 'Tu rol no tiene permiso para enviar checklists. Contacta al administrador.',
-        'Usuario inactivo': 'Tu cuenta está inactiva.',
-        'Clave incorrecta': 'Error de sesión. Cierra y vuelve a ingresar.',
-      };
-      showAlertCheck('❌ ' + (mensajes[msg] || msg), 'err');
+      const msg = data.error||'Error desconocido';
+      showAlertCheck('❌ '+msg,'err');
     }
   } catch(e) {
-    btn.disabled = false;
-    btn.textContent = 'Enviar checklist';
-    showAlertCheck('Error de red: ' + e.message, 'err');
+    btn.disabled=false; btn.textContent='Enviar checklist';
+    showAlertCheck('Error de red: '+e.message,'err');
   }
 }
 
 function resumenSeccion(sec){
-  const vals = Object.values(_respuestas[sec] || {});
+  const vals = Object.values(_respuestas[sec]||{});
   if(!vals.length) return 'Sin revisar';
-  if(vals.includes('Mal'))     return 'Mal';
+  if(vals.includes('Mal')) return 'Mal';
   if(vals.includes('Regular')) return 'Regular';
   return 'Bien';
 }
-
-function buildJSON(sec){
-  const items = SECCIONES[sec] || [];
-  const resp  = _respuestas[sec] || {};
-  const result = {};
-  items.forEach((label, i) => { result[label] = resp[i] || '—'; });
-  return result;
+function showAlertCheck(msg,tipo){
+  document.getElementById('al-check').innerHTML='<div class="alert a-'+tipo+'">'+msg+'</div>';
+  document.getElementById('al-check').scrollIntoView({behavior:'smooth'});
 }
-
-function buildFotosResumen(){
-  const resumen = {};
-  Object.entries(_fotos).forEach(([sec, arr]) => {
-    if(arr.length) resumen[sec] = arr.length + ' foto(s)';
-  });
-  return resumen;
-}
-
-function showAlertCheck(msg, tipo){
-  document.getElementById('al-check').innerHTML = '<div class="alert a-' + tipo + '">' + msg + '</div>';
-  document.getElementById('al-check').scrollIntoView({ behavior:'smooth' });
-}
-
-// ══ LIMPIAR CHECKLIST ══
 function limpiarChecklist(){
   if(!confirm('¿Limpiar todas las respuestas?')) return;
-  Object.keys(SECCIONES).forEach(sec => {
-    _respuestas[sec] = {};
-    _fotos[sec] = [];
-    renderFotos(sec);
-    SECCIONES[sec].forEach((_, i) => {
-      ['bien','regular','mal','na'].forEach(o => {
-        const b = document.getElementById('opt-' + sec + '-' + i + '-' + o);
-        if(b) b.className = 'opt-btn';
-      });
-    });
+  Object.keys(SECCIONES).forEach(sec=>{
+    _respuestas[sec]={}; _fotos[sec]=[]; renderFotos(sec);
+    SECCIONES[sec].forEach((_,i)=>['bien','regular','mal','na'].forEach(o=>{
+      const b=document.getElementById('opt-'+sec+'-'+i+'-'+o);
+      if(b) b.className='opt-btn';
+    }));
     actualizarSeccion(sec);
   });
-  _estGeneral = '';
-  ['eg-aprobado','eg-obs','eg-rechazado'].forEach(id => {
-    document.getElementById(id).className = 'est-btn';
-  });
-  document.getElementById('alerta-est-general').innerHTML = '';
-  document.getElementById('al-check').innerHTML = '';
+  _estGeneral='';
+  ['eg-aprobado','eg-obs','eg-rechazado'].forEach(id=>document.getElementById(id).className='est-btn');
+  document.getElementById('alerta-est-general').innerHTML='';
+  document.getElementById('al-check').innerHTML='';
   actualizarProgreso();
 }
 
-// ══════════════════════════════════════════
-//  COLA OFFLINE — puntos GPS guardados en
-//  localStorage cuando no hay señal de red.
-//  Se reenvían automáticamente al recuperar
-//  la conexión, en orden cronológico.
-// ══════════════════════════════════════════
-const COLA_KEY   = 'fc_gps_cola';
-const COLA_MAX   = 500;   // máx puntos guardados (~2h a 15 s/punto)
-let   _hayRed    = navigator.onLine;
-let   _enviandoCola = false;
+function guardarHistorialLocal(payload){
+  try {
+    const hist = JSON.parse(localStorage.getItem('fc_historial')||'[]');
+    hist.unshift({id:payload.ID_Check,placa:payload.Placa,conductor:payload.Conductor,fecha:payload.Fecha,hora:payload.Hora,tipo:payload.Tipo,estado:payload.Estado_General,pct:payload.Completado_Pct,obs:payload.Observaciones});
+    localStorage.setItem('fc_historial', JSON.stringify(hist.slice(0,50)));
+  } catch(e){}
+}
 
-function colaCargar(){
-  try { return JSON.parse(localStorage.getItem(COLA_KEY) || '[]'); } catch(e){ return []; }
-}
-function colaGuardar(arr){
-  try { localStorage.setItem(COLA_KEY, JSON.stringify(arr.slice(-COLA_MAX))); } catch(e){}
-}
-function colaAgregar(punto){
-  const arr = colaCargar();
-  arr.push(punto);
-  colaGuardar(arr);
-  actualizarIndicadorCola();
-}
-function colaVaciar(){
-  localStorage.removeItem(COLA_KEY);
-  actualizarIndicadorCola();
-}
+// ══════════════════════════════════════════════
+//  COLA OFFLINE
+// ══════════════════════════════════════════════
+function colaCargar(){ try{ return JSON.parse(localStorage.getItem(COLA_KEY)||'[]'); }catch(e){ return []; } }
+function colaGuardar(arr){ try{ localStorage.setItem(COLA_KEY, JSON.stringify(arr.slice(-COLA_MAX))); }catch(e){} }
+function colaAgregar(punto){ const arr=colaCargar(); arr.push(punto); colaGuardar(arr); actualizarIndicadorCola(); }
+function colaVaciar(){ localStorage.removeItem(COLA_KEY); actualizarIndicadorCola(); }
 
 function actualizarIndicadorCola(){
-  const n   = colaCargar().length;
-  const el  = document.getElementById('cola-contador');
+  const n = colaCargar().length;
+  const el = document.getElementById('cola-contador');
   const row = document.getElementById('cola-row');
   const cnt = document.getElementById('r-cola');
   if(cnt) cnt.textContent = n;
-  if(!el || !row) return;
-  if(n > 0){
-    row.style.display = 'flex';
-    el.textContent = n + ' punto' + (n===1?'':'s') + ' guardado' + (n===1?'':'s') + ' sin enviar';
-  } else {
-    row.style.display = 'none';
-  }
+  if(!el||!row) return;
+  if(n>0){ row.style.display='flex'; el.textContent=n+' punto'+(n===1?'':'s')+' sin enviar'; }
+  else row.style.display='none';
 }
 
-// Escuchar cambios de red
-window.addEventListener('online',  () => { _hayRed = true;  onRedRecuperada(); });
-window.addEventListener('offline', () => { _hayRed = false; onRedPerdida();    });
+window.addEventListener('online',  ()=>{ _hayRed=true;  onRedRecuperada(); });
+window.addEventListener('offline', ()=>{ _hayRed=false; onRedPerdida(); });
 
 function onRedPerdida(){
-  agregarLogGPS('⚠ Sin señal — guardando puntos en cola local', 'err');
+  agregarLogGPS('⚠ Sin red — guardando puntos localmente','err');
   actualizarEstadoRed(false);
 }
-
 function onRedRecuperada(){
-  agregarLogGPS('✓ Señal recuperada — vaciando cola...', 'ok');
+  agregarLogGPS('✓ Red recuperada — sincronizando cola...','ok');
   actualizarEstadoRed(true);
   vaciarColaOffline();
 }
-
 function actualizarEstadoRed(online){
-  const badge = document.getElementById('h-gps-badge');
+  const badge=document.getElementById('h-gps-badge');
   if(!badge) return;
-  if(!online && _rastreando){
-    badge.textContent = 'Sin red';
-    badge.className   = 'header-badge badge-offline';
-  }
-  // Si online, se actualiza desde onPos()
+  if(!online && _rastreando){ badge.textContent='Sin red'; badge.className='header-badge badge-offline'; }
 }
 
 async function vaciarColaOffline(){
@@ -1127,70 +1150,100 @@ async function vaciarColaOffline(){
   const cola = colaCargar();
   if(!cola.length) return;
   _enviandoCola = true;
-  agregarLogGPS('Reenviando ' + cola.length + ' punto(s) guardados...', '');
-
+  agregarLogGPS('Reenviando '+cola.length+' punto(s)...','');
   let enviados = 0;
   for(const punto of cola){
     try {
-      const r = await fetch(API, { method:'POST', body: JSON.stringify(punto) });
+      const r = await fetch(API,{method:'POST',body:JSON.stringify(punto)});
       await r.json();
-      enviados++;
-      _envios++;
+      enviados++; _envios++;
       document.getElementById('r-envios').textContent = _envios;
-    } catch(e){
-      // Si vuelve a fallar, dejar el resto en cola y salir
-      break;
-    }
+    } catch(e){ break; }
   }
-
-  // Quitar los que se enviaron exitosamente
   const restante = colaCargar().slice(enviados);
   colaGuardar(restante);
   actualizarIndicadorCola();
   _enviandoCola = false;
-
-  if(enviados > 0){
-    agregarLogGPS('✓ ' + enviados + ' punto(s) reenviados desde la cola', 'ok');
-  }
-  const pendientes = restante.length;
-  if(pendientes > 0){
-    agregarLogGPS('⚠ ' + pendientes + ' punto(s) aún pendientes', 'err');
-  }
+  if(enviados>0) agregarLogGPS('✓ '+enviados+' punto(s) sincronizados','ok');
+  if(restante.length>0) agregarLogGPS('⚠ '+restante.length+' pendientes','err');
 }
 
-// ══ RASTREO GPS ══
+// ══════════════════════════════════════════════
+//  RASTREO GPS — CORREGIDO
+//  Problemas anteriores:
+//  1) watchPosition se perdía si el SO suspendía la app
+//  2) No había reconexión automática al recuperar GPS
+//  3) El contador de próximo envío no reiniciaba bien
+// ══════════════════════════════════════════════
+let _ultimoEnvioTimestamp = 0;
+let _reconexionTimeout = null;
+const INTERVALO_ENVIO = 15; // segundos
+
 function iniciarRastreo(){
   if(!navigator.geolocation){
-    document.getElementById('al-rastreo').innerHTML = '<div class="alert a-err">Tu dispositivo no soporta GPS.</div>';
+    document.getElementById('al-rastreo').innerHTML='<div class="alert a-err">Tu dispositivo no soporta GPS.</div>';
     return;
   }
   _rastreando = true;
   actualizarEstadoRastreo('conectando');
-  document.getElementById('btn-iniciar-rastreo').style.display = 'none';
-  document.getElementById('btn-detener-rastreo').style.display = 'block';
+  document.getElementById('btn-iniciar-rastreo').style.display='none';
+  document.getElementById('btn-detener-rastreo').style.display='block';
 
-  _watchId  = navigator.geolocation.watchPosition(onPos, onErrGPS,
-    { enableHighAccuracy:true, timeout:15000, maximumAge:5000 });
-  _interval = setInterval(cicloEnvio, 15000);
+  // Limpiar watcher anterior si existe
+  if(_watchId !== null){ try{ navigator.geolocation.clearWatch(_watchId); }catch(e){} _watchId=null; }
+  if(_intervalEnvio){ clearInterval(_intervalEnvio); _intervalEnvio=null; }
+  if(_intervalCountdown){ clearInterval(_intervalCountdown); _intervalCountdown=null; }
 
-  // Intentar vaciar cola pendiente al arrancar (pudo haber quedado de sesión anterior)
+  // watchPosition con opciones optimizadas para mantenerlo activo
+  _watchId = navigator.geolocation.watchPosition(onPos, onErrGPS, {
+    enableHighAccuracy: true,
+    timeout: 30000,         // 30s timeout por posición
+    maximumAge: 10000       // acepta posiciones de hasta 10s atrás
+  });
+
+  // Intervalo de envío cada INTERVALO_ENVIO segundos
+  _contadorProximo = INTERVALO_ENVIO;
+  _intervalEnvio = setInterval(cicloEnvio, INTERVALO_ENVIO * 1000);
+
+  // Contador visual para el próximo envío
+  _intervalCountdown = setInterval(()=>{
+    _contadorProximo--;
+    if(_contadorProximo < 0) _contadorProximo = INTERVALO_ENVIO;
+    const el = document.getElementById('proximo-envio');
+    if(el) el.textContent = 'Próximo envío: '+_contadorProximo+'s';
+    // Actualizar indicador keepalive
+    const dot = document.getElementById('keepalive-dot');
+    const txt = document.getElementById('keepalive-txt');
+    if(_rastreando && _ultimaPos){
+      if(dot){ dot.style.background='#4ade80'; dot.style.boxShadow='0 0 6px rgba(74,222,128,.5)'; }
+      if(txt) txt.textContent = 'GPS activo · '+(_hayRed?'Con red':'Sin red — guardando en cola');
+    }
+  }, 1000);
+
+  // Intentar vaciar cola pendiente
   if(_hayRed) vaciarColaOffline();
   actualizarIndicadorCola();
+  pedirWakeLock();
 }
 
 function detenerRastreo(){
-  if(_watchId !== null){ navigator.geolocation.clearWatch(_watchId); _watchId = null; }
-  if(_interval){ clearInterval(_interval); _interval = null; }
+  if(_watchId!==null){ try{ navigator.geolocation.clearWatch(_watchId); }catch(e){} _watchId=null; }
+  if(_intervalEnvio){ clearInterval(_intervalEnvio); _intervalEnvio=null; }
+  if(_intervalCountdown){ clearInterval(_intervalCountdown); _intervalCountdown=null; }
   _rastreando = false;
   actualizarEstadoRastreo('detenido');
-  document.getElementById('btn-iniciar-rastreo').style.display = 'block';
-  document.getElementById('btn-detener-rastreo').style.display = 'none';
-  agregarLogGPS('Rastreo detenido.', '');
-  document.getElementById('gps-dot').className = 'gps-dot off';
-  document.getElementById('h-gps-badge').textContent = 'GPS off';
-  document.getElementById('h-gps-badge').className = 'header-badge badge-gps-off';
-
-  // Intentar vaciar cola al detener si hay red
+  document.getElementById('btn-iniciar-rastreo').style.display='block';
+  document.getElementById('btn-detener-rastreo').style.display='none';
+  agregarLogGPS('Rastreo detenido.','');
+  document.getElementById('gps-dot').className='gps-dot off';
+  document.getElementById('h-gps-badge').textContent='GPS off';
+  document.getElementById('h-gps-badge').className='header-badge badge-gps-off';
+  const dot=document.getElementById('keepalive-dot');
+  if(dot){ dot.style.background='var(--t3)'; dot.style.boxShadow='none'; }
+  const txt=document.getElementById('keepalive-txt');
+  if(txt) txt.textContent='GPS inactivo';
+  const el=document.getElementById('proximo-envio');
+  if(el) el.textContent='—';
   if(_hayRed) vaciarColaOffline();
 }
 
@@ -1198,62 +1251,77 @@ function onPos(pos){
   _ultimaPos = pos;
   const lat  = pos.coords.latitude;
   const lng  = pos.coords.longitude;
-  const vel  = pos.coords.speed != null ? Math.round(pos.coords.speed * 3.6) : null;
+  const vel  = pos.coords.speed != null ? Math.round(pos.coords.speed*3.6) : null;
   const prec = Math.round(pos.coords.accuracy);
-  document.getElementById('gps-coords').textContent = lat.toFixed(5) + ', ' + lng.toFixed(5);
-  document.getElementById('gps-prec').textContent   = 'Precisión: ' + prec + ' m' + (prec > 100 ? ' ⚠ baja' : '');
-  document.getElementById('gps-speed').textContent  = vel !== null ? vel + ' km/h' : '— km/h';
+
+  document.getElementById('gps-coords').textContent = lat.toFixed(5)+', '+lng.toFixed(5);
+  document.getElementById('gps-prec').textContent   = 'Precisión: '+prec+' m'+(prec>100?' ⚠ baja':'');
+  document.getElementById('gps-speed').textContent  = vel!==null ? vel+' km/h' : '— km/h';
 
   if(_hayRed){
-    document.getElementById('gps-dot').className      = 'gps-dot on';
-    document.getElementById('h-gps-badge').textContent = 'GPS ON';
-    document.getElementById('h-gps-badge').className  = 'header-badge badge-gps-on';
+    document.getElementById('gps-dot').className='gps-dot on';
+    document.getElementById('h-gps-badge').textContent='GPS ON';
+    document.getElementById('h-gps-badge').className='header-badge badge-gps-on';
     actualizarEstadoRastreo('activo');
   } else {
-    document.getElementById('gps-dot').className      = 'gps-dot on';
-    document.getElementById('h-gps-badge').textContent = 'Sin red';
-    document.getElementById('h-gps-badge').className  = 'header-badge badge-offline';
+    document.getElementById('gps-dot').className='gps-dot on';
+    document.getElementById('h-gps-badge').textContent='Sin red';
+    document.getElementById('h-gps-badge').className='header-badge badge-offline';
     actualizarEstadoRastreo('sinred');
   }
+
+  // Verificar puntos de paso de la ruta activa
+  if(_rutaActiva) verificarPuntosPaso(lat, lng);
 }
 
 function onErrGPS(err){
+  // En lugar de simplemente reportar el error, intentar reconectar
+  agregarLogGPS('⚠ GPS: '+err.message+' — reconectando...','err');
   actualizarEstadoRastreo('error');
-  agregarLogGPS('Error GPS: ' + err.message, 'err');
+
+  // Reconexión automática después de 5 segundos
+  if(_rastreando){
+    if(_reconexionTimeout) clearTimeout(_reconexionTimeout);
+    _reconexionTimeout = setTimeout(()=>{
+      if(_rastreando){
+        agregarLogGPS('↺ Intentando reconectar GPS...','warn');
+        if(_watchId!==null){ try{ navigator.geolocation.clearWatch(_watchId); }catch(e){} _watchId=null; }
+        _watchId = navigator.geolocation.watchPosition(onPos, onErrGPS, {
+          enableHighAccuracy: true,
+          timeout: 30000,
+          maximumAge: 10000
+        });
+      }
+    }, 5000);
+  }
 }
 
 function actualizarEstadoRastreo(tipo){
-  const card   = document.getElementById('rastreo-card');
-  const icono  = document.getElementById('r-icono');
-  const titulo = document.getElementById('r-titulo');
-  const sub    = document.getElementById('r-sub');
-  card.className = 'rastreo-card' + (tipo==='activo' ? ' activo' : tipo==='sinred' ? ' sinred' : '');
-
-  const estados = {
-    activo:    { i:'📡', t:'● Transmitiendo',       c:'var(--green)', s:'Ubicación enviándose cada 15 segundos',     bc:'var(--green)' },
-    sinred:    { i:'📶', t:'Sin red — modo offline', c:'var(--amber)', s:'GPS activo. Los puntos se guardan y se enviarán cuando vuelva la señal.', bc:'var(--amber)' },
-    conectando:{ i:'🔍', t:'Buscando GPS...',        c:'var(--amber)', s:'Activa el GPS de tu dispositivo',           bc:'var(--amber)' },
-    error:     { i:'📵', t:'Sin señal GPS',           c:'var(--red)',   s:'Revisa los permisos de ubicación',         bc:'var(--red)'   },
-    detenido:  { i:'⏹', t:'Rastreo detenido',        c:'var(--t2)',    s:'Pulsa el botón para reanudar',             bc:'var(--bd)'    },
-    listo:     { i:'📡', t:'Listo para iniciar',      c:'var(--t)',
-      s: _checklistEnviado ? 'Checklist enviado. Pulsa el botón para comenzar el rastreo.' : 'Envía el checklist primero para activar el rastreo.',
-      bc:'var(--bd)' },
+  const card=document.getElementById('rastreo-card');
+  const icono=document.getElementById('r-icono');
+  const titulo=document.getElementById('r-titulo');
+  const sub=document.getElementById('r-sub');
+  card.className='rastreo-card'+(tipo==='activo'?' activo':tipo==='sinred'?' sinred':'');
+  const estados={
+    activo:    {i:'📡',t:'● Transmitiendo',       c:'var(--green)', s:'Ubicación enviándose cada '+INTERVALO_ENVIO+' segundos',bc:'var(--green)'},
+    sinred:    {i:'📶',t:'Sin red — modo offline', c:'var(--amber)', s:'GPS activo. Los puntos se guardan y se enviarán al recuperar la señal.',bc:'var(--amber)'},
+    conectando:{i:'🔍',t:'Buscando GPS...',        c:'var(--amber)', s:'Activa el GPS de tu dispositivo',bc:'var(--amber)'},
+    error:     {i:'📵',t:'Error GPS',              c:'var(--red)',   s:'Reconectando automáticamente en 5 segundos...',bc:'var(--red)'},
+    detenido:  {i:'⏹', t:'Rastreo detenido',       c:'var(--t2)',    s:'Pulsa el botón para reanudar',bc:'var(--bd)'},
+    listo:     {i:'📡',t:'Listo para iniciar',      c:'var(--t)',     s:_checklistEnviado?'Checklist enviado. Pulsa para iniciar el rastreo.':'Envía el checklist primero.',bc:'var(--bd)'},
   };
-  const e = estados[tipo] || estados.listo;
-  icono.textContent        = e.i;
-  titulo.textContent       = e.t;
-  titulo.style.color       = e.c;
-  sub.textContent          = e.s;
-  card.style.borderColor   = e.bc;
+  const e=estados[tipo]||estados.listo;
+  icono.textContent=e.i; titulo.textContent=e.t; titulo.style.color=e.c;
+  sub.textContent=e.s; card.style.borderColor=e.bc;
 }
 
-// cicloEnvio: cada 15s decide si envía directo o encola
 async function cicloEnvio(){
   if(!_ultimaPos || !_rastreando) return;
-  const { latitude, longitude, speed, heading, accuracy } = _ultimaPos.coords;
-  const velocidad = speed != null ? Math.round(speed * 3.6) : 0;
+  _contadorProximo = INTERVALO_ENVIO; // Reiniciar contador
+  const {latitude,longitude,speed,heading,accuracy} = _ultimaPos.coords;
+  const velocidad = speed!=null ? Math.round(speed*3.6) : 0;
   const punto = {
-    accion: 'crear', modulo: 'ubicaciones',
+    accion:'crear', modulo:'ubicaciones',
     Placa:     SESSION.placa,
     Conductor: SESSION.nombre,
     Ruta:      SESSION.ruta,
@@ -1266,126 +1334,279 @@ async function cicloEnvio(){
   };
 
   if(!_hayRed){
-    // Sin red: guardar en cola local
     colaAgregar(punto);
     const n = colaCargar().length;
     const hora = new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-    agregarLogGPS(hora + ' 📥 Cola[' + n + '] ' + latitude.toFixed(4) + ',' + longitude.toFixed(4), 'err');
+    agregarLogGPS(hora+' 📥 Cola['+n+'] '+latitude.toFixed(4)+','+longitude.toFixed(4),'err');
     return;
   }
 
-  // Con red: intentar enviar + vaciar cola pendiente
   try {
-    const resp = await fetch(API, { method:'POST', body: JSON.stringify(punto) });
-    await resp.json();
-    _envios++;
-    document.getElementById('r-envios').textContent = _envios;
-    const hora = new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-    agregarLogGPS(hora + ' ✓ ' + latitude.toFixed(4) + ',' + longitude.toFixed(4) + ' ' + velocidad + 'km/h', 'ok');
-
-    // Aprovechar para vaciar cola si hay pendientes
-    const cola = colaCargar();
-    if(cola.length > 0 && !_enviandoCola) vaciarColaOffline();
-
+    const resp = await fetch(API,{method:'POST',body:JSON.stringify(punto)});
+    const data = await resp.json();
+    if(data.ok || data.mensaje){
+      _envios++;
+      document.getElementById('r-envios').textContent = _envios;
+      const hora = new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+      agregarLogGPS(hora+' ✓ '+latitude.toFixed(4)+','+longitude.toFixed(4)+' '+velocidad+'km/h','ok');
+      _ultimoEnvioTimestamp = Date.now();
+      // Vaciar cola si hay pendientes
+      const cola = colaCargar();
+      if(cola.length>0 && !_enviandoCola) vaciarColaOffline();
+    } else {
+      throw new Error(data.error||'Error respuesta');
+    }
   } catch(e) {
-    // El fetch falló aunque navigator.onLine decía true (edge case)
     _hayRed = false;
     colaAgregar(punto);
-    _erroresGPS++;
-    document.getElementById('r-errores').textContent = _erroresGPS;
-    agregarLogGPS('⚠ Falló envío — punto encolado', 'err');
+    agregarLogGPS('⚠ Falló envío — punto encolado','err');
     actualizarEstadoRastreo('sinred');
+    // Intentar reconectar en 10s
+    setTimeout(()=>{ if(!_hayRed && navigator.onLine){ _hayRed=true; onRedRecuperada(); } }, 10000);
   }
 }
 
 function agregarLogGPS(msg, tipo){
   const lista = document.getElementById('log-gps');
   const item  = document.createElement('div');
-  item.className = 'log-item ' + (tipo||'');
+  item.className = 'log-item '+(tipo||'');
   item.textContent = msg;
   lista.insertBefore(item, lista.firstChild);
-  while(lista.children.length > 30) lista.removeChild(lista.lastChild);
+  while(lista.children.length>30) lista.removeChild(lista.lastChild);
 }
 
-// ══ HISTORIAL LOCAL ══
-function guardarHistorialLocal(payload){
-  try {
-    const hist = JSON.parse(localStorage.getItem('fc_historial') || '[]');
-    hist.unshift({
-      id:        payload.ID_Check,
-      placa:     payload.Placa,
-      conductor: payload.Conductor,
-      fecha:     payload.Fecha,
-      hora:      payload.Hora,
-      tipo:      payload.Tipo,
-      estado:    payload.Estado_General,
-      pct:       payload.Completado_Pct,
-      obs:       payload.Observaciones,
-    });
-    localStorage.setItem('fc_historial', JSON.stringify(hist.slice(0, 50)));
-  } catch(e){}
-}
+// ══════════════════════════════════════════════
+//  GESTIÓN DE RUTAS Y PUNTOS DE PASO
+// ══════════════════════════════════════════════
 
-async function cargarHistorial(){
-  const wrap = document.getElementById('hist-wrap');
-  wrap.innerHTML = '<div class="loader"><span class="spin"></span>Cargando...</div>';
+function seleccionarRuta(numRuta, btnEl){
+  _rutaActiva = numRuta;
+  localStorage.setItem('fc_ruta_activa', numRuta);
 
-  let hist = [];
-  try {
-    const d = await fetch(API + '?' + new URLSearchParams({
-      accion: 'buscar', modulo: 'checklist',
-      campo: 'Conductor', valor: SESSION.nombre,
-      email: SESSION.email, clave: SESSION.clave
-    }));
-    const data = await d.json();
-    if(data.ok) hist = (data.data || [])
-      .filter(r => String(r.Conductor||'').toLowerCase() === SESSION.nombre.toLowerCase())
-      .sort((a,b) => ((b.Fecha+b.Hora) > (a.Fecha+a.Hora) ? 1 : -1))
-      .slice(0, 30);
-  } catch(e) {
-    const local = JSON.parse(localStorage.getItem('fc_historial') || '[]');
-    hist = local.filter(r => r.placa === SESSION.placa || r.conductor === SESSION.nombre);
+  // Resetear puntos visitados al cambiar de ruta
+  if(numRuta > 0){
+    const hoy = new Date().toISOString().split('T')[0];
+    // Solo resetear si es un día diferente al último guardado
+    const ultimaFechaRuta = localStorage.getItem('fc_ruta_fecha_'+numRuta);
+    if(ultimaFechaRuta !== hoy){
+      _puntosVisitados = {};
+      _puntoNotificado = {};
+      localStorage.setItem('fc_puntos_visitados', '{}');
+      localStorage.setItem('fc_ruta_fecha_'+numRuta, hoy);
+    } else {
+      try{ _puntosVisitados = JSON.parse(localStorage.getItem('fc_puntos_visitados')||'{}'); }catch(e){ _puntosVisitados={}; }
+    }
   }
 
-  if(!hist.length){
-    wrap.innerHTML = '<div class="empty"><div class="ei">📋</div><p>Sin checklists registrados</p></div>';
+  // UI botones
+  document.querySelectorAll('.ruta-btn').forEach(b=>b.classList.remove('active'));
+  if(btnEl) btnEl.classList.add('active');
+
+  renderRuta(numRuta);
+}
+
+function renderRuta(numRuta){
+  const progCard = document.getElementById('ruta-progress-card');
+  const sinSel   = document.getElementById('ruta-sin-seleccion');
+  const progressCard = document.getElementById('ruta-progress-card');
+
+  if(!numRuta || !RUTAS_PUNTOS[numRuta]){
+    if(progCard) progCard.style.display='none';
+    if(sinSel) sinSel.style.display='block';
     return;
   }
+  if(progCard) progCard.style.display='block';
+  if(sinSel) sinSel.style.display='none';
 
-  wrap.innerHTML = hist.map(r => {
-    const est = r.Estado_General || r.estado || '';
-    const pct = r.Completado_Pct || r.pct || 0;
-    const ec  = est === 'Aprobado' ? 'ok' : est === 'Rechazado' ? 'err' : 'warn';
-    return `<div class="hist-card">
-      <div class="hist-top">
-        <span class="hist-placa">${r.Placa || r.placa || '—'}</span>
-        <span style="font-size:11px;color:var(--t2);">${r.Tipo || r.tipo || ''}</span>
-        <span class="hist-fecha">${r.Fecha || r.fecha || ''} ${r.Hora || r.hora || ''}</span>
-      </div>
-      <div class="hist-badges">
-        <span class="hbadge hb-${ec}">${est || '—'}</span>
-        <span class="hbadge hb-gray">${pct}% completado</span>
-      </div>
-      ${(r.Observaciones || r.obs) ? '<div style="font-size:12px;color:var(--t2);margin-top:6px;line-height:1.5;">' + (r.Observaciones || r.obs) + '</div>' : ''}
+  const puntos = RUTAS_PUNTOS[numRuta];
+  const visitados = puntos.filter(p => _puntosVisitados[p.id]);
+  const pct = Math.round(visitados.length / puntos.length * 100);
+
+  document.getElementById('ruta-progress-nombre').textContent = 'Ruta ' + numRuta;
+  document.getElementById('ruta-pct-txt').textContent         = pct + '%';
+  document.getElementById('ruta-bar-fill').style.width        = pct + '%';
+  document.getElementById('ruta-puntos-visitados').textContent = visitados.length + ' visitados';
+  document.getElementById('ruta-puntos-total').textContent     = puntos.length + ' puntos totales';
+
+  // Próximo punto (el primer no visitado)
+  const proximo = puntos.find(p => !_puntosVisitados[p.id]);
+  const proxWrap = document.getElementById('ruta-proximo-wrap');
+  if(proximo){
+    document.getElementById('ruta-proximo-nombre').textContent = proximo.nombre;
+    if(_ultimaPos){
+      const dist = distanciaMetros(_ultimaPos.coords.latitude, _ultimaPos.coords.longitude, proximo.lat, proximo.lng);
+      document.getElementById('ruta-proximo-dist').textContent = 'A '+Math.round(dist)+' m de distancia';
+    } else {
+      document.getElementById('ruta-proximo-dist').textContent = 'GPS no activo';
+    }
+    if(proxWrap) proxWrap.style.display='block';
+  } else {
+    if(proxWrap){ proxWrap.innerHTML='<div style="font-size:13px;font-weight:700;color:#4ade80;text-align:center;">🎉 ¡Ruta completada al 100%!</div>'; }
+  }
+
+  // Lista de puntos
+  const lista = document.getElementById('ruta-puntos-lista');
+  lista.innerHTML = puntos.map((p,i)=>{
+    const visitado = _puntosVisitados[p.id];
+    const esProximo = !visitado && i === (puntos.findIndex(x=>!_puntosVisitados[x.id]));
+    return `<div class="ruta-punto-item ${visitado?'visitado':''} ${esProximo?'actual':''}">
+      <div class="ruta-punto-num">${visitado?'✅':'○'} P${i+1} ${esProximo?'← PRÓXIMO':''}</div>
+      <div style="font-size:11px;font-weight:600;color:${visitado?'#4ade80':'var(--t2)'};">${p.nombre}</div>
+      ${visitado?`<div class="ruta-punto-hora">${visitado.hora}</div>`:''}
     </div>`;
   }).join('');
 }
 
-// ══ NAVEGACIÓN TABS ══
+function verificarPuntosPaso(lat, lng){
+  if(!_rutaActiva || !RUTAS_PUNTOS[_rutaActiva]) return;
+  const puntos = RUTAS_PUNTOS[_rutaActiva];
+
+  puntos.forEach(punto => {
+    if(_puntosVisitados[punto.id]) return; // ya visitado
+    const dist = distanciaMetros(lat, lng, punto.lat, punto.lng);
+    if(dist <= RADIO_DETECCION){
+      // ¡Punto alcanzado!
+      const ahora = new Date();
+      const hora  = ahora.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+      const fecha = ahora.toLocaleDateString('es-CO');
+
+      _puntosVisitados[punto.id] = { hora, fecha, ts: ahora.toISOString() };
+      localStorage.setItem('fc_puntos_visitados', JSON.stringify(_puntosVisitados));
+
+      // Notificar solo una vez por punto
+      if(!_puntoNotificado[punto.id]){
+        _puntoNotificado[punto.id] = true;
+        mostrarNotificacionPunto(punto, hora, fecha);
+        reportarPuntoPaso(punto, hora, fecha, lat, lng);
+      }
+
+      // Actualizar UI de la ruta
+      if(_tabActiva === 'ruta') renderRuta(_rutaActiva);
+      agregarLogGPS('📍 Punto: '+punto.nombre+' — '+hora,'ok');
+    }
+  });
+}
+
+function mostrarNotificacionPunto(punto, hora, fecha){
+  document.getElementById('mpunto-nombre').textContent = punto.nombre;
+  document.getElementById('mpunto-hora').textContent   = hora + ' · ' + fecha;
+  document.getElementById('mpunto-ruta').textContent   = 'Ruta ' + _rutaActiva + ' · Punto ' + punto.id;
+  document.getElementById('modal-punto').classList.add('open');
+  // Auto-cerrar en 4 segundos
+  setTimeout(cerrarModalPunto, 4000);
+  // Vibrar si disponible
+  if(navigator.vibrate) navigator.vibrate([200,100,200]);
+}
+
+function cerrarModalPunto(){
+  document.getElementById('modal-punto').classList.remove('open');
+}
+
+async function reportarPuntoPaso(punto, hora, fecha, lat, lng){
+  // Reportar el paso por el punto al servidor
+  const payload = {
+    accion:'crear', modulo:'ubicaciones',
+    Placa:     SESSION.placa,
+    Conductor: SESSION.nombre,
+    Ruta:      'R'+_rutaActiva+'-'+punto.id,
+    Lat:       parseFloat(lat.toFixed(6)),
+    Lng:       parseFloat(lng.toFixed(6)),
+    Velocidad: _ultimaPos ? Math.round((_ultimaPos.coords.speed||0)*3.6) : 0,
+    Rumbo:     _ultimaPos ? (_ultimaPos.coords.heading||0) : 0,
+    Precision: _ultimaPos ? Math.round(_ultimaPos.coords.accuracy) : 0,
+    Timestamp: new Date().toISOString(),
+    // Campos extra para identificar que es un punto de paso
+    Punto_ID:    punto.id,
+    Punto_Nombre: punto.nombre,
+    Punto_Hora:  hora,
+    Punto_Fecha: fecha,
+  };
+
+  try {
+    if(_hayRed){
+      await fetch(API,{method:'POST',body:JSON.stringify(payload)});
+    } else {
+      colaAgregar(payload);
+    }
+  } catch(e){
+    colaAgregar(payload);
+  }
+}
+
+// Fórmula Haversine para distancia en metros
+function distanciaMetros(lat1, lng1, lat2, lng2){
+  const R = 6371000;
+  const dLat = (lat2-lat1)*Math.PI/180;
+  const dLng = (lng2-lng1)*Math.PI/180;
+  const a = Math.sin(dLat/2)*Math.sin(dLat/2) +
+            Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*
+            Math.sin(dLng/2)*Math.sin(dLng/2);
+  return R * 2 * Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+// ══════════════════════════════════════════════
+//  HISTORIAL
+// ══════════════════════════════════════════════
+async function cargarHistorial(){
+  const wrap = document.getElementById('hist-wrap');
+  wrap.innerHTML = '<div class="loader"><span class="spin"></span>Cargando...</div>';
+  let hist = [];
+  try {
+    const d = await fetch(API+'?'+new URLSearchParams({accion:'buscar',modulo:'checklist',campo:'Conductor',valor:SESSION.nombre,email:SESSION.email,clave:SESSION.clave}));
+    const data = await d.json();
+    if(data.ok) hist = (data.data||[])
+      .filter(r=>String(r.Conductor||'').toLowerCase()===SESSION.nombre.toLowerCase())
+      .sort((a,b)=>((b.Fecha+b.Hora)>(a.Fecha+a.Hora)?1:-1))
+      .slice(0,30);
+  } catch(e) {
+    const local = JSON.parse(localStorage.getItem('fc_historial')||'[]');
+    hist = local.filter(r=>r.placa===SESSION.placa||r.conductor===SESSION.nombre);
+  }
+  if(!hist.length){ wrap.innerHTML='<div class="empty"><div class="ei">📋</div><p>Sin checklists registrados</p></div>'; return; }
+  wrap.innerHTML = hist.map(r=>{
+    const est = r.Estado_General||r.estado||'';
+    const pct = r.Completado_Pct||r.pct||0;
+    const ec = est==='Aprobado'?'ok':est==='Rechazado'?'err':'warn';
+    return `<div class="hist-card">
+      <div class="hist-top">
+        <span class="hist-placa">${r.Placa||r.placa||'—'}</span>
+        <span style="font-size:11px;color:var(--t2);">${r.Tipo||r.tipo||''}</span>
+        <span class="hist-fecha">${r.Fecha||r.fecha||''} ${r.Hora||r.hora||''}</span>
+      </div>
+      <div class="hist-badges">
+        <span class="hbadge hb-${ec}">${est||'—'}</span>
+        <span class="hbadge hb-gray">${pct}% completado</span>
+      </div>
+      ${(r.Observaciones||r.obs)?'<div style="font-size:12px;color:var(--t2);margin-top:6px;line-height:1.5;">'+(r.Observaciones||r.obs)+'</div>':''}
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════
+//  NAVEGACIÓN TABS
+// ══════════════════════════════════════════════
 function irTab(tab){
   _tabActiva = tab;
-  document.getElementById('tab-check').className   = 'tab-btn' + (tab==='checklist' ? ' active' : '');
-  document.getElementById('tab-rastreo').className = 'tab-btn' + (tab==='rastreo'   ? ' active' : '');
-  document.getElementById('tab-hist').className    = 'tab-btn' + (tab==='historial'  ? ' active' : '');
+  document.getElementById('tab-check').className   = 'tab-btn'+(tab==='checklist'?' active':'');
+  document.getElementById('tab-rastreo').className = 'tab-btn'+(tab==='rastreo'?' active':'');
+  document.getElementById('tab-ruta').className    = 'tab-btn'+(tab==='ruta'?' active':'');
+  document.getElementById('tab-hist').className    = 'tab-btn'+(tab==='historial'?' active':'');
 
-  document.getElementById('pg-checklist').className   = 'page' + (tab==='checklist' ? ' active' : '');
-  document.getElementById('pg-rastreo-tab').className = 'page' + (tab==='rastreo'   ? ' active' : '');
-  document.getElementById('pg-historial').className   = 'page' + (tab==='historial'  ? ' active' : '');
+  document.getElementById('pg-checklist').className   = 'page'+(tab==='checklist'?' active':'');
+  document.getElementById('pg-rastreo-tab').className = 'page'+(tab==='rastreo'?' active':'');
+  document.getElementById('pg-ruta-tab').className    = 'page'+(tab==='ruta'?' active':'');
+  document.getElementById('pg-historial').className   = 'page'+(tab==='historial'?' active':'');
 
-  document.getElementById('footer-check').style.display = tab==='checklist' ? 'flex' : 'none';
+  document.getElementById('footer-check').style.display = tab==='checklist'?'flex':'none';
 
-  if(tab === 'historial') cargarHistorial();
+  if(tab==='historial') cargarHistorial();
+  if(tab==='ruta' && _rutaActiva) renderRuta(_rutaActiva);
 }
+
+// Actualizar la tab de ruta periódicamente si está abierta
+setInterval(()=>{
+  if(_tabActiva==='ruta' && _rutaActiva) renderRuta(_rutaActiva);
+}, 5000);
 </script>
 </body>
 </html>
