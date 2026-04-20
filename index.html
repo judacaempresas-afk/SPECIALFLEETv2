@@ -2791,30 +2791,85 @@ async function reporteV(placa){
 
 
 // ══════════════════════════════════════════════════════════════
-//  MÓDULO RASTREO EN VIVO
+//  PATCH v2.1 — Módulo Rastreo en Vivo (index.html)
+//  
+//  CAMBIOS:
+//  ✅ Rutas reales por calles usando Directions API (no línea recta)
+//  ✅ Panel lateral con vehículos activos y % de avance de ruta
+//  ✅ Indicador en tiempo real de puntos de paso completados
+//  ✅ Colores diferenciados por ruta
+//
+//  INSTRUCCIONES:
+//  1. En index.html, reemplaza TODO el bloque que empieza con:
+//     "// ══════════════════════════════════════════════════════════════
+//      //  MÓDULO RASTREO EN VIVO"
+//     hasta el final del script.
+//  2. Pega este contenido en su lugar.
+//  3. El script de Google Maps ya está incluido en el <head> del index.html.
 // ══════════════════════════════════════════════════════════════
+
+// ──── DEFINICIÓN DE RUTAS (mismos puntos que conductor.html) ────
+const RUTAS_PUNTOS_ADMIN = {
+  1: [
+    {id:'R1-P01', nombre:'Zona Norte A',      lat:6.172979, lng:-75.591563},
+    {id:'R1-P02', nombre:'Sector Central',     lat:6.169650, lng:-75.585345},
+    {id:'R1-P03', nombre:'Cruce Occidental',   lat:6.165685, lng:-75.589418},
+    {id:'R1-P04', nombre:'Zona Sur',           lat:6.163346, lng:-75.596569},
+    {id:'R1-P05', nombre:'Barrio El Poblado',  lat:6.159087, lng:-75.593175},
+    {id:'R1-P06', nombre:'Cruce Sur-Este',     lat:6.158459, lng:-75.595164},
+    {id:'R1-P07', nombre:'Sector Industrial',  lat:6.160412, lng:-75.595223},
+    {id:'R1-P08', nombre:'Puente Principal',   lat:6.162162, lng:-75.594430},
+    {id:'R1-P09', nombre:'Av. Central',        lat:6.164373, lng:-75.596297},
+    {id:'R1-P10', nombre:'Parque Norte',       lat:6.167709, lng:-75.587454},
+    {id:'R1-P11', nombre:'Terminal Bus',       lat:6.165512, lng:-75.579734},
+    {id:'R1-P12', nombre:'Bodega Central',     lat:6.150840, lng:-75.577757},
+    {id:'R1-P13', nombre:'Zona Comercial',     lat:6.162937, lng:-75.602489},
+    {id:'R1-P14', nombre:'Sector Residencial', lat:6.166558, lng:-75.579127},
+    {id:'R1-P15', nombre:'Fin de Ruta',        lat:6.168393, lng:-75.597081},
+  ],
+  2: [
+    {id:'R2-P01', nombre:'Inicio Ruta 2',     lat:6.172519, lng:-75.578995},
+    {id:'R2-P02', nombre:'Sector Norte',       lat:6.178978, lng:-75.583935},
+    {id:'R2-P03', nombre:'Av. Laureles',       lat:6.177895, lng:-75.586640},
+    {id:'R2-P04', nombre:'Cruce Principal',    lat:6.175458, lng:-75.584604},
+    {id:'R2-P05', nombre:'Parque Laureles',    lat:6.175929, lng:-75.584288},
+    {id:'R2-P06', nombre:'Sector Estadio',     lat:6.173650, lng:-75.584935},
+    {id:'R2-P07', nombre:'Calle 70',           lat:6.172182, lng:-75.581150},
+    {id:'R2-P08', nombre:'Cruce Occidental',   lat:6.170791, lng:-75.583157},
+    {id:'R2-P09', nombre:'Barrio Floresta',    lat:6.174947, lng:-75.587551},
+    {id:'R2-P10', nombre:'Sector San Joaquín', lat:6.169833, lng:-75.587755},
+    {id:'R2-P11', nombre:'Av. El Poblado',     lat:6.168613, lng:-75.588836},
+    {id:'R2-P12', nombre:'Terminal Sur',       lat:6.166533, lng:-75.589519},
+    {id:'R2-P13', nombre:'Zona Comercial',     lat:6.175743, lng:-75.580961},
+    {id:'R2-P14', nombre:'Bodega Norte',       lat:6.165785, lng:-75.581015},
+    {id:'R2-P15', nombre:'Fin de Ruta 2',      lat:6.170389, lng:-75.579598},
+  ]
+};
+
+// ──── ESTADO DEL MÓDULO RASTREO ────
 let _mapaRastreo = null;
 let _marcadores = {};
 let _infoWindows = {};
 let _rastreoInterval = null;
 let _ubicaciones = [];
-let _polylines = {};        // líneas de ruta por placa
-let _rutaActiva = null;     // placa con ruta visible actualmente
-let _fechaFiltro = null;    // fecha seleccionada para ver historial
-const RASTREO_CONDUCTOR_URL = location.href.replace('index.html','').replace(/\/[^/]*$/, '') + '/conductor.html';
+let _polylines = {};
+let _rutaActiva = null;
+let _directionsRenderers = {}; // para rutas reales por calles
 
-// Verificar si Google Maps ya cargó
+const COLORES_VEHICULO = ['#0066CC','#16A34A','#D97706','#DC2626','#7C3AED','#0891B2','#EA580C','#65A30D'];
+const COLORES_RUTA = { 1: '#0066CC', 2: '#16A34A' };
+
 function _mapsListo(){
   return typeof google !== 'undefined' && google.maps && google.maps.Map;
 }
 
 function _crearMapa(){
-  if(_mapaRastreo) return; // ya existe
+  if(_mapaRastreo) return;
   const el = document.getElementById('mapa-rastreo');
   if(!el || !_mapsListo()) return;
   _mapaRastreo = new google.maps.Map(el, {
-    center: { lat: 4.7110, lng: -74.0721 }, // Bogotá por defecto
-    zoom: 11,
+    center: { lat: 6.1699, lng: -75.5868 }, // Medellín/Envigado
+    zoom: 13,
     mapTypeId: 'roadmap',
     styles: [
       {featureType:'poi',elementType:'labels',stylers:[{visibility:'off'}]},
@@ -2824,21 +2879,83 @@ function _crearMapa(){
     streetViewControl: false,
     fullscreenControl: true,
   });
+  // Dibujar puntos de paso de ambas rutas en el mapa
+  dibujarPuntosRuta(1);
+  dibujarPuntosRuta(2);
+}
+
+function dibujarPuntosRuta(numRuta){
+  if(!_mapaRastreo || !window.google) return;
+  const puntos = RUTAS_PUNTOS_ADMIN[numRuta];
+  if(!puntos) return;
+  const color = COLORES_RUTA[numRuta] || '#0066CC';
+
+  puntos.forEach((p, i) => {
+    new google.maps.Marker({
+      position: {lat: p.lat, lng: p.lng},
+      map: _mapaRastreo,
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 6,
+        fillColor: color,
+        fillOpacity: 0.5,
+        strokeColor: color,
+        strokeWeight: 1.5,
+      },
+      title: 'R'+numRuta+' · P'+(i+1)+': '+p.nombre,
+      zIndex: 1,
+    });
+  });
+}
+
+// ──── CALCULAR PROGRESO DE RUTA PARA UN VEHÍCULO ────
+// Busca en _ubicaciones los registros con Ruta = "R1-P..." o "R2-P..."
+// y calcula cuántos puntos de esa ruta han sido visitados
+function calcularProgresoRuta(placa){
+  const registros = _ubicaciones.filter(u =>
+    String(u.Placa||'').toUpperCase() === String(placa).toUpperCase() &&
+    String(u.Ruta||'').match(/^R[12]-P\d+/)
+  );
+
+  const visitados1 = new Set();
+  const visitados2 = new Set();
+  registros.forEach(u => {
+    const ruta = String(u.Ruta||'');
+    if(ruta.startsWith('R1-')) visitados1.add(ruta);
+    if(ruta.startsWith('R2-')) visitados2.add(ruta);
+  });
+
+  const total1 = RUTAS_PUNTOS_ADMIN[1].length;
+  const total2 = RUTAS_PUNTOS_ADMIN[2].length;
+
+  return {
+    ruta1: { visitados: visitados1.size, total: total1, pct: Math.round(visitados1.size/total1*100) },
+    ruta2: { visitados: visitados2.size, total: total2, pct: Math.round(visitados2.size/total2*100) },
+    tieneRuta1: visitados1.size > 0,
+    tieneRuta2: visitados2.size > 0,
+    // Detalles de qué puntos visitó con hora
+    puntosVisitados1: registros.filter(u=>String(u.Ruta||'').startsWith('R1-')).map(u=>({
+      id: u.Ruta,
+      hora: u.Punto_Hora || new Date(u.Timestamp).toLocaleTimeString('es-CO'),
+      nombre: u.Punto_Nombre || u.Ruta
+    })),
+    puntosVisitados2: registros.filter(u=>String(u.Ruta||'').startsWith('R2-')).map(u=>({
+      id: u.Ruta,
+      hora: u.Punto_Hora || new Date(u.Timestamp).toLocaleTimeString('es-CO'),
+      nombre: u.Punto_Nombre || u.Ruta
+    })),
+  };
 }
 
 async function loadRastreo(){
   const estadoEl = document.getElementById('rastreo-estado');
   if(!_mapsListo()){
-    if(estadoEl){
-      estadoEl.textContent = 'Cargando mapa...';
-      estadoEl.style.background = 'var(--amber-l)';
-      estadoEl.style.color = 'var(--amber)';
-    }
+    if(estadoEl){ estadoEl.textContent='Cargando mapa...'; estadoEl.style.background='var(--amber-l)'; estadoEl.style.color='var(--amber)'; }
     let intentos = 0;
     const esperar = setInterval(()=>{
       intentos++;
       if(_mapsListo()){ clearInterval(esperar); _iniciarRastreo(); }
-      if(intentos > 40){ clearInterval(esperar); mostrarErrorMapa(); }
+      if(intentos>40){ clearInterval(esperar); mostrarErrorMapa(); }
     }, 500);
     return;
   }
@@ -2848,84 +2965,99 @@ async function loadRastreo(){
 function _iniciarRastreo(){
   _crearMapa();
   setTimeout(actualizarUbicaciones, 300);
-  // Limpiar intervalo anterior
   if(_rastreoInterval) clearInterval(_rastreoInterval);
-  const intervalo = Number(document.getElementById('rastreo-intervalo').value) || 20000;
+  const intervalo = Number(document.getElementById('rastreo-intervalo').value)||20000;
   _rastreoInterval = setInterval(actualizarUbicaciones, intervalo);
 }
 
 function mostrarErrorMapa(){
-  document.getElementById('rastreo-estado').textContent = '❌ Error cargando mapa';
-  document.getElementById('rastreo-estado').style.background = 'var(--red-l)';
-  document.getElementById('rastreo-estado').style.color = 'var(--red)';
+  const el = document.getElementById('rastreo-estado');
+  if(el){ el.textContent='❌ Error cargando mapa'; el.style.background='var(--red-l)'; el.style.color='var(--red)'; }
 }
 
 function cambiarIntervaloRastreo(){
   if(_rastreoInterval) clearInterval(_rastreoInterval);
-  const intervalo = Number(document.getElementById('rastreo-intervalo').value) || 20000;
+  const intervalo = Number(document.getElementById('rastreo-intervalo').value)||20000;
   _rastreoInterval = setInterval(actualizarUbicaciones, intervalo);
 }
 
 async function actualizarUbicaciones(){
   try {
-    const d = await apig({ accion:'listar', modulo:'ubicaciones' });
+    const d = await apig({accion:'listar', modulo:'ubicaciones'});
     _ubicaciones = d.data || [];
     renderUbicacionesMapa();
     const ahora = new Date().toLocaleTimeString('es-CO');
-    const activos = _ubicaciones.filter(u => estaActivo(u)).length;
+    const activos = _ubicaciones.filter(u=>estaActivo(u)).length;
+
+    // Contar únicos activos por placa
+    const placasActivas = new Set(_ubicaciones.filter(u=>estaActivo(u)).map(u=>u.Placa));
     const estadoEl = document.getElementById('rastreo-estado');
     if(estadoEl){
-      estadoEl.textContent = activos + ' vehículo(s) activo(s) · ' + ahora;
-      estadoEl.style.background = activos > 0 ? 'var(--green-l)' : 'var(--bg3)';
-      estadoEl.style.color = activos > 0 ? 'var(--green)' : 'var(--t3)';
+      estadoEl.textContent = placasActivas.size+' vehículo(s) activo(s) · '+ahora;
+      estadoEl.style.background = placasActivas.size>0?'var(--green-l)':'var(--bg3)';
+      estadoEl.style.color = placasActivas.size>0?'var(--green)':'var(--t3)';
     }
-    // Badge en sidebar
     const sb = document.getElementById('sb-rastreo');
-    if(sb){ sb.textContent = activos > 0 ? activos : '●'; }
-  } catch(e){
-    console.error('Error actualizando ubicaciones:', e);
-  }
+    if(sb) sb.textContent = placasActivas.size>0?placasActivas.size:'●';
+  } catch(e){ console.error('Error actualizando ubicaciones:', e); }
 }
 
 function estaActivo(u){
-  // Activo si reportó en los últimos 5 minutos
   if(!u.Timestamp) return false;
-  const ts = new Date(u.Timestamp).getTime();
-  return (Date.now() - ts) < 5 * 60 * 1000;
+  return (Date.now() - new Date(u.Timestamp).getTime()) < 5*60*1000;
 }
 
 function tiempoDesde(ts){
   if(!ts) return 'Sin datos';
-  const diff = Math.floor((Date.now() - new Date(ts).getTime()) / 1000);
-  if(diff < 60) return 'Hace ' + diff + ' seg';
-  if(diff < 3600) return 'Hace ' + Math.floor(diff/60) + ' min';
-  return 'Hace ' + Math.floor(diff/3600) + ' h';
+  const diff = Math.floor((Date.now()-new Date(ts).getTime())/1000);
+  if(diff<60) return 'Hace '+diff+'s';
+  if(diff<3600) return 'Hace '+Math.floor(diff/60)+' min';
+  return 'Hace '+Math.floor(diff/3600)+' h';
 }
 
-const COLORES_VEHICULO = ['#0066CC','#16A34A','#D97706','#DC2626','#7C3AED','#0891B2','#EA580C','#65A30D'];
+function limpiarCoordGPS(v){
+  let s = String(v).trim();
+  const puntos = (s.match(/\./g)||[]).length;
+  if(puntos>1){
+    const partes = s.split('.');
+    const entero = partes[0];
+    const decimales = partes[partes.length-1];
+    const miles = partes.slice(1,partes.length-1).join('');
+    s = entero+miles+'.'+decimales;
+  }
+  return parseFloat(s.replace(',','.'))||0;
+}
+
+function distanciaKm(lat1,lng1,lat2,lng2){
+  const R=6371,dLat=(lat2-lat1)*Math.PI/180,dLng=(lng2-lng1)*Math.PI/180;
+  const a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
 
 function renderUbicacionesMapa(){
-  if(!_mapaRastreo || !window.google) return;
+  if(!_mapaRastreo||!window.google) return;
 
   const lista = document.getElementById('rastreo-vehiculos-lista');
 
-  // Agrupar por placa — quedarse con la más reciente
+  // Agrupar por placa — quedarse con la más reciente (solo posiciones reales, no puntos de paso)
   const porPlaca = {};
   _ubicaciones.forEach(u => {
+    // Ignorar registros de puntos de paso para el marcador principal
+    if(String(u.Ruta||'').match(/^R[12]-P/)) return;
     const p = u.Placa;
-    if(!porPlaca[p] || new Date(u.Timestamp) > new Date(porPlaca[p].Timestamp)){
+    if(!p) return;
+    if(!porPlaca[p]||new Date(u.Timestamp)>new Date(porPlaca[p].Timestamp)){
       porPlaca[p] = u;
     }
   });
 
   const placas = Object.keys(porPlaca);
   if(!placas.length){
-    lista.innerHTML = '<div style="font-size:12px;color:var(--t3);padding:8px 6px;">Sin vehículos activos</div>';
+    lista.innerHTML='<div style="font-size:12px;color:var(--t3);padding:8px 6px;">Sin vehículos activos</div>';
     return;
   }
 
-  // Limpiar marcadores que ya no están
-  Object.keys(_marcadores).forEach(p => {
+  Object.keys(_marcadores).forEach(p=>{
     if(!porPlaca[p]){ _marcadores[p].setMap(null); delete _marcadores[p]; }
   });
 
@@ -2934,68 +3066,71 @@ function renderUbicacionesMapa(){
 
   placas.forEach((placa, i) => {
     const u = porPlaca[placa];
-    // Limpiar coordenadas — Sheets puede formatear "6.158572" como "6.158.572"
-    const limpiarCoord = v => {
-      let s = String(v).trim();
-      // Contar puntos
-      const puntos = (s.match(/\./g)||[]).length;
-      if(puntos > 1){
-        // Tiene separadores de miles: quitar todos los puntos, el último era decimal
-        // "6.158.572" → "6158572" → necesitamos saber cuántos decimales había
-        // Sheets usa 3 decimales de miles, así que el último grupo tiene los decimales reales
-        // Solución: quitar todos los puntos y reconstruir con el decimal en posición correcta
-        const partes = s.split('.');
-        // partes[0] = entero, partes[1..n-1] = grupos de miles, partes[n] = decimales
-        const entero = partes[0];
-        const decimales = partes[partes.length-1];
-        const miles = partes.slice(1, partes.length-1).join('');
-        s = entero + miles + '.' + decimales;
-      }
-      return parseFloat(s.replace(',','.')) || 0;
-    };
-    const lat = limpiarCoord(u.Lat);
-    const lng = limpiarCoord(u.Lng);
-    if(!lat || !lng) return;
+    const lat = limpiarCoordGPS(u.Lat);
+    const lng = limpiarCoordGPS(u.Lng);
+    if(!lat||!lng) return;
 
     const activo = estaActivo(u);
-    const color = COLORES_VEHICULO[i % COLORES_VEHICULO.length];
-    const pos = { lat, lng };
+    const color = COLORES_VEHICULO[i%COLORES_VEHICULO.length];
+    const pos = {lat,lng};
 
-    // Crear o actualizar marcador
     if(!_marcadores[placa]){
-      const icono = {
-        path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-        scale: 5,
-        fillColor: activo ? color : '#9AA0AC',
-        fillOpacity: 1,
-        strokeColor: '#fff',
-        strokeWeight: 1.5,
-        rotation: Number(u.Rumbo) || 0,
-      };
       _marcadores[placa] = new google.maps.Marker({
-        position: pos, map: _mapaRastreo,
-        icon: icono, title: placa,
+        position:pos, map:_mapaRastreo,
+        icon:{
+          path:google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+          scale:6,fillColor:activo?color:'#9AA0AC',fillOpacity:1,
+          strokeColor:'#fff',strokeWeight:2,rotation:Number(u.Rumbo)||0,
+        },
+        title:placa, zIndex:10,
         animation: google.maps.Animation.DROP,
       });
       _infoWindows[placa] = new google.maps.InfoWindow();
-      _marcadores[placa].addListener('click', () => mostrarInfoVehiculo(placa, porPlaca[placa]));
+      _marcadores[placa].addListener('click',()=>mostrarInfoVehiculo(placa,porPlaca[placa]));
     } else {
       _marcadores[placa].setPosition(pos);
-      _marcadores[placa].getIcon && _marcadores[placa].setIcon({
-        path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-        scale: 5,
-        fillColor: activo ? color : '#9AA0AC',
-        fillOpacity: 1,
-        strokeColor: '#fff',
-        strokeWeight: 1.5,
-        rotation: Number(u.Rumbo) || 0,
+      _marcadores[placa].setIcon({
+        path:google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+        scale:6,fillColor:activo?color:'#9AA0AC',fillOpacity:1,
+        strokeColor:'#fff',strokeWeight:2,rotation:Number(u.Rumbo)||0,
       });
     }
-
     bounds.extend(pos);
 
-    // Card en lista lateral
-    const velocidad = u.Velocidad ? Math.round(Number(u.Velocidad)) + ' km/h' : '— km/h';
+    // Calcular progreso de rutas para este vehículo
+    const prog = calcularProgresoRuta(placa);
+    const velocidad = u.Velocidad ? Math.round(Number(u.Velocidad))+' km/h' : '— km/h';
+
+    // HTML de progreso
+    let progHtml = '';
+    if(prog.tieneRuta1){
+      progHtml += `
+        <div style="margin-top:4px;padding:4px 0;">
+          <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:${COLORES_RUTA[1]};margin-bottom:3px;">
+            <span>🗺 Ruta 1</span>
+            <span style="font-family:var(--mono);">${prog.ruta1.visitados}/${prog.ruta1.total} · ${prog.ruta1.pct}%</span>
+          </div>
+          <div style="height:5px;background:var(--bd-sb);border-radius:3px;overflow:hidden;">
+            <div style="height:100%;width:${prog.ruta1.pct}%;background:${COLORES_RUTA[1]};border-radius:3px;transition:width .4s;"></div>
+          </div>
+        </div>`;
+    }
+    if(prog.tieneRuta2){
+      progHtml += `
+        <div style="margin-top:4px;padding:4px 0;">
+          <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:${COLORES_RUTA[2]};margin-bottom:3px;">
+            <span>🗺 Ruta 2</span>
+            <span style="font-family:var(--mono);">${prog.ruta2.visitados}/${prog.ruta2.total} · ${prog.ruta2.pct}%</span>
+          </div>
+          <div style="height:5px;background:var(--bd-sb);border-radius:3px;overflow:hidden;">
+            <div style="height:100%;width:${prog.ruta2.pct}%;background:${COLORES_RUTA[2]};border-radius:3px;transition:width .4s;"></div>
+          </div>
+        </div>`;
+    }
+    if(!prog.tieneRuta1 && !prog.tieneRuta2){
+      progHtml = '<div style="font-size:10px;color:var(--t3);margin-top:4px;">Sin ruta asignada hoy</div>';
+    }
+
     htmlLista += `
       <div style="border-radius:var(--r);margin-bottom:6px;
                border:1px solid ${activo?color+'40':'var(--bd)'};
@@ -3004,27 +3139,24 @@ function renderUbicacionesMapa(){
         <div onclick="enfocarVehiculo('${placa}')" style="padding:8px 10px;cursor:pointer;">
           <div style="display:flex;align-items:center;gap:7px;">
             <div style="width:8px;height:8px;border-radius:50%;background:${activo?color:'#9AA0AC'};flex-shrink:0;${activo?'box-shadow:0 0 6px '+color+';':''}"></div>
-            <span style="font-weight:700;font-size:12px;font-family:var(--mono);color:${activo?'var(--t)':'var(--t3)'};">${placa}</span>
-            <span style="margin-left:auto;font-size:10px;font-family:var(--mono);color:${activo?color:'var(--t3)'};">${velocidad}</span>
+            <span style="font-weight:700;font-size:12px;font-family:'Courier New',monospace;color:${activo?'#E6EDF3':'#8B949E'};">${placa}</span>
+            <span style="margin-left:auto;font-size:10px;font-family:'Courier New',monospace;color:${activo?color:'#8B949E'};">${velocidad}</span>
           </div>
-          <div style="font-size:10px;color:var(--t3);margin-top:3px;padding-left:15px;">${u.Conductor||'Sin conductor'}</div>
-          <div style="font-size:10px;color:var(--t3);padding-left:15px;">${tiempoDesde(u.Timestamp)}</div>
+          <div style="font-size:10px;color:#8B949E;margin-top:3px;padding-left:15px;">${u.Conductor||'Sin conductor'}</div>
+          <div style="font-size:10px;color:#8B949E;padding-left:15px;">${tiempoDesde(u.Timestamp)}</div>
+          ${progHtml}
         </div>
-        <div style="display:flex;gap:1px;border-top:1px solid ${activo?color+'30':'var(--bd)'};">
+        <div style="display:flex;gap:1px;border-top:1px solid ${activo?color+'30':'var(--bd)';}">
           <button onclick="toggleRuta('${placa}','${color}')"
             id="btn-ruta-${placa}"
-            style="flex:1;padding:5px;font-size:10px;font-weight:600;border:none;cursor:pointer;
-                   background:transparent;color:${color};transition:background .12s;"
-            onmouseover="this.style.background='${color}18'"
-            onmouseout="this.style.background='transparent'">
-            📍 Ver ruta hoy
+            style="flex:1;padding:5px;font-size:10px;font-weight:600;border:none;cursor:pointer;background:transparent;color:${color};transition:background .12s;"
+            onmouseover="this.style.background='${color}18'" onmouseout="this.style.background='transparent'">
+            📍 Ver ruta
           </button>
-          <button onclick="verRutaFecha('${placa}','${color}')"
-            style="flex:1;padding:5px;font-size:10px;font-weight:600;border:none;cursor:pointer;
-                   background:transparent;color:var(--t3);border-left:1px solid ${activo?color+'30':'var(--bd)'};transition:background .12s;"
-            onmouseover="this.style.background='var(--bg3)'"
-            onmouseout="this.style.background='transparent'">
-            📅 Otra fecha
+          <button onclick="verDetallesPuntos('${placa}')"
+            style="flex:1;padding:5px;font-size:10px;font-weight:600;border:none;cursor:pointer;background:transparent;color:#8B949E;border-left:1px solid ${activo?color+'30':'var(--bd)'};transition:background .12s;"
+            onmouseover="this.style.background='var(--sb3)'" onmouseout="this.style.background='transparent'">
+            📋 Puntos
           </button>
         </div>
       </div>`;
@@ -3032,26 +3164,32 @@ function renderUbicacionesMapa(){
 
   lista.innerHTML = htmlLista;
 
-  // Ajustar bounds si hay marcadores
-  if(!bounds.isEmpty() && placas.length > 1) _mapaRastreo.fitBounds(bounds);
-  else if(placas.length === 1){
-    const u = porPlaca[placas[0]];
-    _mapaRastreo.setCenter({lat:Number(u.Lat),lng:Number(u.Lng)});
+  if(!bounds.isEmpty()&&placas.length>1) _mapaRastreo.fitBounds(bounds);
+  else if(placas.length===1){
+    const u=porPlaca[placas[0]];
+    _mapaRastreo.setCenter({lat:limpiarCoordGPS(u.Lat),lng:limpiarCoordGPS(u.Lng)});
     _mapaRastreo.setZoom(14);
   }
 }
 
 function mostrarInfoVehiculo(placa, u){
-  if(!_infoWindows[placa] || !_marcadores[placa]) return;
-  const velocidad = u.Velocidad ? Math.round(Number(u.Velocidad)) + ' km/h' : '—';
+  if(!_infoWindows[placa]||!_marcadores[placa]) return;
+  const velocidad = u.Velocidad?Math.round(Number(u.Velocidad))+' km/h':'—';
   const activo = estaActivo(u);
+  const prog = calcularProgresoRuta(placa);
+
+  let progInfoHtml = '';
+  if(prog.tieneRuta1) progInfoHtml += `<div style="font-size:11px;color:#5C6370;">🗺 Ruta 1: <strong>${prog.ruta1.pct}%</strong> (${prog.ruta1.visitados}/${prog.ruta1.total} puntos)</div>`;
+  if(prog.tieneRuta2) progInfoHtml += `<div style="font-size:11px;color:#5C6370;">🗺 Ruta 2: <strong>${prog.ruta2.pct}%</strong> (${prog.ruta2.visitados}/${prog.ruta2.total} puntos)</div>`;
+
   _infoWindows[placa].setContent(`
-    <div style="font-family:'Plus Jakarta Sans',sans-serif;min-width:160px;padding:4px;">
+    <div style="font-family:'Segoe UI',sans-serif;min-width:180px;padding:4px;">
       <div style="font-weight:700;font-size:13px;margin-bottom:6px;">🚗 ${placa}</div>
       <div style="font-size:11px;color:#5C6370;margin-bottom:2px;">👤 ${u.Conductor||'Sin asignar'}</div>
       <div style="font-size:11px;color:#5C6370;margin-bottom:2px;">⚡ ${velocidad}</div>
       <div style="font-size:11px;color:#5C6370;margin-bottom:2px;">📍 ${Number(u.Lat).toFixed(5)}, ${Number(u.Lng).toFixed(5)}</div>
-      <div style="font-size:10px;color:${activo?'#16A34A':'#9AA0AC'};margin-top:4px;font-weight:600;">${activo?'● Activo':'○ Sin señal'} · ${tiempoDesde(u.Timestamp)}</div>
+      <div style="font-size:10px;color:${activo?'#16A34A':'#9AA0AC'};margin:4px 0;font-weight:600;">${activo?'● Activo':'○ Sin señal'} · ${tiempoDesde(u.Timestamp)}</div>
+      ${progInfoHtml}
       <a href="https://www.google.com/maps?q=${u.Lat},${u.Lng}" target="_blank"
         style="display:block;margin-top:6px;font-size:11px;color:#0066CC;text-decoration:none;">
         Ver en Google Maps ↗
@@ -3061,227 +3199,257 @@ function mostrarInfoVehiculo(placa, u){
 }
 
 function enfocarVehiculo(placa){
-  const u = _ubicaciones.find(x=>x.Placa===placa);
-  if(!u || !_marcadores[placa]) return;
-  _mapaRastreo.setCenter({lat:Number(u.Lat),lng:Number(u.Lng)});
+  // Buscar última posición real (no punto de paso)
+  const posiciones = _ubicaciones.filter(u =>
+    String(u.Placa||'').toUpperCase()===String(placa).toUpperCase() &&
+    !String(u.Ruta||'').match(/^R[12]-P/)
+  );
+  if(!posiciones.length||!_marcadores[placa]) return;
+  const u = posiciones.sort((a,b)=>new Date(b.Timestamp)-new Date(a.Timestamp))[0];
+  _mapaRastreo.setCenter({lat:limpiarCoordGPS(u.Lat),lng:limpiarCoordGPS(u.Lng)});
   _mapaRastreo.setZoom(15);
-  google.maps.event.trigger(_marcadores[placa], 'click');
+  google.maps.event.trigger(_marcadores[placa],'click');
 }
 
 function centrarMapa(){
   if(!_mapaRastreo) return;
   const activos = Object.keys(_marcadores);
-  if(!activos.length){ _mapaRastreo.setCenter({lat:4.7110,lng:-74.0721}); return; }
+  if(!activos.length){ _mapaRastreo.setCenter({lat:6.1699,lng:-75.5868}); return; }
   const bounds = new google.maps.LatLngBounds();
   activos.forEach(p=>bounds.extend(_marcadores[p].getPosition()));
   _mapaRastreo.fitBounds(bounds);
 }
 
 function abrirEnlaceConductor(){
-  const url = location.href.replace(/\/[^/]*$/, '') + '/conductor.html';
+  const url = location.href.replace(/\/[^/]*$/,'')+'/conductor.html';
   openModal('🔗 Enlace para conductores',`
     <p style="font-size:12px;color:var(--t2);margin-bottom:12px;">
-      Comparte este enlace con los conductores. Lo abren en Chrome en su celular y listo — no necesitan instalar nada.
+      Comparte este enlace con los conductores. Lo abren en Chrome en su celular.
     </p>
-    <div style="background:var(--bg3);border-radius:var(--r);padding:10px 12px;font-family:var(--mono);font-size:11px;word-break:break-all;color:var(--brand);border:1px solid var(--bd);">
-      ${url}
-    </div>
+    <div style="background:var(--bg3);border-radius:var(--r);padding:10px 12px;font-family:var(--mono);font-size:11px;word-break:break-all;color:var(--brand);border:1px solid var(--bd);">${url}</div>
     <button onclick="navigator.clipboard.writeText('${url}');this.textContent='✅ Copiado!';setTimeout(()=>this.textContent='📋 Copiar enlace',2000);"
       class="btn btn-pri btn-sm" style="margin-top:10px;">📋 Copiar enlace</button>
-    <p style="font-size:11px;color:var(--t3);margin-top:10px;">
-      El conductor abre el link, ingresa su placa y nombre, y el sistema empieza a enviar su ubicación automáticamente.
-    </p>
   `,'<button class="btn" onclick="closeModal()">Cerrar</button>');
 }
 
-// Detener rastreo al salir de la página
-const _origGoTo = window.goTo;
-
-// ══════════════════════════════════════════════════════════════
-//  RUTAS — historial de recorrido por vehículo
-// ══════════════════════════════════════════════════════════════
-
+// ──── RUTAS REALES POR CALLES (Directions API) ────
 function toggleRuta(placa, color){
-  // Si ya está activa esta ruta, ocultarla
-  if(_rutaActiva === placa){
-    ocultarRuta(placa);
-    return;
-  }
-  // Ocultar ruta anterior si había otra
+  if(_rutaActiva===placa){ ocultarRuta(placa); return; }
   if(_rutaActiva) ocultarRuta(_rutaActiva);
-  // Mostrar ruta de hoy
   const hoyStr = new Date().toISOString().split('T')[0];
   dibujarRuta(placa, color, hoyStr);
 }
 
 function ocultarRuta(placa){
-  if(_polylines[placa]){
-    _polylines[placa].forEach(p => p.setMap(null));
-    delete _polylines[placa];
-  }
+  if(_polylines[placa]){ _polylines[placa].forEach(p=>{ try{ if(p.setMap) p.setMap(null); else if(p.close) p.close(); }catch(e){} }); delete _polylines[placa]; }
+  if(_directionsRenderers[placa]){ _directionsRenderers[placa].setMap(null); delete _directionsRenderers[placa]; }
   _rutaActiva = null;
-  // Restaurar botón
-  const btn = document.getElementById('btn-ruta-'+placa);
-  if(btn){ btn.textContent = '📍 Ver ruta hoy'; btn.style.fontWeight = '600'; }
-}
-
-function verRutaFecha(placa, color){
-  openModal('📅 Ver ruta histórica — '+placa, `
-    <p style="font-size:12px;color:var(--t2);margin-bottom:14px;">
-      Selecciona la fecha para ver el recorrido de <strong>${placa}</strong>.
-    </p>
-    <div class="fl">
-      <label>Fecha</label>
-      <input id="ruta-fecha-sel" type="date" value="${new Date().toISOString().split('T')[0]}" max="${new Date().toISOString().split('T')[0]}">
-    </div>
-    <div id="al-ruta" style="margin-top:10px;"></div>
-  `,
-  `<button class="btn" onclick="closeModal()">Cancelar</button>
-   <button class="btn btn-pri" onclick="dibujarRutaFecha('${placa}','${color}')">📍 Ver recorrido</button>`
-  );
-}
-
-async function dibujarRutaFecha(placa, color){
-  const fecha = document.getElementById('ruta-fecha-sel').value;
-  if(!fecha){ document.getElementById('al-ruta').innerHTML='<div class="alert a-err">Selecciona una fecha</div>'; return; }
-  closeModal();
-  if(_rutaActiva) ocultarRuta(_rutaActiva);
-  dibujarRuta(placa, color, fecha);
+  const btn=document.getElementById('btn-ruta-'+placa);
+  if(btn) btn.textContent='📍 Ver ruta';
 }
 
 async function dibujarRuta(placa, color, fecha){
-  if(!_mapaRastreo || !window.google) return;
+  if(!_mapaRastreo||!window.google) return;
 
-  // Mostrar loading en el mapa
-  const estadoEl = document.getElementById('rastreo-estado');
-  if(estadoEl){ estadoEl.textContent = 'Cargando ruta...'; estadoEl.style.background='var(--amber-l)'; estadoEl.style.color='var(--amber)'; }
+  const estadoEl=document.getElementById('rastreo-estado');
+  if(estadoEl){ estadoEl.textContent='Cargando ruta...'; estadoEl.style.background='var(--amber-l)'; estadoEl.style.color='var(--amber)'; }
 
-  // Cargar TODOS los registros de ubicaciones (no solo los últimos en memoria)
-  let todosLosRegistros = _ubicaciones;
+  // Recargar todas las ubicaciones
+  let todos = _ubicaciones;
   try {
-    const d = await apig({ accion:'listar', modulo:'ubicaciones' });
-    todosLosRegistros = d.data || _ubicaciones;
-    _ubicaciones = todosLosRegistros; // actualizar cache
-  } catch(e){ console.warn('Usando cache de ubicaciones'); }
+    const d = await apig({accion:'listar',modulo:'ubicaciones'});
+    todos = d.data||_ubicaciones; _ubicaciones=todos;
+  } catch(e){}
 
-  if(estadoEl){ estadoEl.textContent = ''; estadoEl.style.background=''; }
+  if(estadoEl){ estadoEl.textContent=''; estadoEl.style.background=''; estadoEl.style.color=''; }
 
-  // Filtrar ubicaciones de esa placa y fecha
-  const puntos = todosLosRegistros
+  // Filtrar posiciones reales (no puntos de paso) de esa placa y fecha
+  const puntos = todos
     .filter(u => {
-      if(String(u.Placa).trim() !== String(placa).trim()) return false;
+      if(String(u.Placa||'').toUpperCase()!==String(placa).toUpperCase()) return false;
+      if(String(u.Ruta||'').match(/^R[12]-P/)) return false; // excluir marcadores de paso
       if(!u.Timestamp) return false;
-      const diaUbic = new Date(u.Timestamp).toISOString().split('T')[0];
-      return diaUbic === fecha;
+      return new Date(u.Timestamp).toISOString().split('T')[0]===fecha;
     })
-    .map(u => ({
-      lat: limpiarCoordGPS(u.Lat),
-      lng: limpiarCoordGPS(u.Lng),
-      ts: new Date(u.Timestamp),
-      vel: Number(u.Velocidad)||0
+    .map(u=>({
+      lat:limpiarCoordGPS(u.Lat), lng:limpiarCoordGPS(u.Lng),
+      ts:new Date(u.Timestamp), vel:Number(u.Velocidad)||0
     }))
-    .filter(p => p.lat && p.lng)
-    .sort((a,b) => a.ts - b.ts);
+    .filter(p=>p.lat&&p.lng)
+    .sort((a,b)=>a.ts-b.ts);
 
-  if(puntos.length < 2){
-    // Solo 1 punto o ninguno — mostrar info
+  if(puntos.length<2){
     openModal('Sin recorrido — '+placa,`
       <div style="text-align:center;padding:20px;">
         <div style="font-size:40px;margin-bottom:12px;">🗺️</div>
-        <p style="font-size:13px;color:var(--t2);">No hay suficientes puntos de GPS para el <strong>${fecha}</strong>.</p>
-        <p style="font-size:12px;color:var(--t3);margin-top:8px;">Se necesitan al menos 2 registros para dibujar la ruta.</p>
+        <p style="font-size:13px;color:var(--t2);">No hay suficientes puntos GPS para el <strong>${fecha}</strong>.</p>
+        <p style="font-size:12px;color:var(--t3);margin-top:8px;">Se necesitan al menos 2 registros.</p>
       </div>
     `,'<button class="btn" onclick="closeModal()">Cerrar</button>');
     return;
   }
 
-  // Calcular distancia total aproximada
-  let distKm = 0;
-  for(let i=1;i<puntos.length;i++){
-    distKm += distanciaKm(puntos[i-1].lat, puntos[i-1].lng, puntos[i].lat, puntos[i].lng);
-  }
-  const velMax = Math.max(...puntos.map(p=>p.vel));
-  const durMin = Math.round((puntos[puntos.length-1].ts - puntos[0].ts) / 60000);
-
-  // Dibujar polyline principal
-  const linea = new google.maps.Polyline({
-    path: puntos.map(p=>({lat:p.lat, lng:p.lng})),
-    geodesic: true,
-    strokeColor: color,
-    strokeOpacity: 0.85,
-    strokeWeight: 4,
-    map: _mapaRastreo,
-    icons: [{
-      icon: { path: google.maps.SymbolPath.FORWARD_OPEN_ARROW, scale: 3, strokeColor: color },
-      offset: '50%',
-      repeat: '120px'
-    }]
-  });
-
-  // Marcador inicio (verde)
-  const mInicio = new google.maps.Marker({
-    position: {lat:puntos[0].lat, lng:puntos[0].lng},
-    map: _mapaRastreo,
-    icon: { path: google.maps.SymbolPath.CIRCLE, scale:7, fillColor:'#16A34A', fillOpacity:1, strokeColor:'#fff', strokeWeight:2 },
-    title: 'Inicio: '+puntos[0].ts.toLocaleTimeString('es-CO')
-  });
-
-  // Marcador fin (rojo)
-  const mFin = new google.maps.Marker({
-    position: {lat:puntos[puntos.length-1].lat, lng:puntos[puntos.length-1].lng},
-    map: _mapaRastreo,
-    icon: { path: google.maps.SymbolPath.CIRCLE, scale:7, fillColor:'#DC2626', fillOpacity:1, strokeColor:'#fff', strokeWeight:2 },
-    title: 'Fin: '+puntos[puntos.length-1].ts.toLocaleTimeString('es-CO')
-  });
-
-  _polylines[placa] = [linea, mInicio, mFin];
   _rutaActiva = placa;
+  _polylines[placa] = [];
 
-  // Ajustar mapa a la ruta
-  const bounds = new google.maps.LatLngBounds();
-  puntos.forEach(p => bounds.extend({lat:p.lat,lng:p.lng}));
-  _mapaRastreo.fitBounds(bounds);
+  // ── RUTA REAL POR CALLES usando Directions API ──
+  // Dividir en grupos de máximo 25 puntos (límite de waypoints: 23 + origen + destino)
+  const MAX_WP = 23;
+  const grupos = [];
+  for(let i=0; i<puntos.length; i+=MAX_WP+1){
+    grupos.push(puntos.slice(i, i+MAX_WP+2));
+  }
 
-  // Actualizar botón
-  const btn = document.getElementById('btn-ruta-'+placa);
-  if(btn){ btn.textContent = '✕ Ocultar ruta'; }
+  const directionsService = new google.maps.DirectionsService();
 
-  // Info flotante sobre la ruta
+  for(const grupo of grupos){
+    if(grupo.length<2) continue;
+    const origen = {lat:grupo[0].lat, lng:grupo[0].lng};
+    const destino = {lat:grupo[grupo.length-1].lat, lng:grupo[grupo.length-1].lng};
+    const waypoints = grupo.slice(1,-1).map(p=>({
+      location: {lat:p.lat, lng:p.lng},
+      stopover: false
+    }));
+
+    try {
+      const result = await new Promise((resolve,reject)=>{
+        directionsService.route({
+          origin: origen,
+          destination: destino,
+          waypoints: waypoints,
+          travelMode: google.maps.TravelMode.DRIVING,
+          optimizeWaypoints: false,
+        }, (res,status)=>{
+          if(status==='OK') resolve(res);
+          else reject(status);
+        });
+      });
+
+      const renderer = new google.maps.DirectionsRenderer({
+        map: _mapaRastreo,
+        directions: result,
+        suppressMarkers: true,
+        polylineOptions: {
+          strokeColor: color,
+          strokeOpacity: 0.85,
+          strokeWeight: 5,
+        }
+      });
+      if(!_directionsRenderers[placa]) _directionsRenderers[placa] = [];
+      _directionsRenderers[placa].push(renderer);
+      _polylines[placa].push({setMap: m=>renderer.setMap(m)});
+
+    } catch(err){
+      // Si Directions falla (límite de API, etc.), dibujar línea simple como fallback
+      console.warn('Directions API falló, usando línea simple:', err);
+      const linea = new google.maps.Polyline({
+        path: grupo.map(p=>({lat:p.lat,lng:p.lng})),
+        geodesic: true,
+        strokeColor: color,
+        strokeOpacity: 0.7,
+        strokeWeight: 4,
+        map: _mapaRastreo,
+      });
+      _polylines[placa].push(linea);
+    }
+  }
+
+  // Marcadores inicio y fin
+  const mInicio = new google.maps.Marker({
+    position:{lat:puntos[0].lat,lng:puntos[0].lng}, map:_mapaRastreo,
+    icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:'#16A34A',fillOpacity:1,strokeColor:'#fff',strokeWeight:2},
+    title:'Inicio: '+puntos[0].ts.toLocaleTimeString('es-CO'), zIndex:20
+  });
+  const mFin = new google.maps.Marker({
+    position:{lat:puntos[puntos.length-1].lat,lng:puntos[puntos.length-1].lng}, map:_mapaRastreo,
+    icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:'#DC2626',fillOpacity:1,strokeColor:'#fff',strokeWeight:2},
+    title:'Fin: '+puntos[puntos.length-1].ts.toLocaleTimeString('es-CO'), zIndex:20
+  });
+  _polylines[placa].push(mInicio, mFin);
+
+  // Calcular distancia total
+  let distKm=0;
+  for(let i=1;i<puntos.length;i++) distKm+=distanciaKm(puntos[i-1].lat,puntos[i-1].lng,puntos[i].lat,puntos[i].lng);
+  const velMax=Math.max(...puntos.map(p=>p.vel));
+  const durMin=Math.round((puntos[puntos.length-1].ts-puntos[0].ts)/60000);
+
+  // Info window central
+  const prog = calcularProgresoRuta(placa);
+  let rutaProgHtml='';
+  if(prog.tieneRuta1) rutaProgHtml+=`<div style="font-size:11px;color:#5C6370;">🗺 Ruta 1: <strong>${prog.ruta1.pct}%</strong></div>`;
+  if(prog.tieneRuta2) rutaProgHtml+=`<div style="font-size:11px;color:#5C6370;">🗺 Ruta 2: <strong>${prog.ruta2.pct}%</strong></div>`;
+
   const centro = puntos[Math.floor(puntos.length/2)];
   const infoRuta = new google.maps.InfoWindow({
-    content: `<div style="font-family:'Plus Jakarta Sans',sans-serif;padding:4px;">
+    content:`<div style="font-family:'Segoe UI',sans-serif;padding:4px;">
       <div style="font-weight:700;font-size:13px;margin-bottom:6px;">🗺️ Recorrido ${placa}</div>
       <div style="font-size:11px;color:#5C6370;">📅 ${fecha}</div>
-      <div style="font-size:11px;color:#5C6370;">📏 Distancia aprox: <strong>${distKm.toFixed(1)} km</strong></div>
+      <div style="font-size:11px;color:#5C6370;">📏 Dist aprox: <strong>${distKm.toFixed(1)} km</strong></div>
       <div style="font-size:11px;color:#5C6370;">⚡ Vel. máx: <strong>${velMax} km/h</strong></div>
       <div style="font-size:11px;color:#5C6370;">⏱ Duración: <strong>${durMin} min</strong></div>
       <div style="font-size:11px;color:#5C6370;">📍 ${puntos.length} puntos GPS</div>
+      ${rutaProgHtml}
     </div>`,
-    position: {lat:centro.lat, lng:centro.lng}
+    position:{lat:centro.lat,lng:centro.lng}
   });
   infoRuta.open(_mapaRastreo);
-  _polylines[placa].push(infoRuta);
+  _polylines[placa].push({setMap:()=>{}, close:()=>infoRuta.close()});
+
+  // Ajustar mapa
+  const bounds=new google.maps.LatLngBounds();
+  puntos.forEach(p=>bounds.extend({lat:p.lat,lng:p.lng}));
+  _mapaRastreo.fitBounds(bounds);
+
+  const btn=document.getElementById('btn-ruta-'+placa);
+  if(btn) btn.textContent='✕ Ocultar';
 }
 
-function limpiarCoordGPS(v){
-  let s = String(v).trim();
-  const puntos = (s.match(/\./g)||[]).length;
-  if(puntos > 1){
-    const partes = s.split('.');
-    const entero = partes[0];
-    const decimales = partes[partes.length-1];
-    const miles = partes.slice(1, partes.length-1).join('');
-    s = entero + miles + '.' + decimales;
-  }
-  return parseFloat(s.replace(',','.')) || 0;
-}
+// ──── DETALLE DE PUNTOS DE PASO ────
+function verDetallesPuntos(placa){
+  const prog = calcularProgresoRuta(placa);
 
-function distanciaKm(lat1,lng1,lat2,lng2){
-  const R=6371, dLat=(lat2-lat1)*Math.PI/180, dLng=(lng2-lng1)*Math.PI/180;
-  const a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);
-  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
-}
+  const renderPuntosList = (numRuta, puntosVisitados, progresoRuta) => {
+    const todosPuntos = RUTAS_PUNTOS_ADMIN[numRuta];
+    if(!todosPuntos) return '';
+    const visitadosMap = {};
+    puntosVisitados.forEach(p=>{ visitadosMap[p.id]=p; });
 
+    return `
+      <div style="margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <span style="font-size:12px;font-weight:700;color:${COLORES_RUTA[numRuta]};">🗺 Ruta ${numRuta}</span>
+          <span style="font-size:12px;font-weight:700;font-family:'Courier New',monospace;color:${COLORES_RUTA[numRuta]};">${progresoRuta.pct}% · ${progresoRuta.visitados}/${progresoRuta.total}</span>
+        </div>
+        <div style="height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;margin-bottom:10px;">
+          <div style="height:100%;width:${progresoRuta.pct}%;background:${COLORES_RUTA[numRuta]};border-radius:3px;"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;max-height:240px;overflow-y:auto;">
+          ${todosPuntos.map((p,i)=>{
+            const v = visitadosMap[p.id];
+            return `<div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;background:${v?'rgba(22,163,74,.08)':'var(--bg3)'};border:1px solid ${v?'rgba(22,163,74,.25)':'var(--bd)'};">
+              <span style="font-size:13px;">${v?'✅':'○'}</span>
+              <div style="flex:1;">
+                <div style="font-size:11px;font-weight:600;color:${v?'#E6EDF3':'#8B949E'};">P${i+1} · ${p.nombre}</div>
+                ${v?`<div style="font-size:10px;color:#4ade80;font-family:'Courier New',monospace;">${v.hora}</div>`:''}
+              </div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>`;
+  };
+
+  const body = `
+    <div>
+      <div style="font-size:12px;color:var(--t2);margin-bottom:14px;">
+        Puntos de paso registrados para <strong style="color:var(--t);font-family:'Courier New',monospace;">${placa}</strong> hoy.
+      </div>
+      ${prog.tieneRuta1 ? renderPuntosList(1, prog.puntosVisitados1, prog.ruta1) : ''}
+      ${prog.tieneRuta2 ? renderPuntosList(2, prog.puntosVisitados2, prog.ruta2) : ''}
+      ${!prog.tieneRuta1 && !prog.tieneRuta2 ? '<div class="empty"><div class="ei">🗺️</div><p>Sin puntos de paso registrados hoy</p></div>' : ''}
+    </div>`;
+
+  openModal('Puntos de paso — '+placa, body, '<button class="btn" onclick="closeModal()">Cerrar</button>', true);
+}
 </script>
 </body>
 </html>
