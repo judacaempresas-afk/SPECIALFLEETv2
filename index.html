@@ -3650,10 +3650,9 @@ function gestionarPuntos(idRuta) {
     </div>`,
     `<button class="btn btn-sm" onclick="closeModal();loadRUTAS()">← Volver</button>
  <button class="btn btn-sm btn-pri" onclick="agregarPunto('${idRuta}',${puntos.length+1})">+ Agregar</button>
- <button class="btn btn-sm" onclick="abrirImp('${idRuta}')">📥 Importar</button>`
-  true
+ <button class="btn btn-sm" onclick="abrirImp('${idRuta}')">📥 Importar</button>`,
+  true        // ← LA COMA VA DESPUÉS DEL BACKTICK
   );
-}
 
 async function agregarPunto(idRuta, ordenSugerido) {
   const nombre = document.getElementById('np-nombre').value.trim();
