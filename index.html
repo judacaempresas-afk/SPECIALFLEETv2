@@ -3648,9 +3648,9 @@ function gestionarPuntos(idRuta) {
       </div>
       <div id="al-np" style="margin-top:8px;"></div>
     </div>`,
-    `<button class="btn" onclick="abrirImportador('${idRuta}')">📥 Importar masivo</button>
-   <button class="btn" onclick="closeModal();loadRUTAS()">Cerrar</button>
-   <button class="btn btn-pri" onclick="agregarPunto('${idRuta}',${puntos.length+1})">+ Agregar punto</button>`,
+    `<button class="btn btn-sm" onclick="closeModal();loadRUTAS()">← Volver</button>
+ <button class="btn btn-sm btn-pri" onclick="agregarPunto('${idRuta}',${puntos.length+1})">+ Agregar</button>
+ <button class="btn btn-sm" onclick="abrirImp('${idRuta}')">📥 Importar</button>`
   true
   );
 }
@@ -3729,13 +3729,17 @@ function verRutaEnMapa(idRuta) {
 //  
 //  1. En la función gestionarPuntos(), en el openModal,
 //     agrega el botón "📥 Importar masivo" al footer:
-//     `<button class="btn" onclick="abrirImportador('${idRuta}')">📥 Importar masivo</button>
+//     `<button class="btn" onclick="abrirImp('${idRuta}')">📥 Importar masivo</button>
 //      <button class="btn" onclick="closeModal();loadRUTAS()">Cerrar</button>
 //      <button class="btn btn-pri" onclick="agregarPunto('${idRuta}',${puntos.length+1})">+ Agregar punto</button>`
 //
 //  2. Pega las funciones de abajo antes del </script>
 // ══════════════════════════════════════════════════════════════
-
+function abrirImp(idRuta){
+  closeModal();
+  setTimeout(()=> abrirImportador(idRuta), 80);
+}
+  
 function abrirImportador(idRuta) {
   // Forzar cierre completo del modal anterior y limpiar clases
   const modalEl = document.getElementById('modal');
