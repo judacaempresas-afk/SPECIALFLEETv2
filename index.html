@@ -390,7 +390,7 @@ tr:hover td{background:#FAFBFC;}
 </div>
 
 <!-- ══ APP ══ -->
-<div id="app" style="display:none;">
+<div id="app">
 
 <!-- ══ SIDEBAR ══ -->
 <aside>
@@ -1071,7 +1071,9 @@ function showLoginErr(msg){
 // ══════════════════════════════════════════════
 function iniciarApp(){
   document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('app').classList.add('visible');
+  const appEl = document.getElementById('app');
+appEl.style.display = 'flex';
+appEl.classList.add('visible');
 
   const cfg = ROL_CONFIG[SESSION.rol] || ROL_CONFIG.conductor;
 
@@ -1132,7 +1134,9 @@ function doLogout(){
   // Detener rastreo
   if(_rastreoInterval) clearInterval(_rastreoInterval);
   
-  document.getElementById('app').classList.remove('visible');
+  const appEl = document.getElementById('app');
+appEl.style.display = 'flex';
+appEl.classList.add('visible');
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('l-pass').value = '';
   document.getElementById('l-err').style.display = 'none';
