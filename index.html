@@ -3769,7 +3769,7 @@ function abrirImportador(idRuta) {
         <select id="imp-separador">
           <option value=",">Coma ( , )</option>
           <option value=";">Punto y coma ( ; )</option>
-          <option value="	">Tabulación</option>
+          <option value="TAB">Tabulación</option>
         </select>
       </div>
     </div>
@@ -3793,7 +3793,7 @@ let _puntosParaImportar = [];
 
 function previewImportador(idRuta) {
   const texto     = document.getElementById('imp-texto').value.trim();
-  const separador = document.getElementById('imp-separador').value;
+  const separador = document.getElementById('imp-separador').value === 'TAB' ? '\t' : document.getElementById('imp-separador').value;
   const ordenInicio = Number(document.getElementById('imp-orden-inicio').value) || 1;
   const alEl      = document.getElementById('al-imp');
   const previewEl = document.getElementById('imp-preview');
