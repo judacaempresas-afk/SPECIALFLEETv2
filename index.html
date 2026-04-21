@@ -3051,7 +3051,7 @@ function renderUbicacionesMapa(){
     }
   });
 
-  const placas = Object.keys(porPlaca);
+  const placas = Object.keys(porPlaca).filter(p => estaActivo(porPlaca[p]));
   if(!placas.length){
     lista.innerHTML='<div style="font-size:12px;color:var(--t3);padding:8px 6px;">Sin vehículos activos</div>';
     return;
