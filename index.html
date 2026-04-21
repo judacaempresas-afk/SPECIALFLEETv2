@@ -1018,7 +1018,19 @@ async function doLogin(){
   btn.innerHTML = '<span class="login-spin"></span>Verificando...';
   err.style.display = 'none';
 
-  const rc = await apig({ accion:'listar', modulo:'conductores', email, clave });
+  // NUEVO: cerrar cualquier modal previo
+  const modal = document.getElementById('modal');
+  if(modal) modal.style.display = 'none';
+
+  let rc;
+  try {
+    rc = await apig({ accion:'listar', modulo:'conductores', email, clave });
+  } catch(e) {
+    btn.disabled = false;
+    btn.textContent = 'Ingresar';
+    showLoginErr('Error de conexión. Verifica tu internet.');
+    return;
+  }
 
   btn.disabled = false;
   btn.textContent = 'Ingresar';
@@ -1114,6 +1126,12 @@ function iniciarApp(){
 // ══════════════════════════════════════════════
 function doLogout(){
   SESSION = null;
+  // Cerrar modal si está abierto
+  const modal = document.getElementById('modal');
+  if(modal) modal.style.display = 'none';
+  // Detener rastreo
+  if(_rastreoInterval) clearInterval(_rastreoInterval);
+  
   document.getElementById('app').classList.remove('visible');
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('l-pass').value = '';
