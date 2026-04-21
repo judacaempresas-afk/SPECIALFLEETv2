@@ -418,6 +418,7 @@ tr:hover td{background:#FAFBFC;}
   <div class="sb-sec">Recursos</div>
   <button class="sb-item" id="nav-inventario" onclick="goTo('inventario',this)"><span class="sb-icon">📦</span>Inventario<span class="sb-badge amber" id="sb-inv">0</span></button>
   <button class="sb-item" id="nav-compras" onclick="goTo('compras',this)"><span class="sb-icon">🛒</span>Compras</button>
+  <button class="sb-item" id="nav-rutas" onclick="goTo('rutas',this)"><span class="sb-icon">🗺</span>Rutas</button>
   <button class="sb-item" id="nav-proveedores" onclick="goTo('proveedores',this)"><span class="sb-icon">🏢</span>Proveedores</button>
 
   <div class="sb-user">
@@ -884,6 +885,39 @@ tr:hover td{background:#FAFBFC;}
       <div class="tw"><table><thead><tr><th>ID</th><th>Nombre</th><th>NIT</th><th>Categoría</th><th>Ciudad</th><th>Teléfono</th><th>Email</th><th>Contacto</th><th>Estado</th><th></th></tr></thead><tbody id="tbl-prov"><tr><td colspan="10" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
     </div>
   </div>
+    <!-- ══ RUTAS ══ -->
+  <div class="page" id="pg-rutas">
+    <div class="card">
+      <div class="card-hd">
+        <div><div class="card-title">Gestión de Rutas</div><div class="card-sub">Crea rutas y asigna puntos de paso a vehículos</div></div>
+        <div class="card-actions">
+          <button class="btn btn-pri btn-sm" onclick="tp('fruta')">+ Nueva ruta</button>
+        </div>
+      </div>
+      <div id="fruta" style="display:none;">
+        <div class="fpanel">
+          <div class="fg">
+            <div class="fl"><label>Nombre de la ruta <span class="req">*</span></label><input id="vr-nombre" placeholder="La Mina, Ruta Centro..."></div>
+            <div class="fl"><label>Descripción</label><input id="vr-desc" placeholder="Descripción de la ruta..."></div>
+            <div class="fl"><label>Vehículo asignado</label><select id="vr-vehiculo"><option value="">Sin asignar</option></select></div>
+            <div class="fl"><label>Color en mapa</label><input id="vr-color" type="color" value="#0066CC" style="height:38px;padding:3px;"></div>
+            <div class="fl"><label>Activa</label><select id="vr-activa"><option value="Si">Sí</option><option value="No">No</option></select></div>
+          </div>
+        </div>
+        <div class="ffoot">
+          <div id="al-ruta" style="flex:1;"></div>
+          <button class="btn btn-sm" onclick="tp('fruta')">Cancelar</button>
+          <button class="btn btn-pri btn-sm" onclick="crearRUTA()">Crear ruta</button>
+        </div>
+      </div>
+      <div class="tw">
+        <table>
+          <thead><tr><th>ID</th><th>Nombre</th><th>Descripción</th><th>Vehículo</th><th>Puntos</th><th>Activa</th><th></th></tr></thead>
+          <tbody id="tbl-rutas"><tr><td colspan="7" class="loader"><span class="spin"></span></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
   </div><!-- /content -->
 </div><!-- /main -->
@@ -946,13 +980,13 @@ let SESSION = null;
 const ROL_CONFIG = {
   admin: {
     modulos: ['dashboard','vehiculos','conductores','mantenimiento','combustible',
-              'neumaticos','checklist','viajes','inventario','compras','proveedores','rastreo'],
+              'neumaticos','checklist','viajes','inventario','compras','proveedores','rastreo','rutas'],
     puedeEscribir: true,
     esAdmin: true,
   },
   tecnico: {
     modulos: ['dashboard','vehiculos','mantenimiento','neumaticos','inventario',
-              'compras','combustible','checklist','conductores','viajes','proveedores','rastreo'],
+              'compras','combustible','checklist','conductores','viajes','proveedores','rastreo','rutas'],
     puedeEscribir: true,
     esAdmin: false,
   },
@@ -962,7 +996,6 @@ const ROL_CONFIG = {
     esAdmin: false,
   },
 };
-
 // ══════════════════════════════════════════════
 //  LOGIN
 // ══════════════════════════════════════════════
@@ -1180,6 +1213,7 @@ const PAGE_META = {
   compras:      {title:'Compras', sub:'Órdenes de compra y proveedores', load:loadCP},
   proveedores:  {title:'Proveedores', sub:'Talleres, suministros y servicios', load:loadPROV},
   rastreo:      {title:'Rastreo en vivo', sub:'Ubicación GPS de la flota en tiempo real', load:loadRastreo},
+  rutas: {title:'Gestión de Rutas', sub:'Rutas y puntos de paso por vehículo', load:loadRUTAS},
 };
 
 function goTo(pg, btn){
@@ -3449,6 +3483,227 @@ function verDetallesPuntos(placa){
     </div>`;
 
   openModal('Puntos de paso — '+placa, body, '<button class="btn" onclick="closeModal()">Cerrar</button>', true);
+}
+  // ══════════════════════════════════════════════
+//  GESTIÓN DE RUTAS
+// ══════════════════════════════════════════════
+const DB_RUTAS = { rutas: [], puntos: [] };
+
+async function loadRUTAS() {
+  document.getElementById('tbl-rutas').innerHTML = '<tr><td colspan="7" class="loader"><span class="spin"></span></td></tr>';
+  const [dv, dr, dp] = await Promise.all([
+    apig({ accion:'listar', modulo:'vehiculos' }),
+    apig({ accion:'listar', modulo:'rutas' }),
+    apig({ accion:'listar', modulo:'puntos_ruta' }),
+  ]);
+  DB_RUTAS.rutas  = dr.data || [];
+  DB_RUTAS.puntos = dp.data || [];
+  DB.v = dv.data || [];
+  const sel = document.getElementById('vr-vehiculo');
+  if(sel) sel.innerHTML = '<option value="">Sin asignar</option>' + 
+    DB.v.map(v => `<option>${v.Placa}</option>`).join('');
+  renderRUTAS();
+}
+
+function renderRUTAS() {
+  const tb = document.getElementById('tbl-rutas');
+  if(!DB_RUTAS.rutas.length) {
+    tb.innerHTML = '<tr><td colspan="7"><div class="empty"><div class="ei">🗺</div><p>Sin rutas creadas</p></div></td></tr>';
+    return;
+  }
+  tb.innerHTML = DB_RUTAS.rutas.map(r => {
+    const numPuntos = DB_RUTAS.puntos.filter(p => p.ID_Ruta === r.ID_Ruta).length;
+    const colorDot  = r.Color || '#0066CC';
+    return `<tr>
+      <td class="tmono" style="color:var(--brand);font-weight:700;">${r.ID_Ruta||'—'}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:12px;height:12px;border-radius:50%;background:${colorDot};flex-shrink:0;"></div>
+          <span style="font-weight:600;">${r.Nombre||'—'}</span>
+        </div>
+      </td>
+      <td class="tdim">${r.Descripcion||'—'}</td>
+      <td><span class="tmono" style="color:var(--brand);">${r.Vehiculo_Asignado||'Sin asignar'}</span></td>
+      <td><span style="background:var(--brand-l);color:var(--brand);font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;">${numPuntos} puntos</span></td>
+      <td>${r.Activa==='Si'?'<span class="badge bg">Activa</span>':'<span class="badge bgr">Inactiva</span>'}</td>
+      <td style="white-space:nowrap;">
+        <button class="btn btn-xs btn-pri" onclick="gestionarPuntos('${r.ID_Ruta}')">📍 Puntos</button>
+        <button class="btn btn-xs" onclick="editarRUTA('${r.ID_Ruta}')">✏</button>
+        <button class="btn btn-xs" onclick="verRutaEnMapa('${r.ID_Ruta}')">🗺</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+async function crearRUTA() {
+  const nombre = document.getElementById('vr-nombre').value.trim();
+  if(!nombre) { showAlert('al-ruta','El nombre es obligatorio','err'); return; }
+  const btn = event.target; btn.disabled=true; btn.textContent='Guardando...';
+  const id = 'RUT-' + Date.now().toString().slice(-6);
+  const r = await apip({
+    accion:'crear', modulo:'rutas',
+    ID_Ruta: id, Nombre: nombre,
+    Descripcion: document.getElementById('vr-desc').value,
+    Vehiculo_Asignado: document.getElementById('vr-vehiculo').value,
+    Color: document.getElementById('vr-color').value,
+    Activa: document.getElementById('vr-activa').value,
+  });
+  btn.disabled=false; btn.textContent='Crear ruta';
+  if(r.ok) { showAlert('al-ruta','✅ Ruta creada: '+id,'ok'); setTimeout(()=>{ tp('fruta'); loadRUTAS(); },1500); }
+  else showAlert('al-ruta','❌ '+(r.error||'Error'),'err');
+}
+
+function editarRUTA(idRuta) {
+  const r = DB_RUTAS.rutas.find(x => x.ID_Ruta === idRuta);
+  if(!r) return;
+  openModal('Editar ruta: '+r.Nombre, `
+    <div class="fg" style="gap:11px;">
+      <div class="fl"><label>Nombre</label><input id="er-nombre" value="${r.Nombre||''}"></div>
+      <div class="fl"><label>Descripción</label><input id="er-desc" value="${r.Descripcion||''}"></div>
+      <div class="fl"><label>Vehículo asignado</label>
+        <select id="er-vehiculo">
+          <option value="">Sin asignar</option>
+          ${DB.v.map(v=>`<option ${r.Vehiculo_Asignado===v.Placa?'selected':''}>${v.Placa}</option>`).join('')}
+        </select>
+      </div>
+      <div class="fl"><label>Color</label><input id="er-color" type="color" value="${r.Color||'#0066CC'}" style="height:38px;padding:3px;"></div>
+      <div class="fl"><label>Activa</label>
+        <select id="er-activa">
+          <option value="Si" ${r.Activa==='Si'?'selected':''}>Sí</option>
+          <option value="No" ${r.Activa!=='Si'?'selected':''}>No</option>
+        </select>
+      </div>
+    </div>
+    <div id="al-er" style="margin-top:10px;"></div>`,
+    `<button class="btn" onclick="closeModal()">Cancelar</button>
+     <button class="btn btn-pri" onclick="guardarRUTA('${idRuta}')">Guardar</button>`
+  );
+}
+
+async function guardarRUTA(idRuta) {
+  const btn = event.target; btn.disabled=true; btn.textContent='Guardando...';
+  const r = await apip({
+    accion:'actualizar', modulo:'rutas',
+    buscarCampo:'ID_Ruta', buscarValor:idRuta,
+    datos:{
+      Nombre: document.getElementById('er-nombre').value,
+      Descripcion: document.getElementById('er-desc').value,
+      Vehiculo_Asignado: document.getElementById('er-vehiculo').value,
+      Color: document.getElementById('er-color').value,
+      Activa: document.getElementById('er-activa').value,
+    }
+  });
+  btn.disabled=false; btn.textContent='Guardar';
+  if(r.ok) { closeModal(); await loadRUTAS(); }
+  else document.getElementById('al-er').innerHTML='<div class="alert a-err">Error al guardar</div>';
+}
+
+function gestionarPuntos(idRuta) {
+  const ruta = DB_RUTAS.rutas.find(x => x.ID_Ruta === idRuta);
+  const puntos = DB_RUTAS.puntos
+    .filter(p => p.ID_Ruta === idRuta)
+    .sort((a,b) => Number(a.Orden) - Number(b.Orden));
+  const listaPuntos = puntos.length
+    ? puntos.map((p,i) => `
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg);border-radius:var(--r);border:1px solid var(--bd);margin-bottom:6px;">
+          <div style="width:24px;height:24px;border-radius:50%;background:var(--brand);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">${p.Orden||i+1}</div>
+          <div style="flex:1;">
+            <div style="font-size:12px;font-weight:600;">${p.Nombre_Punto||'Punto '+(i+1)}</div>
+            <div style="font-size:10px;color:var(--t3);font-family:'Courier New',monospace;">${p.Lat}, ${p.Lng}</div>
+          </div>
+          <button class="btn btn-xs" style="color:var(--red);" onclick="eliminarPunto('${p.ID_Punto}','${idRuta}')">✕</button>
+        </div>`).join('')
+    : '<div style="font-size:12px;color:var(--t3);padding:8px 0;">Sin puntos. Agrega el primero abajo.</div>';
+
+  openModal('Puntos de paso — '+(ruta?.Nombre||idRuta), `
+    <div style="max-height:280px;overflow-y:auto;margin-bottom:14px;">${listaPuntos}</div>
+    <div style="border-top:1px solid var(--bd);padding-top:14px;">
+      <div style="font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px;">Agregar nuevo punto</div>
+      <div class="fg" style="gap:10px;">
+        <div class="fl"><label>Nombre del punto <span class="req">*</span></label><input id="np-nombre" placeholder="Entrada La Mina..."></div>
+        <div class="fl"><label>Latitud <span class="req">*</span></label><input id="np-lat" placeholder="6.172979" style="font-family:var(--mono);" type="number" step="any"></div>
+        <div class="fl"><label>Longitud <span class="req">*</span></label><input id="np-lng" placeholder="-75.591563" style="font-family:var(--mono);" type="number" step="any"></div>
+        <div class="fl"><label>Orden</label><input id="np-orden" type="number" value="${puntos.length+1}" min="1"></div>
+      </div>
+      <div style="margin-top:10px;padding:10px 12px;background:var(--bg3);border-radius:var(--r);font-size:11px;color:var(--t3);">
+        💡 Abre Google Maps → clic derecho en el punto → copia las coordenadas
+      </div>
+      <div id="al-np" style="margin-top:8px;"></div>
+    </div>`,
+    `<button class="btn" onclick="closeModal();loadRUTAS()">Cerrar</button>
+     <button class="btn btn-pri" onclick="agregarPunto('${idRuta}',${puntos.length+1})">+ Agregar punto</button>`,
+    true
+  );
+}
+
+async function agregarPunto(idRuta, ordenSugerido) {
+  const nombre = document.getElementById('np-nombre').value.trim();
+  const lat    = document.getElementById('np-lat').value.trim();
+  const lng    = document.getElementById('np-lng').value.trim();
+  const orden  = document.getElementById('np-orden').value || ordenSugerido;
+  if(!nombre||!lat||!lng) { document.getElementById('al-np').innerHTML='<div class="alert a-err">Nombre, latitud y longitud son obligatorios</div>'; return; }
+  const latNum = parseFloat(lat);
+  const lngNum = parseFloat(lng);
+  if(isNaN(latNum)||isNaN(lngNum)||Math.abs(latNum)>90||Math.abs(lngNum)>180) { document.getElementById('al-np').innerHTML='<div class="alert a-err">Coordenadas inválidas</div>'; return; }
+  const btn = event.target; btn.disabled=true; btn.textContent='Agregando...';
+  const id = 'PTO-'+Date.now().toString().slice(-6);
+  const r = await apip({
+    accion:'crear', modulo:'puntos_ruta',
+    ID_Punto:id, ID_Ruta:idRuta,
+    Nombre_Punto:nombre,
+    Lat:latNum.toFixed(6), Lng:lngNum.toFixed(6),
+    Orden:Number(orden),
+  });
+  btn.disabled=false; btn.textContent='+ Agregar punto';
+  if(r.ok) {
+    const dp = await apig({accion:'listar',modulo:'puntos_ruta'});
+    DB_RUTAS.puntos = dp.data||[];
+    gestionarPuntos(idRuta);
+  } else {
+    document.getElementById('al-np').innerHTML='<div class="alert a-err">❌ '+(r.error||'Error')+'</div>';
+  }
+}
+
+async function eliminarPunto(idPunto, idRuta) {
+  if(!confirm('¿Eliminar este punto?')) return;
+  const r = await apip({accion:'eliminar',modulo:'puntos_ruta',buscarCampo:'ID_Punto',buscarValor:idPunto});
+  if(r.ok) {
+    const dp = await apig({accion:'listar',modulo:'puntos_ruta'});
+    DB_RUTAS.puntos = dp.data||[];
+    gestionarPuntos(idRuta);
+  } else alert('Error al eliminar');
+}
+
+function verRutaEnMapa(idRuta) {
+  const ruta   = DB_RUTAS.rutas.find(x => x.ID_Ruta === idRuta);
+  const puntos = DB_RUTAS.puntos
+    .filter(p => p.ID_Ruta === idRuta)
+    .sort((a,b) => Number(a.Orden) - Number(b.Orden));
+  if(!puntos.length) { openModal('Sin puntos','<div class="empty"><div class="ei">📍</div><p>Esta ruta no tiene puntos aún</p></div>'); return; }
+  const color = ruta?.Color||'#0066CC';
+  const gmUrl = `https://www.google.com/maps/dir/${puntos.map(p=>`${p.Lat},${p.Lng}`).join('/')}`;
+  openModal('Vista previa — '+(ruta?.Nombre||idRuta), `
+    <div style="margin-bottom:12px;display:flex;gap:6px;flex-wrap:wrap;">
+      <span style="background:var(--brand-l);color:var(--brand);font-size:11px;font-weight:700;padding:3px 10px;border-radius:4px;">${puntos.length} puntos</span>
+      ${ruta?.Vehiculo_Asignado?`<span class="tmono" style="color:var(--brand);font-size:12px;padding:3px 8px;border:1px solid var(--bd);border-radius:4px;">${ruta.Vehiculo_Asignado}</span>`:''}
+      ${ruta?.Activa==='Si'?'<span class="badge bg">Activa</span>':'<span class="badge bgr">Inactiva</span>'}
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;max-height:320px;overflow-y:auto;margin-bottom:14px;">
+      ${puntos.map((p,i)=>`
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border-radius:var(--r);border:1px solid var(--bd);">
+          <div style="width:26px;height:26px;border-radius:50%;background:${color};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">${p.Orden||i+1}</div>
+          <div style="flex:1;">
+            <div style="font-size:12px;font-weight:600;">${p.Nombre_Punto}</div>
+            <div style="font-size:10px;color:var(--t3);font-family:var(--mono);">${parseFloat(p.Lat).toFixed(5)}, ${parseFloat(p.Lng).toFixed(5)}</div>
+          </div>
+          <a href="https://www.google.com/maps?q=${p.Lat},${p.Lng}" target="_blank" style="font-size:10px;color:var(--brand);text-decoration:none;">Maps ↗</a>
+        </div>`).join('')}
+    </div>
+    <a href="${gmUrl}" target="_blank" class="btn btn-pri" style="width:100%;justify-content:center;text-decoration:none;">
+      🗺 Ver ruta completa en Google Maps
+    </a>`,
+    '<button class="btn" onclick="closeModal()">Cerrar</button>', true
+  );
 }
 </script>
 </body>
