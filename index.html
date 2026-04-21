@@ -93,7 +93,7 @@ aside{width:var(--sb-w);min-width:var(--sb-w);background:var(--sb);display:flex;
 
 /* ══ MAIN ══ */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
-.topbar{background:var(--bg2);border-bottom:1px solid var(--bd);padding:0 20px;height:var(--top-h);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:relative;}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--bd);padding:0 20px;height:var(--top-h);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 .topbar-title{font-size:14px;font-weight:700;color:var(--t);}
 .topbar-sub{font-size:11px;color:var(--t3);margin-top:1px;}
 .topbar-actions{display:flex;gap:8px;align-items:center;}
@@ -107,7 +107,7 @@ aside{width:var(--sb-w);min-width:var(--sb-w);background:var(--sb);display:flex;
 .rol-conductor{background:var(--amber-l);color:#B45309;}
 
 /* ══ PAGES ══ */
-.content{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
+.content{flex:1;overflow-y:auto;}
 .page{display:none;flex-direction:column;gap:14px;padding:16px 20px;}
 .page.active{display:flex;}
 .page-mapa{padding:0!important;gap:0!important;overflow:hidden!important;}
@@ -167,31 +167,6 @@ tr:hover td{background:#FAFBFC;}
 .ftab.active{background:var(--brand);color:#fff;border-color:var(--brand);}
 .sbox{padding:5px 9px;font-size:12px;font-family:var(--font);border:1px solid var(--bd);border-radius:var(--r);background:var(--bg2);color:var(--t);outline:none;width:155px;}
 .sbox:focus{border-color:var(--brand);}
-
-/* ══ ESTADO TABS CON CONTADORES (Mantenimiento) ══ */
-.estado-tabs{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
-.etab{
-  display:inline-flex;align-items:center;gap:5px;
-  padding:5px 11px;font-size:11.5px;font-weight:600;
-  border-radius:20px;border:1px solid var(--bd);
-  background:transparent;color:var(--t2);cursor:pointer;
-  transition:all .15s;font-family:var(--font);
-}
-.etab:hover{background:var(--bg3);}
-.etab.active{background:var(--brand);color:#fff;border-color:var(--brand);}
-.etab-count{
-  background:rgba(0,0,0,.12);color:inherit;
-  font-size:10px;font-weight:700;
-  padding:1px 6px;border-radius:8px;min-width:18px;text-align:center;
-  font-family:var(--mono);
-}
-.etab.active .etab-count{background:rgba(255,255,255,.25);color:#fff;}
-/* Colores por estado */
-.etab.etab-abierta.active{background:#D97706;border-color:#D97706;}
-.etab.etab-proceso.active{background:#2563EB;border-color:#2563EB;}
-.etab.etab-espera.active{background:#7C3AED;border-color:#7C3AED;}
-.etab.etab-cerrada.active{background:#16A34A;border-color:#16A34A;}
-.etab.etab-todas.active{background:var(--brand);border-color:var(--brand);}
 
 /* ══ FORM ══ */
 .fpanel{background:#F8FAFB;border-bottom:1px solid var(--bd);padding:14px;}
@@ -282,36 +257,11 @@ tr:hover td{background:#FAFBFC;}
 .dash-left{display:flex;flex-direction:column;gap:14px;}
 .dash-right{display:flex;flex-direction:column;gap:14px;}
 
-/* ══ REPUESTO SEARCH BOX ══ */
-.rep-search-wrap{position:relative;}
-.rep-search-input{
-  width:100%;padding:7px 9px;font-size:12.5px;font-family:var(--font);
-  border:1px solid var(--bd);border-radius:var(--r);
-  background:var(--bg2);color:var(--t);outline:none;
-  transition:border-color .15s;
-}
-.rep-search-input:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(0,102,204,.08);}
-.rep-dropdown{
-  position:absolute;top:calc(100% + 3px);left:0;right:0;
-  background:var(--bg2);border:1px solid var(--bd);border-radius:var(--rl);
-  box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:200;
-  max-height:220px;overflow-y:auto;display:none;
-}
-.rep-dropdown.open{display:block;}
-.rep-opt{
-  padding:8px 12px;cursor:pointer;font-size:12px;
-  border-bottom:1px solid var(--bg3);
-  display:flex;justify-content:space-between;align-items:center;
-  transition:background .1s;
-}
-.rep-opt:hover{background:var(--brand-l);}
-.rep-opt:last-child{border-bottom:none;}
-.rep-opt-name{font-weight:600;color:var(--t);}
-.rep-opt-meta{font-size:10.5px;color:var(--t3);margin-top:1px;}
-.rep-opt-stock{font-family:var(--mono);font-size:11px;font-weight:700;}
-.rep-opt-stock.low{color:var(--red);}
-.rep-opt-stock.ok{color:var(--green);}
-.rep-empty{padding:12px;text-align:center;font-size:12px;color:var(--t3);}
+/* ══ ACCESS DENIED ══ */
+.access-denied{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;text-align:center;gap:12px;}
+.access-denied .icon{font-size:48px;}
+.access-denied h3{font-size:16px;font-weight:700;color:var(--t);}
+.access-denied p{font-size:12px;color:var(--t3);}
 
 /* ══ BOTTOM NAV ══ */
 .bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--sb);border-top:1px solid var(--bd-sb);z-index:500;}
@@ -332,6 +282,23 @@ tr:hover td{background:#FAFBFC;}
 .dg-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:12px 8px;border-radius:10px;background:var(--sb2);cursor:pointer;color:#8B949E;font-size:10px;font-weight:600;font-family:var(--font);text-align:center;border:1px solid var(--bd-sb);transition:all .12s;}
 .dg-item:hover,.dg-item.active{background:var(--brand);color:#fff;border-color:var(--brand);}
 .dg-icon{font-size:20px;}
+
+/* ══ CONDUCTOR: vista exclusiva ══ */
+.conductor-wrap{
+  display:flex;flex-direction:column;align-items:center;
+  min-height:100vh;background:var(--bg);
+}
+.conductor-header{
+  width:100%;background:var(--sb);padding:14px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.conductor-logo{display:flex;align-items:center;gap:9px;}
+.conductor-logo-icon{width:30px;height:30px;border-radius:7px;background:var(--brand);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;font-family:var(--mono);}
+.conductor-logo-text{font-size:14px;font-weight:700;color:#E6EDF3;}
+.conductor-logo-text span{color:#58A6FF;}
+.conductor-user{display:flex;align-items:center;gap:8px;}
+.conductor-ava{width:28px;height:28px;border-radius:50%;background:var(--brand);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;}
+.conductor-name{font-size:12px;font-weight:600;color:#E6EDF3;}
 
 /* ══ RESPONSIVE ══ */
 @media(max-width:768px){
@@ -357,8 +324,6 @@ tr:hover td{background:#FAFBFC;}
   .login-box{border-radius:0;border:none;padding:28px 24px;max-width:100%;}
   #login-screen{justify-content:flex-end;}
   .sbox{width:100%;}
-  .estado-tabs{gap:4px;}
-  .etab{padding:4px 8px;font-size:10.5px;}
 }
 </style>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0SUA8TpcWiH5WkwsMoMv-cGwlmN397AU&loading=async" async defer></script>
@@ -385,12 +350,12 @@ tr:hover td{background:#FAFBFC;}
     </div>
     <div class="login-err" id="l-err"></div>
     <button class="login-btn" id="l-btn" onclick="doLogin()">Ingresar</button>
-    <div style="font-size:11px;color:#484F58;text-align:center;">FleetCO v2.1 — Acceso restringido</div>
+    <div style="font-size:11px;color:#484F58;text-align:center;">FleetCO v2.0 — Acceso restringido</div>
   </div>
 </div>
 
 <!-- ══ APP ══ -->
-<div id="app" style="display:none;">
+<div id="app">
 
 <!-- ══ SIDEBAR ══ -->
 <aside>
@@ -402,24 +367,24 @@ tr:hover td{background:#FAFBFC;}
   <div class="sb-sec">Principal</div>
   <button class="sb-item active" id="nav-dashboard" onclick="goTo('dashboard',this)"><span class="sb-icon">▦</span>Dashboard</button>
 
-  <div class="sb-sec">Gestión</div>
+  <div class="sb-sec sb-sec-gestion">Gestión</div>
   <button class="sb-item" id="nav-vehiculos" onclick="goTo('vehiculos',this)"><span class="sb-icon">🚗</span>Vehículos<span class="sb-badge" id="sb-veh">0</span></button>
   <button class="sb-item" id="nav-conductores" onclick="goTo('conductores',this)"><span class="sb-icon">👤</span>Conductores<span class="sb-badge" id="sb-con">0</span></button>
 
-  <div class="sb-sec">Operaciones</div>
-  <button class="sb-item" id="nav-rastreo" onclick="goTo('rastreo',this)"><span class="sb-icon">📡</span>Rastreo en vivo<span class="sb-badge" id="sb-rastreo" style="background:#16A34A;">●</span></button>
+  <div class="sb-sec sb-sec-ops">Operaciones</div>
   <button class="sb-item" id="nav-mantenimiento" onclick="goTo('mantenimiento',this)"><span class="sb-icon">🔧</span>Mantenimiento<span class="sb-badge" id="sb-mant">0</span></button>
   <button class="sb-item" id="nav-combustible" onclick="goTo('combustible',this)"><span class="sb-icon">⛽</span>Combustible</button>
   <button class="sb-item" id="nav-neumaticos" onclick="goTo('neumaticos',this)"><span class="sb-icon">🛞</span>Neumáticos</button>
   <button class="sb-item" id="nav-checklist" onclick="goTo('checklist',this)"><span class="sb-icon">✅</span>Checklist</button>
   <button class="sb-item" id="nav-viajes" onclick="goTo('viajes',this)"><span class="sb-icon">🚚</span>Viajes<span class="sb-badge amber" id="sb-vj">0</span></button>
 
-  <div class="sb-divider"></div>
-  <div class="sb-sec">Recursos</div>
+  <div class="sb-divider sb-div-recursos"></div>
+  <div class="sb-sec sb-sec-recursos">Recursos</div>
   <button class="sb-item" id="nav-inventario" onclick="goTo('inventario',this)"><span class="sb-icon">📦</span>Inventario<span class="sb-badge amber" id="sb-inv">0</span></button>
   <button class="sb-item" id="nav-compras" onclick="goTo('compras',this)"><span class="sb-icon">🛒</span>Compras</button>
-  <button class="sb-item" id="nav-rutas" onclick="goTo('rutas',this)"><span class="sb-icon">🗺</span>Rutas</button>
   <button class="sb-item" id="nav-proveedores" onclick="goTo('proveedores',this)"><span class="sb-icon">🏢</span>Proveedores</button>
+  <button class="sb-item" id="nav-rastreo" onclick="goTo('rastreo',this)"><span class="sb-icon">📡</span>Rastreo en vivo<span class="sb-badge" id="sb-rastreo" style="background:#16A34A;">●</span></button>
+  <button class="sb-item" id="nav-rutas" onclick="goTo('rutas',this)"><span class="sb-icon">🗺</span>Rutas</button>
 
   <div class="sb-user">
     <div class="sb-avatar" id="sb-ava">?</div>
@@ -436,8 +401,7 @@ tr:hover td{background:#FAFBFC;}
   <div class="topbar">
     <div><div class="topbar-title" id="tb-title">Dashboard</div><div class="topbar-sub" id="tb-sub">Resumen general de la operación</div></div>
     <div class="topbar-actions" id="topbar-actions-wrap">
-      <input class="t-search" placeholder="Buscar en la plataforma..." id="gsearch" oninput="buscarGlobal(this.value)" autocomplete="off">
-      <div id="gsearch-results" style="display:none;position:absolute;top:44px;right:20px;width:320px;background:var(--bg2);border:1px solid var(--bd);border-radius:var(--rl);box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:300;max-height:340px;overflow-y:auto;"></div>
+      <input class="t-search" placeholder="Buscar en la plataforma..." id="gsearch">
       <button class="btn btn-sm" id="btn-init" onclick="initSheets()" title="Inicializar hojas">⚙ Init Sheet</button>
       <button class="btn btn-sm" onclick="recargar()">↻ Actualizar</button>
     </div>
@@ -549,21 +513,13 @@ tr:hover td{background:#FAFBFC;}
         <div><div class="card-title">Órdenes de Trabajo (OT)</div><div class="card-sub">Control de mantenimiento preventivo y correctivo</div></div>
         <div class="card-actions">
           <input class="sbox" placeholder="Buscar placa, taller..." id="sm" oninput="renderM()">
+          <button class="ftab active" onclick="sfM('todos',this)">Todas</button>
+          <button class="ftab" onclick="sfM('Abierta',this)">Abiertas</button>
+          <button class="ftab" onclick="sfM('En proceso',this)">En proceso</button>
+          <button class="ftab" onclick="sfM('Cerrada',this)">Cerradas</button>
           <button class="btn btn-pri btn-sm perm-write" onclick="tp('fm')">+ Nueva OT</button>
         </div>
       </div>
-
-      <!-- ✅ MEJORA: Botones de estado con contadores -->
-      <div style="padding:10px 14px;border-bottom:1px solid var(--bd);background:#FAFBFC;">
-        <div class="estado-tabs" id="mant-estado-tabs">
-          <button class="etab etab-todas active" onclick="sfM('todos',this)">Todas <span class="etab-count" id="ec-todos">0</span></button>
-          <button class="etab etab-abierta" onclick="sfM('Abierta',this)">🟠 Abiertas <span class="etab-count" id="ec-abierta">0</span></button>
-          <button class="etab etab-proceso" onclick="sfM('En proceso',this)">🔵 En proceso <span class="etab-count" id="ec-proceso">0</span></button>
-          <button class="etab etab-espera" onclick="sfM('En espera repuesto',this)">🟣 En espera <span class="etab-count" id="ec-espera">0</span></button>
-          <button class="etab etab-cerrada" onclick="sfM('Cerrada',this)">🟢 Cerradas <span class="etab-count" id="ec-cerrada">0</span></button>
-        </div>
-      </div>
-
       <div id="fm" style="display:none;">
         <div class="fpanel">
           <div class="fg" style="margin-bottom:10px;">
@@ -581,17 +537,6 @@ tr:hover td{background:#FAFBFC;}
             <div class="fl"><label>Costo estimado (COP)</label><input id="vm-costo" type="number" placeholder="0" style="font-family:var(--mono);"></div>
             <div class="fl"><label>Ciudad</label><input id="vm-ciudad" placeholder="Medellín..."></div>
           </div>
-
-          <!-- ✅ MEJORA: Repuestos con buscador en tiempo real -->
-          <div style="border-top:1px solid var(--bd);padding-top:10px;margin-top:4px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-              <span style="font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.4px;">Repuestos del inventario</span>
-              <button type="button" class="btn btn-sm" onclick="agregarRepuestoOT()">+ Agregar repuesto</button>
-            </div>
-            <div id="ot-repuestos-lista" style="display:flex;flex-direction:column;gap:6px;"></div>
-            <div id="ot-repuestos-total" style="font-size:12px;font-weight:700;color:var(--t2);margin-top:6px;text-align:right;"></div>
-          </div>
-
           <div style="display:flex;gap:16px;padding-top:8px;border-top:1px solid var(--bd);">
             <label style="display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;cursor:pointer;"><input type="checkbox" class="tgl" id="vm-disp"> Afecta disponibilidad</label>
             <label style="display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;cursor:pointer;"><input type="checkbox" class="tgl" id="vm-falla"> Es una falla</label>
@@ -618,7 +563,7 @@ tr:hover td{background:#FAFBFC;}
         <div class="fpanel"><div class="fg">
           <div class="fl"><label>Placa <span class="req">*</span></label><select id="vcb-placa"><option value="">Seleccionar...</option></select></div>
           <div class="fl"><label>Fecha <span class="req">*</span></label><input id="vcb-fecha" type="date"></div>
-          <div class="fl"><label>Galones cargados</label><input id="vcb-galones" type="number" step="0.01" placeholder="0.0" style="font-family:var(--mono);"></div>
+          <div class="fl"><label>Litros cargados</label><input id="vcb-litros" type="number" step="0.01" placeholder="0.0" style="font-family:var(--mono);"></div>
           <div class="fl"><label>Costo total (COP)</label><input id="vcb-costo" type="number" placeholder="0" style="font-family:var(--mono);"></div>
           <div class="fl"><label>KM al momento</label><input id="vcb-km" type="number" placeholder="0" style="font-family:var(--mono);"></div>
           <div class="fl"><label>Estación / Proveedor</label><input id="vcb-est" placeholder="Terpel, Biomax..."></div>
@@ -628,7 +573,7 @@ tr:hover td{background:#FAFBFC;}
         </div></div>
         <div class="ffoot"><div id="al-cb" style="flex:1;"></div><button class="btn btn-sm" onclick="tp('fcb')">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearCB()">Registrar</button></div>
       </div>
-      <div class="tw"><table><thead><tr><th>Placa</th><th>Fecha</th><th>Galones</th><th>Costo</th><th>$/Galón</th><th>KM</th><th>Km/Gal</th><th>Estación</th><th>Tipo</th></tr></thead><tbody id="tbl-cb"><tr><td colspan="9" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
+      <div class="tw"><table><thead><tr><th>Placa</th><th>Fecha</th><th>Litros</th><th>Costo</th><th>$/Litro</th><th>KM</th><th>Rendimiento</th><th>Estación</th><th>Tipo</th></tr></thead><tbody id="tbl-cb"><tr><td colspan="9" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
     </div>
   </div>
 
@@ -743,7 +688,7 @@ tr:hover td{background:#FAFBFC;}
         </div></div>
         <div class="ffoot"><div id="al-vj" style="flex:1;"></div><button class="btn btn-sm" onclick="tp('fvj')">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearVJ()">Registrar viaje</button></div>
       </div>
-      <div class="tw"><table><thead><tr><th>ID</th><th>Placa</th><th>Conductor</th><th>Origen → Destino</th><th>F. Salida</th><th>Cliente</th><th>Anticipo</th><th>Ingreso</th><th>Utilidad</th><th>Estado</th><th></th></tr></thead><tbody id="tbl-vj"><tr><td colspan="11" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
+      <div class="tw"><table><thead><tr><th>ID</th><th>Placa</th><th>Conductor</th><th>Origen → Destino</th><th>F. Salida</th><th>Cliente</th><th>Anticipo</th><th>Ingreso</th><th>Utilidad</th><th>Estado</th></tr></thead><tbody id="tbl-vj"><tr><td colspan="10" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
     </div>
   </div>
 
@@ -755,7 +700,7 @@ tr:hover td{background:#FAFBFC;}
         <div class="card-actions">
           <input class="sbox" placeholder="Buscar ref, nombre..." id="sinv" oninput="renderINV()">
           <button class="ftab active" onclick="sfINV('todos',this)">Todos</button>
-          <button class="ftab etab-abierta" id="btn-stock-bajo" onclick="sfINV('bajo',this)">⚠️ Stock bajo <span id="cnt-stock-bajo" style="background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px;margin-left:3px;">0</span></button>
+          <button class="ftab" onclick="sfINV('bajo',this)">Stock bajo</button>
           <button class="btn btn-pri btn-sm perm-write" onclick="tp('finv')">+ Agregar ítem</button>
         </div>
       </div>
@@ -773,39 +718,7 @@ tr:hover td{background:#FAFBFC;}
         </div></div>
         <div class="ffoot"><div id="al-inv" style="flex:1;"></div><button class="btn btn-sm" onclick="tp('finv')">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearINV()">Agregar al inventario</button></div>
       </div>
-      <div class="tw"><table><thead><tr><th>Referencia</th><th>Nombre</th><th>Categoría</th><th>Stock</th><th>Mínimo</th><th>Costo unit.</th><th>Proveedor</th><th>Ubicación</th><th>Estado</th></tr></thead><tbody id="tbl-inv"><tr><td colspan="9" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
-    </div>
-  </div>
-
-  <!-- ══ RASTREO EN VIVO ══ -->
-  <div class="page page-mapa" id="pg-rastreo">
-    <div style="display:flex;flex-direction:column;flex:1;min-height:0;">
-      <!-- Topbar del mapa -->
-      <div style="background:var(--bg2);border-bottom:1px solid var(--bd);padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex-shrink:0;">
-        <div style="font-size:13px;font-weight:700;color:var(--t);">📡 Rastreo en tiempo real</div>
-        <div id="rastreo-estado" style="font-size:11px;padding:3px 10px;border-radius:20px;background:var(--bg3);color:var(--t3);">Cargando...</div>
-        <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
-          <span style="font-size:11px;color:var(--t3);">Actualiza cada</span>
-          <select id="rastreo-intervalo" onchange="cambiarIntervaloRastreo()" style="font-size:11px;padding:3px 7px;border:1px solid var(--bd);border-radius:var(--r);background:var(--bg);">
-            <option value="10000">10 seg</option>
-            <option value="20000" selected>20 seg</option>
-            <option value="30000">30 seg</option>
-            <option value="60000">1 min</option>
-          </select>
-          <button class="btn btn-xs btn-grn" onclick="centrarMapa()">⊙ Centrar</button>
-          <button class="btn btn-xs" onclick="abrirEnlaceConductor()">🔗 Link conductor</button>
-        </div>
-      </div>
-      <!-- Panel lateral + mapa -->
-      <div style="display:flex;flex:1;overflow:hidden;min-height:0;">
-        <!-- Lista de vehículos activos -->
-        <div id="rastreo-lista" style="width:240px;min-width:240px;background:var(--bg2);border-right:1px solid var(--bd);overflow-y:auto;padding:8px;">
-          <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;padding:4px 6px 8px;">Vehículos activos</div>
-          <div id="rastreo-vehiculos-lista"><div style="font-size:12px;color:var(--t3);padding:8px 6px;">Sin vehículos activos</div></div>
-        </div>
-        <!-- Mapa -->
-        <div id="mapa-rastreo" style="flex:1;background:var(--bg3);"></div>
-      </div>
+      <div class="tw"><table><thead><tr><th>Referencia</th><th>Nombre</th><th>Categoría</th><th>Stock</th><th>Mínimo</th><th>Costo unit.</th><th>Proveedor</th><th>Ubicación</th><th>Stock</th></tr></thead><tbody id="tbl-inv"><tr><td colspan="9" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
     </div>
   </div>
 
@@ -824,30 +737,20 @@ tr:hover td{background:#FAFBFC;}
       </div>
       <div id="fcp" style="display:none;">
         <div class="fpanel"><div class="fg">
-          <!-- ✅ MEJORA: Buscador de referencia en Compras -->
-          <div class="fl s2">
-            <label>Buscar repuesto del inventario</label>
-            <div class="rep-search-wrap" id="cp-rep-search-wrap">
-              <input class="rep-search-input" id="cp-rep-buscar" placeholder="Escribir nombre o referencia..." autocomplete="off" oninput="buscarRepuestoCP(this.value)" onfocus="buscarRepuestoCP(this.value)">
-              <div class="rep-dropdown" id="cp-rep-dropdown"></div>
-            </div>
-          </div>
-          <div class="fl"><label>Referencia seleccionada</label><input id="vcp-ref" placeholder="Se llena al seleccionar" style="font-family:var(--mono);" readonly></div>
+          <div class="fl"><label>Referencia ítem</label><select id="vcp-ref"><option value="">Seleccionar del inventario...</option></select></div>
           <div class="fl s2"><label>Descripción <span class="req">*</span></label><input id="vcp-desc" placeholder="Descripción del artículo"></div>
           <div class="fl"><label>Cantidad</label><input id="vcp-qty" type="number" placeholder="1" min="1"></div>
           <div class="fl"><label>Costo unitario (COP)</label><input id="vcp-costo" type="number" placeholder="0" style="font-family:var(--mono);"></div>
           <div class="fl"><label>Proveedor <span class="req">*</span></label><input id="vcp-prov" placeholder="Nombre del proveedor"></div>
           <div class="fl"><label>Fecha</label><input id="vcp-fecha" type="date"></div>
-          <div class="fl"><label>No. Factura / Remisión</label><input id="vcp-factura" placeholder="FAC-00001 / REM-00001" style="font-family:var(--mono);"></div>
           <div class="fl"><label>OT asociada</label><input id="vcp-ot" placeholder="OT-2026-XXXX" style="font-family:var(--mono);"></div>
           <div class="fl"><label>Placa asociada</label><select id="vcp-placa"><option value="">Sin placa asociada</option></select></div>
-          <div class="fl"><label>¿Actualiza inventario al recibir?</label><select id="vcp-actualizainv"><option value="Si">Sí — sumar stock</option><option value="No">No</option></select></div>
+          <div class="fl"><label>No. Factura</label><input id="vcp-factura" placeholder="FAC-XXXXX" style="font-family:var(--mono);"></div>
           <div class="fl"><label>Estado</label><select id="vcp-estado"><option>Pendiente</option><option>Aprobada</option><option>Recibido</option><option>Cancelada</option></select></div>
         </div></div>
         <div class="ffoot"><div id="al-cp" style="flex:1;"></div><button class="btn btn-sm" onclick="tp('fcp')">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearCP()">Registrar compra</button></div>
       </div>
-      <!-- ✅ MEJORA: columna Factura visible -->
-      <div class="tw"><table><thead><tr><th>ID</th><th>Descripción / Ref.</th><th>Cant.</th><th>Costo unit.</th><th>Total</th><th>Proveedor</th><th>Fecha</th><th>Factura</th><th>OT</th><th>Inv.</th><th>Estado</th><th></th></tr></thead><tbody id="tbl-cp"><tr><td colspan="12" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
+      <div class="tw"><table><thead><tr><th>ID</th><th>Descripción</th><th>Cantidad</th><th>Costo unit.</th><th>Total</th><th>Proveedor</th><th>Fecha</th><th>OT</th><th>Factura</th><th>Estado</th></tr></thead><tbody id="tbl-cp"><tr><td colspan="10" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
     </div>
   </div>
 
@@ -885,37 +788,51 @@ tr:hover td{background:#FAFBFC;}
       <div class="tw"><table><thead><tr><th>ID</th><th>Nombre</th><th>NIT</th><th>Categoría</th><th>Ciudad</th><th>Teléfono</th><th>Email</th><th>Contacto</th><th>Estado</th><th></th></tr></thead><tbody id="tbl-prov"><tr><td colspan="10" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
     </div>
   </div>
-    <!-- ══ RUTAS ══ -->
+
+
+  <!-- ══ RASTREO EN VIVO ══ -->
+  <div class="page page-mapa" id="pg-rastreo">
+    <div style="display:flex;flex-direction:column;flex:1;min-height:0;">
+      <div style="background:var(--bg2);border-bottom:1px solid var(--bd);padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex-shrink:0;">
+        <div style="font-size:13px;font-weight:700;color:var(--t);">📡 Rastreo en tiempo real</div>
+        <div id="rastreo-estado" style="font-size:11px;padding:3px 10px;border-radius:20px;background:var(--bg3);color:var(--t3);">Cargando...</div>
+        <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
+          <span style="font-size:11px;color:var(--t3);">Actualiza cada</span>
+          <select id="rastreo-intervalo" onchange="cambiarIntervaloRastreo()" style="font-size:11px;padding:3px 7px;border:1px solid var(--bd);border-radius:var(--r);background:var(--bg);">
+            <option value="10000">10 seg</option><option value="20000" selected>20 seg</option><option value="30000">30 seg</option><option value="60000">1 min</option>
+          </select>
+          <button class="btn btn-xs btn-grn" onclick="centrarMapa()">⊙ Centrar</button>
+          <button class="btn btn-xs" onclick="abrirEnlaceConductor()">🔗 Link conductor</button>
+        </div>
+      </div>
+      <div style="display:flex;flex:1;overflow:hidden;min-height:0;">
+        <div id="rastreo-lista" style="width:240px;min-width:240px;background:var(--bg2);border-right:1px solid var(--bd);overflow-y:auto;padding:8px;">
+          <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;padding:4px 6px 8px;">Vehículos activos</div>
+          <div id="rastreo-vehiculos-lista"><div style="font-size:12px;color:var(--t3);padding:8px 6px;">Sin vehículos activos</div></div>
+        </div>
+        <div id="mapa-rastreo" style="flex:1;background:var(--bg3);"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ RUTAS ══ -->
   <div class="page" id="pg-rutas">
     <div class="card">
       <div class="card-hd">
         <div><div class="card-title">Gestión de Rutas</div><div class="card-sub">Crea rutas y asigna puntos de paso a vehículos</div></div>
-        <div class="card-actions">
-          <button class="btn btn-pri btn-sm" onclick="tp('fruta')">+ Nueva ruta</button>
-        </div>
+        <div class="card-actions"><button class="btn btn-pri btn-sm" onclick="tp('fruta')">+ Nueva ruta</button></div>
       </div>
       <div id="fruta" style="display:none;">
-        <div class="fpanel">
-          <div class="fg">
-            <div class="fl"><label>Nombre de la ruta <span class="req">*</span></label><input id="vr-nombre" placeholder="La Mina, Ruta Centro..."></div>
-            <div class="fl"><label>Descripción</label><input id="vr-desc" placeholder="Descripción de la ruta..."></div>
-            <div class="fl"><label>Vehículo asignado</label><select id="vr-vehiculo"><option value="">Sin asignar</option></select></div>
-            <div class="fl"><label>Color en mapa</label><input id="vr-color" type="color" value="#0066CC" style="height:38px;padding:3px;"></div>
-            <div class="fl"><label>Activa</label><select id="vr-activa"><option value="Si">Sí</option><option value="No">No</option></select></div>
-          </div>
-        </div>
-        <div class="ffoot">
-          <div id="al-ruta" style="flex:1;"></div>
-          <button class="btn btn-sm" onclick="tp('fruta')">Cancelar</button>
-          <button class="btn btn-pri btn-sm" onclick="crearRUTA()">Crear ruta</button>
-        </div>
+        <div class="fpanel"><div class="fg">
+          <div class="fl"><label>Nombre de la ruta <span class="req">*</span></label><input id="vr-nombre" placeholder="La Mina, Ruta Centro..."></div>
+          <div class="fl"><label>Descripción</label><input id="vr-desc" placeholder="Descripción de la ruta..."></div>
+          <div class="fl"><label>Vehículo asignado</label><select id="vr-vehiculo"><option value="">Sin asignar</option></select></div>
+          <div class="fl"><label>Color en mapa</label><input id="vr-color" type="color" value="#0066CC" style="height:38px;padding:3px;"></div>
+          <div class="fl"><label>Activa</label><select id="vr-activa"><option value="Si">Sí</option><option value="No">No</option></select></div>
+        </div></div>
+        <div class="ffoot"><div id="al-ruta" style="flex:1;"></div><button class="btn btn-sm" onclick="tp('fruta')">Cancelar</button><button class="btn btn-pri btn-sm" onclick="crearRUTA()">Crear ruta</button></div>
       </div>
-      <div class="tw">
-        <table>
-          <thead><tr><th>ID</th><th>Nombre</th><th>Descripción</th><th>Vehículo</th><th>Puntos</th><th>Activa</th><th></th></tr></thead>
-          <tbody id="tbl-rutas"><tr><td colspan="7" class="loader"><span class="spin"></span></td></tr></tbody>
-        </table>
-      </div>
+      <div class="tw"><table><thead><tr><th>ID</th><th>Nombre</th><th>Descripción</th><th>Vehículo</th><th>Puntos</th><th>Activa</th><th></th></tr></thead><tbody id="tbl-rutas"><tr><td colspan="7" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
     </div>
   </div>
 
@@ -996,6 +913,7 @@ const ROL_CONFIG = {
     esAdmin: false,
   },
 };
+
 // ══════════════════════════════════════════════
 //  LOGIN
 // ══════════════════════════════════════════════
@@ -1018,19 +936,7 @@ async function doLogin(){
   btn.innerHTML = '<span class="login-spin"></span>Verificando...';
   err.style.display = 'none';
 
-  // NUEVO: cerrar cualquier modal previo
-  const modal = document.getElementById('modal');
-  if(modal) modal.style.display = 'none';
-
-  let rc;
-  try {
-    rc = await apig({ accion:'listar', modulo:'conductores', email, clave });
-  } catch(e) {
-    btn.disabled = false;
-    btn.textContent = 'Ingresar';
-    showLoginErr('Error de conexión. Verifica tu internet.');
-    return;
-  }
+  const rc = await apig({ accion:'listar', modulo:'conductores', email, clave });
 
   btn.disabled = false;
   btn.textContent = 'Ingresar';
@@ -1051,7 +957,7 @@ async function doLogin(){
   );
 
   if(!usuario){ showLoginErr('Usuario no encontrado'); return; }
-  if(usuario.Estado !== 'Activo'){ showLoginErr('Tu cuenta está inactiva.'); return; }
+  if(usuario.Estado !== 'Activo'){ showLoginErr('Tu cuenta está inactiva. Contacta al administrador.'); return; }
 
   const rol    = String(usuario.Rol || 'conductor').trim().toLowerCase();
   const nombre = usuario.Nombre || email.split('@')[0];
@@ -1067,7 +973,7 @@ function showLoginErr(msg){
 }
 
 // ══════════════════════════════════════════════
-//  INICIAR APP
+//  INICIAR APP  ← FUNCIÓN CORREGIDA
 // ══════════════════════════════════════════════
 function iniciarApp(){
   document.getElementById('login-screen').style.display = 'none';
@@ -1075,6 +981,7 @@ function iniciarApp(){
 
   const cfg = ROL_CONFIG[SESSION.rol] || ROL_CONFIG.conductor;
 
+  // Info de usuario en sidebar y drawer
   const iniciales = SESSION.nombre.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
   document.getElementById('sb-ava').textContent      = iniciales;
   document.getElementById('sb-nombre').textContent   = SESSION.nombre;
@@ -1083,34 +990,49 @@ function iniciarApp(){
   document.getElementById('drawer-nombre').textContent = SESSION.nombre;
   document.getElementById('drawer-rol').textContent  = SESSION.rol;
 
+  // ── ROL CONDUCTOR: vista exclusiva checklist ──
   if(SESSION.rol === 'conductor'){
+    // Ocultar sidebar, bottom-nav y acciones del topbar
     document.querySelector('aside').style.display          = 'none';
     document.querySelector('.bottom-nav').style.display    = 'none';
     document.getElementById('topbar-actions-wrap').style.display = 'none';
+
+    // Ajustar título del topbar
     document.getElementById('tb-title').textContent = 'Inspección de vehículo';
     document.getElementById('tb-sub').textContent   = 'Diligencia tu checklist diario';
+
+    // Añadir botón "Salir" en el topbar
     document.querySelector('.topbar').insertAdjacentHTML('beforeend',
       '<button class="btn btn-sm btn-red" onclick="doLogout()" style="margin-left:auto;">⏻ Salir</button>'
     );
+
+    // Ocultar todas las páginas y mostrar solo checklist
     document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
     const pgCheck = document.getElementById('pg-checklist');
     pgCheck.style.display = 'flex';
     pgCheck.classList.add('active');
+
     loadCH();
-    return;
+    return; // ← termina aquí para conductores
   }
 
+  // ── ADMIN / TÉCNICO ──
+
+  // Ocultar elementos de solo-admin
   if(!cfg.esAdmin){
     document.querySelectorAll('.perm-admin').forEach(el => el.style.display = 'none');
     const btnInit = document.getElementById('btn-init');
     if(btnInit) btnInit.style.display = 'none';
   }
+
+  // Ocultar elementos de escritura si el rol es solo lectura
   if(!cfg.puedeEscribir){
     document.querySelectorAll('.perm-write').forEach(el => el.style.display = 'none');
   }
 
+  // Ocultar módulos no permitidos en sidebar
   const todosModulos = ['vehiculos','conductores','mantenimiento','combustible',
-                      'neumaticos','checklist','viajes','inventario','compras','proveedores','rutas'];
+                        'neumaticos','checklist','viajes','inventario','compras','proveedores'];
   todosModulos.forEach(m => {
     if(!cfg.modulos.includes(m)){
       const navBtn = document.getElementById('nav-'+m);
@@ -1119,25 +1041,21 @@ function iniciarApp(){
   });
 
   loadDash();
-}
+} // ← cierre correcto de iniciarApp()
 
 // ══════════════════════════════════════════════
 //  LOGOUT
 // ══════════════════════════════════════════════
 function doLogout(){
   SESSION = null;
-  // Cerrar modal si está abierto
-  const modal = document.getElementById('modal');
-  if(modal) modal.style.display = 'none';
-  // Detener rastreo
-  if(_rastreoInterval) clearInterval(_rastreoInterval);
-  
   document.getElementById('app').classList.remove('visible');
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('l-pass').value = '';
   document.getElementById('l-err').style.display = 'none';
+  // Limpiar el botón de salir que se pudo haber inyectado para conductores
   const extraBtn = document.querySelector('.topbar .btn-red');
   if(extraBtn) extraBtn.remove();
+  // Restaurar acciones del topbar
   document.getElementById('topbar-actions-wrap').style.display = '';
 }
 
@@ -1151,16 +1069,13 @@ const F  = { v:'todos', c:'todos', m:'todos', cb:'', n:'todos', ch:'todos', vj:'
 //  UTILIDADES
 // ══════════════════════════════════════════════
 const fmt  = n => Number(n||0).toLocaleString('es-CO');
-const fmtK = n => '$' + Math.round(Number(n||0)).toLocaleString('es-CO');
+const fmtK = n => { const v=Number(n||0); return v>=1000000?'$'+Math.round(v/1000000)+'M':v>=1000?'$'+Math.round(v/1000)+'K':'$'+fmt(v); };
 
 function badge(e){
   const m={
     'Activo':'bg','activo':'bg','Inactivo':'br','inactivo':'br',
     'Mantenimiento':'bw','Vacaciones':'bt','Incapacidad':'bp',
     'Abierta':'bw','En proceso':'bb','En curso':'bb',
-    'En espera repuesto':'bp',
-  'Devuelto':'br',
-  'Rechazado':'br',
     'Cerrada':'bg','Completado':'bg','Anulada':'br','Cancelado':'br',
     'Aprobado':'bg','Rechazado':'br','Aprobado con observaciones':'bw',
     'Pendiente':'bw','Recibido':'bg','Aprobada':'bb',
@@ -1231,7 +1146,7 @@ const PAGE_META = {
   compras:      {title:'Compras', sub:'Órdenes de compra y proveedores', load:loadCP},
   proveedores:  {title:'Proveedores', sub:'Talleres, suministros y servicios', load:loadPROV},
   rastreo:      {title:'Rastreo en vivo', sub:'Ubicación GPS de la flota en tiempo real', load:loadRastreo},
-  rutas: {title:'Gestión de Rutas', sub:'Rutas y puntos de paso por vehículo', load:loadRUTAS},
+  rutas:        {title:'Gestión de Rutas', sub:'Rutas y puntos de paso por vehículo', load:loadRUTAS},
 };
 
 function goTo(pg, btn){
@@ -1249,11 +1164,6 @@ function goTo(pg, btn){
     document.getElementById('tb-sub').textContent=meta.sub;
     meta.load();
   }
-  // Sync bottom nav
-  document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('active'));
-  const bid=BNAV[pg];
-  if(bid) document.getElementById(bid).classList.add('active');
-  else { const bm=document.getElementById('bn-more'); if(bm) bm.classList.add('active'); }
 }
 
 function recargar(){
@@ -1300,7 +1210,7 @@ async function loadDash(){
   const otAbiertas=DB.m.filter(x=>x.Estado!=='Cerrada'&&x.Estado!=='Anulada').length;
   const costMant=DB.m.reduce((s,x)=>s+(Number(x.Costo_Total)||0),0);
   const costComb=DB.cb.reduce((s,x)=>s+(Number(x.Costo_Total)||0),0);
-  const galones=DB.cb.reduce((s,x)=>s+(Number(x.Galones)||0),0);
+  const litros=DB.cb.reduce((s,x)=>s+(Number(x.Litros)||0),0);
   const vjActivos=DB.vj.filter(x=>x.Estado==='En curso').length;
   const utilidad=DB.vj.reduce((s,x)=>s+(Number(x.Utilidad)||0),0);
   const stockBajo=DB.inv.filter(x=>Number(x.Stock)<=Number(x.Stock_Minimo)).length;
@@ -1310,7 +1220,7 @@ async function loadDash(){
     <div class="kpi"><div class="kpi-head"><div class="kpi-icon green">✓</div>${vact>0?`<span class="kpi-delta up">${Math.round(vact/Math.max(DB.v.length,1)*100)}%</span>`:''}</div><div class="kpi-val">${vact}</div><div class="kpi-lbl">Vehículos activos</div><div class="kpi-sub">Disponibles para operación</div></div>
     <div class="kpi"><div class="kpi-head"><div class="kpi-icon red">🔧</div>${otAbiertas>0?`<span class="kpi-delta dn">${otAbiertas}</span>`:''}</div><div class="kpi-val">${otAbiertas}</div><div class="kpi-lbl">OT abiertas</div><div class="kpi-sub">Pendientes + En proceso</div></div>
     <div class="kpi"><div class="kpi-head"><div class="kpi-icon amber">💰</div></div><div class="kpi-val" style="font-size:18px;">${fmtK(costMant)}</div><div class="kpi-lbl">Costo mantenimiento</div><div class="kpi-sub">Acumulado total</div></div>
-    <div class="kpi"><div class="kpi-head"><div class="kpi-icon amber">⛽</div></div><div class="kpi-val" style="font-size:18px;">${fmtK(costComb)}</div><div class="kpi-lbl">Costo combustible</div><div class="kpi-sub">${galones.toFixed(1)} galones registrados</div></div>
+    <div class="kpi"><div class="kpi-head"><div class="kpi-icon amber">⛽</div></div><div class="kpi-val" style="font-size:18px;">${fmtK(costComb)}</div><div class="kpi-lbl">Costo combustible</div><div class="kpi-sub">${litros.toFixed(0)} litros registrados</div></div>
     <div class="kpi"><div class="kpi-head"><div class="kpi-icon teal">🚚</div></div><div class="kpi-val">${vjActivos}</div><div class="kpi-lbl">Viajes en curso</div><div class="kpi-sub">Utilidad acum.: ${fmtK(utilidad)}</div></div>
     <div class="kpi"><div class="kpi-head"><div class="kpi-icon purple">📦</div>${stockBajo>0?`<span class="kpi-delta dn">${stockBajo} bajo</span>`:''}</div><div class="kpi-val">${DB.inv.length}</div><div class="kpi-lbl">Ítems inventario</div><div class="kpi-sub">${stockBajo} con stock bajo</div></div>
   `;
@@ -1399,7 +1309,6 @@ function renderV(){
     <td style="white-space:nowrap;">
       <button class="btn btn-xs" onclick="detalleV(${DB.v.indexOf(r)})">🔍</button>
       <button class="btn btn-xs" onclick="editarV(${DB.v.indexOf(r)})">✏</button>
-      <button class="btn btn-xs btn-ghost" onclick="reporteV('${r.Placa}')">📊</button>
     </td>`).join('');
 }
 function sfV(f,b){F.v=f;document.querySelectorAll('#pg-vehiculos .ftab').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderV();}
@@ -1532,55 +1441,20 @@ async function crearC(){
 // ══════════════════════════════════════════════
 async function loadM(){
   document.getElementById('tbl-m').innerHTML='<tr><td colspan="9" class="loader"><span class="spin"></span></td></tr>';
-  const[dm,dv,dc,dinv]=await Promise.all([
-    apig({accion:'listar',modulo:'mantenimiento'}),
-    apig({accion:'listar',modulo:'vehiculos'}),
-    apig({accion:'listar',modulo:'conductores'}),
-    apig({accion:'listar',modulo:'inventario'})
-  ]);
-  DB.m=dm.data||[];DB.v=dv.data||[];DB.c=dc.data||[];DB.inv=dinv.data||[];updateSB();
+  const[dm,dv,dc]=await Promise.all([apig({accion:'listar',modulo:'mantenimiento'}),apig({accion:'listar',modulo:'vehiculos'}),apig({accion:'listar',modulo:'conductores'})]);
+  DB.m=dm.data||[];DB.v=dv.data||[];DB.c=dc.data||[];updateSB();
   document.getElementById('vm-placa').innerHTML='<option value="">Seleccionar...</option>'+DB.v.map(v=>`<option>${v.Placa}</option>`).join('');
   document.getElementById('vm-conductor').innerHTML='<option value="">Seleccionar...</option>'+DB.c.filter(x=>x.Estado==='Activo').map(x=>`<option>${x.Nombre}</option>`).join('');
   document.getElementById('vm-fecha').value=today();
   document.getElementById('vm-ingreso').value=today();
-  actualizarContadoresM();
   renderM();
 }
-
-// ✅ MEJORA: actualizar contadores en los botones de estado
-function actualizarContadoresM(){
-  const total   = DB.m.length;
-  const abierta = DB.m.filter(x=>x.Estado==='Abierta').length;
-  const proceso  = DB.m.filter(x=>x.Estado==='En proceso').length;
-  const espera   = DB.m.filter(x=>x.Estado==='En espera repuesto').length;
-  const cerrada  = DB.m.filter(x=>x.Estado==='Cerrada'||x.Estado==='Anulada').length;
-  document.getElementById('ec-todos').textContent   = total;
-  document.getElementById('ec-abierta').textContent = abierta;
-  document.getElementById('ec-proceso').textContent = proceso;
-  document.getElementById('ec-espera').textContent  = espera;
-  document.getElementById('ec-cerrada').textContent = cerrada;
-}
-
-// ✅ MEJORA: orden correcto — activas primero, cerradas al final
 function renderM(){
   const q=(document.getElementById('sm')||{}).value||'';
-  let rows=DB.m.filter(r=>(F.m==='todos'||r.Estado===F.m)&&(!q||
-    String(r.Placa||'').toLowerCase().includes(q.toLowerCase())||
-    String(r.Proveedor||'').toLowerCase().includes(q.toLowerCase())||
-    String(r.Descripcion||'').toLowerCase().includes(q.toLowerCase())
-  ));
-
-  // Orden: abiertas > en proceso > en espera > cerradas/anuladas (más recientes primero dentro de cada grupo)
-  const ordenEstado = {'Abierta':0,'En proceso':1,'En espera repuesto':2,'Cerrada':3,'Anulada':4};
-  rows = rows.slice().sort((a,b)=>{
-    const oa = ordenEstado[a.Estado] ?? 3;
-    const ob = ordenEstado[b.Estado] ?? 3;
-    return oa !== ob ? oa - ob : 0; // mantiene orden original dentro del grupo
-  });
-
+  const rows=DB.m.filter(r=>(F.m==='todos'||r.Estado===F.m)&&(!q||String(r.Placa||'').toLowerCase().includes(q.toLowerCase())||String(r.Proveedor||'').toLowerCase().includes(q.toLowerCase())||String(r.Descripcion||'').toLowerCase().includes(q.toLowerCase())));
   const tb=document.getElementById('tbl-m');
   if(!rows.length){tb.innerHTML='<tr><td colspan="9"><div class="empty"><div class="ei">🔧</div><p>Sin órdenes</p></div></td></tr>';return;}
-  tb.innerHTML=rows.map(r=>`<tr style="${(r.Estado==='Cerrada'||r.Estado==='Anulada')?'opacity:.7;':''}"">
+  tb.innerHTML=rows.map(r=>`<tr>
     <td class="tmono" style="font-size:11px;color:var(--brand);">${r.OT_ID||'—'}</td>
     <td class="tmono" style="font-weight:700;">${r.Placa||''}</td>
     <td>${badge(r.Tipo||'')}</td>
@@ -1589,59 +1463,17 @@ function renderM(){
     <td class="tmono">${fmt(r.Odometro||0)} km</td>
     <td class="tmono">${fmtK(r.Costo_Total||0)}</td>
     <td>${r.Estado!=='Cerrada'&&r.Estado!=='Anulada'
-      ?`<select class="ssel" onchange="cambioEstM(this,'${r.OT_ID}',this.value)">
-          <option ${r.Estado==='Abierta'?'selected':''}>Abierta</option>
-          <option ${r.Estado==='En proceso'?'selected':''}>En proceso</option>
-          <option ${r.Estado==='En espera repuesto'?'selected':''}>En espera repuesto</option>
-          <option ${r.Estado==='Cerrada'?'selected':''}>Cerrada</option>
-        </select>`
+      ?`<select class="ssel" onchange="cambioEstM(this,'${r.OT_ID}',this.value)"><option ${r.Estado==='Abierta'?'selected':''}>Abierta</option><option ${r.Estado==='En proceso'?'selected':''}>En proceso</option><option ${r.Estado==='En espera repuesto'?'selected':''}>En espera repuesto</option><option ${r.Estado==='Cerrada'?'selected':''}>Cerrada</option></select>`
       :badge(r.Estado||'')}</td>
-    <td style="white-space:nowrap;">
-      <button class="btn btn-xs" onclick="detalleM(${DB.m.indexOf(r)})" title="Ver detalle">🔍</button>
-      ${r.Estado!=='Cerrada'&&r.Estado!=='Anulada'?`<button class="btn btn-xs" style="margin-left:3px;" onclick="editarOT(${DB.m.indexOf(r)})" title="Editar OT">✏</button>`:''}
-    </td>`).join('');
+    <td><button class="btn btn-xs" onclick="detalleM(${DB.m.indexOf(r)})">🔍</button></td>`).join('');
 }
-function sfM(f,b){
-  F.m=f;
-  document.querySelectorAll('.etab').forEach(x=>x.classList.remove('active'));
-  b.classList.add('active');
-  renderM();
-}
+function sfM(f,b){F.m=f;document.querySelectorAll('#pg-mantenimiento .ftab').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderM();}
 
-async function cambioEstM(sel, otId, val){
-  if(val === 'Cerrada'){
-    const ot = DB.m.find(x => x.OT_ID === otId);
-    const costoActual = ot ? (ot.Costo_Total || 0) : 0;
-    openModal('Cerrar OT: ' + otId, `
-      <p style="font-size:12px;color:var(--t2);margin-bottom:14px;">Confirma los datos finales antes de cerrar la orden.</p>
-      <div class="fg2" style="gap:11px;">
-        <div class="fl"><label>Costo final real (COP)</label><input id="cer-costo" type="number" value="${costoActual}" style="font-family:var(--mono);font-size:14px;font-weight:700;"></div>
-        <div class="fl"><label>Fecha de cierre</label><input id="cer-fecha" type="date" value="${today()}"></div>
-        <div class="fl s2"><label>Observaciones finales</label><input id="cer-obs" placeholder="Trabajo completado, garantía, notas..."></div>
-      </div>
-      <div id="al-cer" style="margin-top:10px;"></div>`,
-      `<button class="btn" onclick="closeModal();loadM()">Cancelar</button>
-       <button class="btn btn-grn" onclick="confirmarCierreOT('${otId}')">✓ Confirmar cierre</button>`
-    );
-    sel.value = ot ? (ot.Estado || 'Abierta') : 'Abierta';
-    return;
-  }
-  sel.disabled = true;
-  const r = await apip({accion:'actualizar',modulo:'mantenimiento',buscarCampo:'OT_ID',buscarValor:otId,datos:{Estado:val}});
-  sel.disabled = false;
-  if(r.ok){ await loadM(); }
-}
-
-async function confirmarCierreOT(otId){
-  const costo = document.getElementById('cer-costo').value;
-  const fecha  = document.getElementById('cer-fecha').value;
-  const obs    = document.getElementById('cer-obs').value;
-  if(!costo){ document.getElementById('al-cer').innerHTML='<div class="alert a-err">Ingresa el costo final</div>'; return; }
-  const btn = event.target; btn.disabled=true; btn.textContent='Cerrando...';
-  const r = await apip({accion:'actualizar',modulo:'mantenimiento',buscarCampo:'OT_ID',buscarValor:otId,datos:{Estado:'Cerrada',Costo_Total:costo,Fecha_Cierre:fecha,Observaciones:obs}});
-  btn.disabled=false; btn.textContent='✓ Confirmar cierre';
-  if(r.ok){ closeModal(); await loadM(); }
-  else document.getElementById('al-cer').innerHTML='<div class="alert a-err">Error al cerrar</div>';
+async function cambioEstM(sel,otId,val){
+  sel.disabled=true;
+  const r=await apip({accion:'actualizar',modulo:'mantenimiento',buscarCampo:'OT_ID',buscarValor:otId,datos:{Estado:val}});
+  sel.disabled=false;
+  if(r.ok){await loadM();}
 }
 
 function detalleM(idx){
@@ -1653,171 +1485,11 @@ function detalleM(idx){
       <div class="dcell"><div class="dk">Taller</div><div class="dv">${r.Proveedor||'—'}</div></div>
       <div class="dcell"><div class="dk">Conductor</div><div class="dv">${r.Conductor||'—'}</div></div>
       <div class="dcell"><div class="dk">Odómetro</div><div class="dv tmono">${fmt(r.Odometro||0)} km</div></div>
-      <div class="dcell"><div class="dk">Fecha orden</div><div class="dv">${String(r.Fecha_Orden||'—').split('T')[0]}</div></div>
+      <div class="dcell"><div class="dk">Fecha orden</div><div class="dv">${r.Fecha_Orden||'—'}</div></div>
       <div class="dcell"><div class="dk">Costo total</div><div class="dv tmono" style="color:var(--red);">${fmtK(r.Costo_Total||0)}</div></div>
     </div>
     ${r.Descripcion?`<div><div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;margin-bottom:4px;">Trabajo</div><div style="font-size:12px;line-height:1.6;color:var(--t2);">${r.Descripcion}</div></div>`:''}
-    ${(()=>{try{const reps=r.Repuestos_Usados?JSON.parse(r.Repuestos_Usados):[];if(!reps.length)return '';return `<div style="margin-top:12px;"><div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;margin-bottom:6px;">Repuestos usados</div>${reps.map(x=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid var(--bg3);"><span>${x.nombre||x.ref}</span><span style="font-family:var(--mono);color:var(--t2);">x${x.qty} · $${Math.round(x.costo*x.qty).toLocaleString('es-CO')}</span></div>`).join('')}</div>`;}catch(e){return '';}})()} 
   `);
-}
-
-
-// ══════════════════════════════════════════════
-//  EDITAR OT (Abierta / En proceso / En espera)
-// ══════════════════════════════════════════════
-let _editOTId = '';
-let _editRepuestos = [];
-
-function editarOT(idx){
-  const r = DB.m[idx];
-  if(!r) return;
-  _editOTId = r.OT_ID;
-  // Cargar repuestos existentes
-  try { _editRepuestos = r.Repuestos_Usados ? JSON.parse(r.Repuestos_Usados).map(x=>({...x,id:'rp-'+Math.random().toString(36).slice(2)})) : []; }
-  catch(e){ _editRepuestos=[]; }
-
-  openModal('Editar OT: ' + r.OT_ID, `
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;">${badge(r.Tipo||'')} ${badge(r.Estado||'')}</div>
-    <div class="fg2" style="gap:10px;">
-      <div class="fl">
-        <label>Estado</label>
-        <select id="eot-estado">
-          <option ${r.Estado==='Abierta'?'selected':''}>Abierta</option>
-          <option ${r.Estado==='En proceso'?'selected':''}>En proceso</option>
-          <option ${r.Estado==='En espera repuesto'?'selected':''}>En espera repuesto</option>
-        </select>
-      </div>
-      <div class="fl">
-        <label>Costo total (COP)</label>
-        <input id="eot-costo" type="number" value="${r.Costo_Total||0}" style="font-family:var(--mono);font-weight:700;">
-      </div>
-      <div class="fl s2">
-        <label>Observaciones / Novedad</label>
-        <input id="eot-obs" placeholder="Trabajo realizado, novedades..." value="${r.Observaciones||''}">
-      </div>
-    </div>
-
-    <div style="margin-top:14px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-        <span style="font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.4px;">Repuestos utilizados</span>
-        <button type="button" class="btn btn-xs btn-pri" onclick="agregarRepOTEdit()">+ Agregar repuesto</button>
-      </div>
-      <div id="eot-reps-lista"></div>
-      <div id="eot-reps-total" style="font-size:12px;font-weight:700;color:var(--t2);text-align:right;margin-top:6px;"></div>
-    </div>
-    <div id="al-eot" style="margin-top:10px;"></div>
-  `,
-  `<button class="btn" onclick="closeModal();loadM()">Cancelar</button>
-   <button class="btn btn-grn" onclick="guardarEdicionOT()">💾 Guardar cambios</button>`
-  );
-  renderRepOTEdit();
-}
-
-function agregarRepOTEdit(){
-  if(!DB.inv.length){ alert('Carga el inventario primero'); return; }
-  _editRepuestos.push({id:'rp-'+Date.now(),ref:'',nombre:'',qty:1,costo:0,busq:''});
-  renderRepOTEdit();
-  setTimeout(()=>{ const ins=document.querySelectorAll('.eot-rep-busq'); if(ins.length) ins[ins.length-1].focus(); },50);
-}
-
-function renderRepOTEdit(){
-  const lista = document.getElementById('eot-reps-lista');
-  const totEl = document.getElementById('eot-reps-total');
-  if(!lista) return;
-  if(!_editRepuestos.length){
-    lista.innerHTML='<div style="font-size:12px;color:var(--t3);padding:4px 0;">Sin repuestos registrados</div>';
-    totEl.textContent=''; return;
-  }
-  lista.innerHTML = _editRepuestos.map((rp,i)=>`
-    <div style="background:var(--bg);border-radius:var(--r);padding:8px 10px;border:1px solid var(--bd);margin-bottom:6px;">
-      <div style="display:grid;grid-template-columns:1fr 80px 110px 24px;gap:6px;align-items:start;">
-        <div class="rep-search-wrap">
-          <input class="rep-search-input eot-rep-busq"
-            placeholder="Buscar repuesto..."
-            value="${rp.ref ? rp.nombre+' ('+rp.ref+')' : rp.busq||''}"
-            oninput="filtrarRepOTEdit(${i},this.value)"
-            onfocus="filtrarRepOTEdit(${i},this.value)"
-            autocomplete="off">
-          <div class="rep-dropdown" id="eot-dd-${i}"></div>
-        </div>
-        <input type="number" min="1" value="${rp.qty}" placeholder="Cant."
-          style="font-size:12px;padding:6px 8px;border:1px solid var(--bd);border-radius:var(--r);font-family:var(--mono);width:100%;"
-          onchange="_editRepuestos[${i}].qty=Number(this.value)||1;renderRepOTEdit()">
-        <span style="font-size:12px;font-family:var(--mono);color:var(--t2);padding:7px 0;display:block;text-align:right;">
-          ${rp.ref?'$'+Math.round(rp.costo*rp.qty).toLocaleString('es-CO'):'—'}
-        </span>
-        <button type="button" style="background:none;border:none;cursor:pointer;color:var(--red);font-size:18px;line-height:1;padding:4px 0;"
-          onclick="_editRepuestos.splice(${i},1);renderRepOTEdit()">×</button>
-      </div>
-      ${rp.ref?`<div style="font-size:10px;color:var(--t3);margin-top:4px;">${rp.ref} · $${Number(rp.costo).toLocaleString('es-CO')} c/u</div>`:''}
-    </div>`).join('');
-  const total = _editRepuestos.reduce((s,r)=>s+(r.costo*r.qty),0);
-  totEl.textContent = total>0 ? 'Total repuestos: $'+Math.round(total).toLocaleString('es-CO') : '';
-}
-
-function filtrarRepOTEdit(idx,q){
-  const dd=document.getElementById('eot-dd-'+idx);
-  if(!dd) return;
-  _editRepuestos[idx].busq=q;
-  const ql=q.trim().toLowerCase();
-  if(ql.length<1){dd.classList.remove('open');return;}
-  const res=DB.inv.filter(x=>String(x.Referencia||'').toLowerCase().includes(ql)||String(x.Nombre||'').toLowerCase().includes(ql)).slice(0,8);
-  if(!res.length){dd.innerHTML='<div class="rep-empty">Sin resultados</div>';dd.classList.add('open');return;}
-  dd.innerHTML=res.map(x=>{
-    const stock=Number(x.Stock||0);
-    const bajo=stock<=(Number(x.Stock_Minimo||0));
-    return`<div class="rep-opt" onclick="selRepOTEdit(${idx},'${x.Referencia}')">
-      <div><div class="rep-opt-name">${x.Nombre}</div><div class="rep-opt-meta">${x.Referencia} · ${fmtK(x.Costo_Unitario||0)}</div></div>
-      <span class="rep-opt-stock ${bajo?'low':'ok'}">Stock: ${stock}</span>
-    </div>`;
-  }).join('');
-  dd.classList.add('open');
-}
-
-function selRepOTEdit(idx,ref){
-  const item=DB.inv.find(x=>x.Referencia===ref);
-  if(!item) return;
-  _editRepuestos[idx].ref=item.Referencia;
-  _editRepuestos[idx].nombre=item.Nombre;
-  _editRepuestos[idx].costo=Number(item.Costo_Unitario)||0;
-  _editRepuestos[idx].busq='';
-  const dd=document.getElementById('eot-dd-'+idx);
-  if(dd) dd.classList.remove('open');
-  renderRepOTEdit();
-}
-
-async function guardarEdicionOT(){
-  const estado = document.getElementById('eot-estado').value;
-  const costo  = document.getElementById('eot-costo').value;
-  const obs    = document.getElementById('eot-obs').value;
-  const repsValidos = _editRepuestos.filter(r=>r.ref);
-  const btn = event.target; btn.disabled=true; btn.textContent='Guardando...';
-
-  // Calcular total si hay repuestos
-  const totalReps = repsValidos.reduce((s,r)=>s+(r.costo*r.qty),0);
-  const costoFinal = costo ? Number(costo) : totalReps;
-
-  const r = await apip({
-    accion:'actualizar', modulo:'mantenimiento',
-    buscarCampo:'OT_ID', buscarValor:_editOTId,
-    datos:{
-      Estado: estado,
-      Costo_Total: costoFinal,
-      Observaciones: obs,
-      Repuestos_Usados: repsValidos.length ? JSON.stringify(repsValidos.map(x=>({ref:x.ref,nombre:x.nombre,qty:x.qty,costo:x.costo}))) : ''
-    }
-  });
-  btn.disabled=false; btn.textContent='💾 Guardar cambios';
-  if(r.ok){
-    closeModal();
-    await loadM();
-    // Refrescar inventario (puede haber cambiado)
-    const di=await apig({accion:'listar',modulo:'inventario'});
-    DB.inv=di.data||[]; updateSB();
-  } else {
-    const al=document.getElementById('al-eot');
-    if(al) al.innerHTML='<div class="alert a-err">❌ Error al guardar</div>';
-  }
 }
 
 async function crearM(){
@@ -1826,40 +1498,10 @@ async function crearM(){
   if(!placa||!desc){showAlert('al-m','Placa y descripción son obligatorios','err');return;}
   const btn=event.target;btn.disabled=true;btn.textContent='Guardando...';
   const otId=genID('OT');
-  const repuestosValidos = _otRepuestos.filter(r=>r.ref);
-  const r=await apip({
-    accion:'crear',modulo:'mantenimiento',
-    OT_ID:otId,Placa:placa,
-    Tipo:document.getElementById('vm-tipo').value,
-    Descripcion:desc,
-    Fecha_Orden:document.getElementById('vm-fecha').value,
-    Fecha_Ingreso:document.getElementById('vm-ingreso').value,
-    Fecha_Cierre:document.getElementById('vm-cierre').value,
-    Odometro:document.getElementById('vm-odo').value||0,
-    Proveedor:document.getElementById('vm-prov').value,
-    Conductor:document.getElementById('vm-conductor').value,
-    Centro_Costos:document.getElementById('vm-cdc').value,
-    Afecta_Disp:document.getElementById('vm-disp').checked,
-    Es_Falla:document.getElementById('vm-falla').checked,
-    Motivo:document.getElementById('vm-motivo').value,
-    Costo_Total:document.getElementById('vm-costo').value||0,
-    Ciudad:document.getElementById('vm-ciudad').value,
-    Estado:'Abierta',
-    Repuestos_Usados: repuestosValidos.length
-      ? JSON.stringify(repuestosValidos.map(r=>({ref:r.ref,nombre:r.nombre,qty:r.qty,costo:r.costo})))
-      : ''
-  });
+  const r=await apip({accion:'crear',modulo:'mantenimiento',OT_ID:otId,Placa:placa,Tipo:document.getElementById('vm-tipo').value,Descripcion:desc,Fecha_Orden:document.getElementById('vm-fecha').value,Fecha_Ingreso:document.getElementById('vm-ingreso').value,Fecha_Cierre:document.getElementById('vm-cierre').value,Odometro:document.getElementById('vm-odo').value||0,Proveedor:document.getElementById('vm-prov').value,Conductor:document.getElementById('vm-conductor').value,Centro_Costos:document.getElementById('vm-cdc').value,Afecta_Disp:document.getElementById('vm-disp').checked,Es_Falla:document.getElementById('vm-falla').checked,Motivo:document.getElementById('vm-motivo').value,Costo_Total:document.getElementById('vm-costo').value||0,Ciudad:document.getElementById('vm-ciudad').value,Estado:'Abierta'});
   btn.disabled=false;btn.textContent='Crear OT';
-  if(r.ok){
-    _otRepuestos=[];renderRepuestosOT();
-    showAlert('al-m','✅ OT '+otId+' creada','ok');
-    setTimeout(async()=>{
-      tp('fm');
-      await loadM();
-      const di=await apig({accion:'listar',modulo:'inventario'});
-      DB.inv=di.data||[];updateSB();
-    },1500);
-  } else showAlert('al-m','❌ '+(r.error||'Error'),'err');
+  if(r.ok){showAlert('al-m','✅ OT '+otId+' creada','ok');setTimeout(()=>{tp('fm');loadM();},1500);}
+  else showAlert('al-m','❌ '+(r.error||'Error'),'err');
 }
 
 // ══════════════════════════════════════════════
@@ -1872,12 +1514,12 @@ async function loadCB(){
   document.getElementById('vcb-placa').innerHTML='<option value="">Seleccionar...</option>'+DB.v.map(v=>`<option>${v.Placa}</option>`).join('');
   document.getElementById('vcb-conductor').innerHTML='<option value="">Seleccionar...</option>'+DB.c.filter(x=>x.Estado==='Activo').map(x=>`<option>${x.Nombre}</option>`).join('');
   document.getElementById('vcb-fecha').value=today();
-  const galones=DB.cb.reduce((s,x)=>s+(Number(x.Galones)||0),0);
+  const litros=DB.cb.reduce((s,x)=>s+(Number(x.Litros)||0),0);
   const costo=DB.cb.reduce((s,x)=>s+(Number(x.Costo_Total)||0),0);
-  const rendProm=DB.cb.filter(x=>Number(x.Rendimiento_KmGal)>0).reduce((s,x)=>s+(Number(x.Rendimiento_KmGal)||0),0)/Math.max(DB.cb.filter(x=>Number(x.Rendimiento_KmGal)>0).length,1);
+  const rendProm=DB.cb.filter(x=>Number(x.Rendimiento)>0).reduce((s,x)=>s+(Number(x.Rendimiento)||0),0)/Math.max(DB.cb.filter(x=>Number(x.Rendimiento)>0).length,1);
   document.getElementById('cb-kpis').innerHTML=`
-    <div class="kpi"><div class="kpi-head"><div class="kpi-icon amber">⛽</div></div><div class="kpi-val" style="font-size:20px;">${galones.toFixed(1)} Gal</div><div class="kpi-lbl">Total galones</div></div>
-    <div class="kpi"><div class="kpi-head"><div class="kpi-icon red">💰</div></div><div class="kpi-val" style="font-size:16px;">$${Math.round(costo).toLocaleString('es-CO')}</div><div class="kpi-lbl">Costo total</div></div>
+    <div class="kpi"><div class="kpi-head"><div class="kpi-icon amber">⛽</div></div><div class="kpi-val" style="font-size:20px;">${litros.toFixed(1)} L</div><div class="kpi-lbl">Total litros</div></div>
+    <div class="kpi"><div class="kpi-head"><div class="kpi-icon red">💰</div></div><div class="kpi-val" style="font-size:18px;">${fmtK(costo)}</div><div class="kpi-lbl">Costo total</div></div>
     <div class="kpi"><div class="kpi-head"><div class="kpi-icon green">📊</div></div><div class="kpi-val" style="font-size:20px;">${rendProm.toFixed(1)}</div><div class="kpi-lbl">Km/Gal promedio</div></div>
     <div class="kpi"><div class="kpi-head"><div class="kpi-icon blue">🔢</div></div><div class="kpi-val">${DB.cb.length}</div><div class="kpi-lbl">Registros</div></div>`;
   renderCB();
@@ -1890,24 +1532,24 @@ function renderCB(){
   tb.innerHTML=rows.slice().reverse().map(r=>`<tr>
     <td class="tmono" style="font-weight:700;">${r.Placa||''}</td>
     <td class="tdim">${r.Fecha||''}</td>
-    <td class="tmono">${Number(r.Galones||0).toFixed(2)} Gal</td>
-    <td class="tmono">$${Math.round(Number(r.Costo_Total||0)).toLocaleString('es-CO')}</td>
-    <td class="tmono">${r.Galones&&r.Costo_Total?'$'+Math.round(r.Costo_Total/r.Galones).toLocaleString('es-CO'):'-'}</td>
+    <td class="tmono">${Number(r.Litros||0).toFixed(1)} L</td>
+    <td class="tmono">${fmtK(r.Costo_Total||0)}</td>
+    <td class="tmono">${r.Litros&&r.Costo_Total?'$'+Math.round(r.Costo_Total/r.Litros).toLocaleString('es-CO'):'-'}</td>
     <td class="tmono">${fmt(r.KM_Momento||0)} km</td>
-    <td class="tmono">${Number(r.Rendimiento_KmGal||0).toFixed(2)} km/gal</td>
+    <td class="tmono">${Number(r.Rendimiento||0).toFixed(1)} km/gal</td>
     <td class="tdim">${r.Estacion||'—'}</td>
     <td><span class="badge bgr">${r.Tipo_Combustible||''}</span></td>`).join('');
 }
 async function crearCB(){
   const placa=document.getElementById('vcb-placa').value;
   if(!placa){showAlert('al-cb','Selecciona una placa','err');return;}
-  const galones=document.getElementById('vcb-galones').value;
+  const litros=document.getElementById('vcb-litros').value;
   const costo=document.getElementById('vcb-costo').value;
   const km=document.getElementById('vcb-km').value;
-  const rendimiento=galones&&km?(Number(km)/Number(galones)).toFixed(2):0;
-  const pGalon=galones&&costo?Math.round(costo/galones):0;
+  const rendimiento=litros&&km?((Number(km)*0.264172)/Number(litros)).toFixed(2):0;
+  const pLitro=litros&&costo?Math.round(costo/litros):0;
   const btn=event.target;btn.disabled=true;btn.textContent='Guardando...';
-  const r=await apip({accion:'crear',modulo:'combustible',Placa:placa,Fecha:document.getElementById('vcb-fecha').value,Galones:galones,Costo_Total:costo,KM_Momento:km,Precio_Galon:pGalon,Rendimiento_KmGal:rendimiento,Estacion:document.getElementById('vcb-est').value,Conductor:document.getElementById('vcb-conductor').value,Tipo_Combustible:document.getElementById('vcb-tipo').value,Factura:document.getElementById('vcb-factura').value});
+  const r=await apip({accion:'crear',modulo:'combustible',Placa:placa,Fecha:document.getElementById('vcb-fecha').value,Litros:litros,Costo_Total:costo,KM_Momento:km,Precio_Litro:pLitro,Rendimiento:rendimiento,Estacion:document.getElementById('vcb-est').value,Conductor:document.getElementById('vcb-conductor').value,Tipo_Combustible:document.getElementById('vcb-tipo').value,Factura:document.getElementById('vcb-factura').value});
   btn.disabled=false;btn.textContent='Registrar';
   if(r.ok){showAlert('al-cb','✅ Carga registrada','ok');setTimeout(()=>{tp('fcb');loadCB();},1500);}
   else showAlert('al-cb','❌ '+(r.error||'Error'),'err');
@@ -2011,7 +1653,7 @@ async function crearCH(){
   const r=await apip({accion:'crear',modulo:'checklist',ID_Check:chId,Placa:placa,Conductor:document.getElementById('vch-conductor').value,Tipo:document.getElementById('vch-tipo').value,Fecha:document.getElementById('vch-fecha').value,Hora:document.getElementById('vch-hora').value,Motor:document.getElementById('vch-motor').value,Frenos:document.getElementById('vch-frenos').value,Llantas:document.getElementById('vch-llantas').value,Luces:document.getElementById('vch-luces').value,Fluidos:document.getElementById('vch-fluidos').value,Carroceria:document.getElementById('vch-car').value,Documentos:document.getElementById('vch-docs').value,Estado_General:estGen,Observaciones:document.getElementById('vch-obs').value});
   btn.disabled=false;btn.textContent='Guardar inspección';
   if(r.ok){
-    if(estGen==='Rechazado') showAlert('al-ch','⚠ Inspección rechazada registrada.','warn');
+    if(estGen==='Rechazado') showAlert('al-ch','⚠ Inspección rechazada registrada. Considera crear una OT.','warn');
     else showAlert('al-ch','✅ Inspección '+chId+' registrada','ok');
     setTimeout(()=>{tp('fch');loadCH();},1800);
   } else showAlert('al-ch','❌ '+(r.error||'Error'),'err');
@@ -2041,10 +1683,9 @@ function renderVJ(){
   const q=(document.getElementById('svj')||{}).value||'';
   const rows=DB.vj.filter(r=>(F.vj==='todos'||r.Estado===F.vj)&&(!q||String(r.Placa||'').toLowerCase().includes(q.toLowerCase())||String(r.Conductor||'').toLowerCase().includes(q.toLowerCase())));
   const tb=document.getElementById('tbl-vj');
-  if(!rows.length){tb.innerHTML='<tr><td colspan="11"><div class="empty"><div class="ei">🚚</div><p>Sin viajes</p></div></td></tr>';return;}
+  if(!rows.length){tb.innerHTML='<tr><td colspan="10"><div class="empty"><div class="ei">🚚</div><p>Sin viajes</p></div></td></tr>';return;}
   tb.innerHTML=rows.slice().reverse().map(r=>{
     const util=Number(r.Utilidad||0);
-    const puedeCerrar = r.Estado==='En curso'||r.Estado==='Programado';
     return`<tr>
       <td class="tmono" style="font-size:11px;color:var(--brand);">${r.ID_Viaje||'—'}</td>
       <td class="tmono" style="font-weight:700;">${r.Placa||''}</td>
@@ -2055,11 +1696,7 @@ function renderVJ(){
       <td class="tmono">${fmtK(r.Anticipo||0)}</td>
       <td class="tmono">${fmtK(r.Ingreso||0)}</td>
       <td class="tmono" style="color:${util>=0?'var(--green)':'var(--red)'};font-weight:700;">${fmtK(util)}</td>
-      <td>${badge(r.Estado||'')}</td>
-      <td style="white-space:nowrap;">
-        <button class="btn btn-xs" onclick="detalleVJ(${DB.vj.indexOf(r)})">🔍</button>
-        ${puedeCerrar?`<button class="btn btn-xs btn-grn" onclick="abrirCierreVJ(${DB.vj.indexOf(r)})">✓</button>`:''}
-      </td>`;
+      <td>${badge(r.Estado||'')}</td>`;
   }).join('');
 }
 function sfVJ(f,b){F.vj=f;document.querySelectorAll('#pg-viajes .ftab').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderVJ();}
@@ -2089,36 +1726,19 @@ async function loadINV(){
 function renderINV(){
   const q=(document.getElementById('sinv')||{}).value||'';
   const bajo=F.inv==='bajo';
-  // Actualizar contador stock bajo
-  const totalBajo = DB.inv.filter(r=>Number(r.Stock)<=Number(r.Stock_Minimo)&&Number(r.Stock_Minimo)>0).length;
-  const cntEl = document.getElementById('cnt-stock-bajo');
-  if(cntEl){
-    cntEl.textContent = totalBajo;
-    cntEl.style.display = totalBajo>0 ? 'inline' : 'none';
-  }
   const rows=DB.inv.filter(r=>{
-    const esBajo=Number(r.Stock)<=Number(r.Stock_Minimo)&&Number(r.Stock_Minimo)>0;
+    const esBajo=Number(r.Stock)<=Number(r.Stock_Minimo);
     return(bajo?esBajo:true)&&(!q||String(r.Referencia||'').toLowerCase().includes(q.toLowerCase())||String(r.Nombre||'').toLowerCase().includes(q.toLowerCase()));
   });
   const tb=document.getElementById('tbl-inv');
-  if(!rows.length){tb.innerHTML=`<tr><td colspan="9"><div class="empty"><div class="ei">📦</div><p>${bajo?'Sin ítems con stock bajo 🎉':'Sin ítems en inventario'}</p></div></td></tr>`;return;}
+  if(!rows.length){tb.innerHTML='<tr><td colspan="9"><div class="empty"><div class="ei">📦</div><p>Sin ítems</p></div></td></tr>';return;}
   tb.innerHTML=rows.map(r=>{
-    const esBajo=Number(r.Stock)<=Number(r.Stock_Minimo)&&Number(r.Stock_Minimo)>0;
-    const pct = Number(r.Stock_Minimo)>0 ? Math.min(100,Math.round(Number(r.Stock)/Number(r.Stock_Minimo)*100)) : 100;
-    return`<tr style="${esBajo?'background:rgba(220,38,38,.03);':''}">
-      <td class="tmono" style="font-weight:700;color:var(--brand);">${r.Referencia||''}</td>
+    const esBajo=Number(r.Stock)<=Number(r.Stock_Minimo);
+    return`<tr>
+      <td class="tmono" style="font-weight:700;">${r.Referencia||''}</td>
       <td style="font-weight:500;">${r.Nombre||''}</td>
       <td><span class="badge bgr">${r.Categoria||''}</span></td>
-      <td>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <span style="font-family:var(--mono);font-weight:700;font-size:13px;color:${esBajo?'var(--red)':'var(--green)'};">${r.Stock||0}</span>
-          <span style="font-size:10px;color:var(--t3);">${r.Unidad||''}</span>
-          ${esBajo?`<span style="font-size:10px;background:var(--red-l);color:var(--red);padding:1px 5px;border-radius:4px;font-weight:700;">⚠ BAJO</span>`:''}
-        </div>
-        <div style="height:3px;background:var(--bg3);border-radius:2px;margin-top:3px;width:60px;">
-          <div style="height:3px;background:${esBajo?'var(--red)':'var(--green)'};border-radius:2px;width:${pct}%;max-width:100%;"></div>
-        </div>
-      </td>
+      <td><span style="font-family:var(--mono);font-weight:700;color:${esBajo?'var(--red)':'var(--t)'};">${r.Stock||0}</span> ${r.Unidad||''}</td>
       <td class="tmono tdim">${r.Stock_Minimo||0}</td>
       <td class="tmono">${fmtK(r.Costo_Unitario||0)}</td>
       <td class="tdim">${r.Proveedor||'—'}</td>
@@ -2143,314 +1763,44 @@ async function crearINV(){
 //  COMPRAS
 // ══════════════════════════════════════════════
 async function loadCP(){
-  document.getElementById('tbl-cp').innerHTML='<tr><td colspan="12" class="loader"><span class="spin"></span></td></tr>';
-  const[d,dv,dinv]=await Promise.all([
-    apig({accion:'listar',modulo:'compras'}),
-    apig({accion:'listar',modulo:'vehiculos'}),
-    apig({accion:'listar',modulo:'inventario'})
-  ]);
+  document.getElementById('tbl-cp').innerHTML='<tr><td colspan="10" class="loader"><span class="spin"></span></td></tr>';
+  const[d,dv,dinv]=await Promise.all([apig({accion:'listar',modulo:'compras'}),apig({accion:'listar',modulo:'vehiculos'}),apig({accion:'listar',modulo:'inventario'})]);
   DB.cp=d.data||[];DB.v=dv.data||[];DB.inv=dinv.data||[];
   document.getElementById('vcp-placa').innerHTML='<option value="">Sin placa asociada</option>'+DB.v.map(v=>`<option>${v.Placa}</option>`).join('');
+  document.getElementById('vcp-ref').innerHTML='<option value="">Seleccionar del inventario...</option>'+DB.inv.map(x=>`<option value="${x.Referencia}">${x.Referencia} — ${x.Nombre}</option>`).join('');
   document.getElementById('vcp-fecha').value=today();
-  // Limpiar buscador de repuesto
-  document.getElementById('cp-rep-buscar').value='';
-  document.getElementById('vcp-ref').value='';
   renderCP();
 }
-
-// ✅ MEJORA: Buscador de repuesto en Compras
-function buscarRepuestoCP(q){
-  const dd = document.getElementById('cp-rep-dropdown');
-  q = q.trim().toLowerCase();
-  if(q.length < 1){dd.classList.remove('open'); return;}
-  const resultados = DB.inv.filter(x =>
-    String(x.Referencia||'').toLowerCase().includes(q) ||
-    String(x.Nombre||'').toLowerCase().includes(q)
-  ).slice(0, 10);
-  if(!resultados.length){
-    dd.innerHTML='<div class="rep-empty">Sin resultados para "'+q+'"</div>';
-    dd.classList.add('open'); return;
-  }
-  dd.innerHTML = resultados.map(x => {
-    const stock = Number(x.Stock||0);
-    const min   = Number(x.Stock_Minimo||0);
-    const bajo  = stock <= min;
-    return `<div class="rep-opt" onclick="selRepuestoCP('${x.Referencia}')">
-      <div>
-        <div class="rep-opt-name">${x.Nombre||x.Referencia}</div>
-        <div class="rep-opt-meta">${x.Referencia} · ${x.Categoria||''} · ${fmtK(x.Costo_Unitario||0)}</div>
-      </div>
-      <span class="rep-opt-stock ${bajo?'low':'ok'}">Stock: ${stock}</span>
-    </div>`;
-  }).join('');
-  dd.classList.add('open');
-}
-
-function selRepuestoCP(ref){
-  const item = DB.inv.find(x => x.Referencia === ref);
-  if(!item) return;
-  document.getElementById('vcp-ref').value   = item.Referencia;
-  document.getElementById('vcp-desc').value  = item.Nombre;
-  document.getElementById('vcp-costo').value = item.Costo_Unitario || '';
-  document.getElementById('cp-rep-buscar').value = item.Nombre + ' (' + item.Referencia + ')';
-  document.getElementById('cp-rep-dropdown').classList.remove('open');
-}
-
-document.addEventListener('click', e => {
-  if(!e.target.closest('#cp-rep-search-wrap')){
-    const dd = document.getElementById('cp-rep-dropdown');
-    if(dd) dd.classList.remove('open');
-  }
-  if(!e.target.closest('#gsearch') && !e.target.closest('#gsearch-results')){
-    const gr = document.getElementById('gsearch-results');
-    if(gr) gr.style.display='none';
-  }
-});
-
 function renderCP(){
   const q=(document.getElementById('scp')||{}).value||'';
-  const rows=DB.cp.filter(r=>(F.cp==='todos'||r.Estado===F.cp)&&(!q||String(r.Descripcion||'').toLowerCase().includes(q.toLowerCase())||String(r.Referencia||'').toLowerCase().includes(q.toLowerCase())));
+  const rows=DB.cp.filter(r=>(F.cp==='todos'||r.Estado===F.cp)&&(!q||String(r.Descripcion||'').toLowerCase().includes(q.toLowerCase())));
   const tb=document.getElementById('tbl-cp');
-  if(!rows.length){tb.innerHTML='<tr><td colspan="12"><div class="empty"><div class="ei">🛒</div><p>Sin compras</p></div></td></tr>';return;}
-  tb.innerHTML=rows.slice().reverse().map(r=>{
-    const puedeRecibir = r.Estado!=='Recibido' && r.Estado!=='Cancelada' && r.Estado!=='Devuelto' && r.Estado!=='Rechazado';
-    const ref = r.Referencia||'';
-    const qty = Number(r.Cantidad)||1;
-    const actInv = r.Actualiza_Inventario||'No';
-    const cpId = r.ID_Compra||'';
-    return`<tr>
+  if(!rows.length){tb.innerHTML='<tr><td colspan="10"><div class="empty"><div class="ei">🛒</div><p>Sin compras</p></div></td></tr>';return;}
+  tb.innerHTML=rows.slice().reverse().map(r=>`<tr>
     <td class="tmono" style="font-size:11px;color:var(--brand);">${r.ID_Compra||'—'}</td>
-    <td style="max-width:160px;"><div style="font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${r.Descripcion||''}</div>${ref?`<span class="tmono" style="font-size:10px;color:var(--brand);">${ref}</span>`:''}</td>
+    <td>${r.Descripcion||''}</td>
     <td class="tmono">${r.Cantidad||0}</td>
     <td class="tmono">${fmtK(r.Costo_Unit||0)}</td>
     <td class="tmono" style="font-weight:700;">${fmtK(r.Total||0)}</td>
     <td class="tdim">${r.Proveedor||'—'}</td>
     <td class="tdim">${r.Fecha||'—'}</td>
-    <td class="tmono" style="font-weight:600;color:var(--t);">${r.Factura||'<span class="tdim" style="font-family:var(--font);">—</span>'}</td>
     <td class="tmono" style="font-size:11px;color:var(--brand);">${r.OT_Asociada||'—'}</td>
-    <td style="text-align:center;">${actInv==='Si'?'<span class="badge bg">Sí</span>':'<span class="badge bgr">No</span>'}</td>
-    <td>${badge(r.Estado||'')}</td>
-    <td style="white-space:nowrap;display:flex;gap:3px;padding:6px 8px;">
-      ${puedeRecibir?`<button class="btn btn-xs btn-grn" onclick="recibirCompra('${cpId}','${ref}',${qty},'${actInv}','${r.Proveedor||''}','${r.Descripcion||''}','${r.Factura||''}')" title="Marcar recibida">✓ Recibir</button>`:''}
-      ${puedeRecibir?`<button class="btn btn-xs" style="background:var(--red-l);color:var(--red);border-color:var(--red);" onclick="rechazarCompra('${cpId}','${ref}',${qty},'${r.Proveedor||''}','${r.Descripcion||''}')" title="Rechazar o devolver">✕ Rechazar</button>`:''}
-    </td>`;
-  }).join('');
+    <td class="tmono tdim">${r.Factura||'—'}</td>
+    <td>${badge(r.Estado||'')}</td>`).join('');
 }
 function sfCP(f,b){F.cp=f;document.querySelectorAll('#pg-compras .ftab').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderCP();}
-
-// ✅ RECIBIR COMPRA: modal de confirmación + email al proveedor
-async function recibirCompra(cpId, ref, qty, actualizaInv, proveedor, descripcion, factura){
-  openModal('Confirmar recepción: '+cpId, `
-    <div style="background:var(--green-l);border:1px solid var(--green);border-radius:var(--r);padding:12px 14px;margin-bottom:14px;">
-      <div style="font-size:12px;font-weight:700;color:var(--green);">✓ Marcando como RECIBIDO</div>
-      <div style="font-size:12px;color:var(--t2);margin-top:4px;">${descripcion||cpId}${factura?' · Factura: '+factura:''}</div>
-      ${actualizaInv==='Si'&&ref?`<div style="font-size:11px;color:var(--green);margin-top:4px;">📦 Se sumará ${qty} unid. de <strong>${ref}</strong> al inventario</div>`:''}
-    </div>
-    <div class="fg2" style="gap:10px;">
-      <div class="fl s2">
-        <label>Notificar recepción al proveedor por correo</label>
-        <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
-          <input type="checkbox" id="rec-notif-email" style="width:15px;height:15px;cursor:pointer;">
-          <label for="rec-notif-email" style="font-size:12px;color:var(--t2);cursor:pointer;">Enviar confirmación al proveedor</label>
-        </div>
-      </div>
-      <div class="fl s2">
-        <label>Email del proveedor (si aplica)</label>
-        <input id="rec-email-prov" type="email" placeholder="proveedor@empresa.com">
-      </div>
-      <div class="fl s2">
-        <label>Notas de recepción</label>
-        <input id="rec-notas" placeholder="Producto recibido completo, en buen estado...">
-      </div>
-    </div>
-    <div id="al-rec" style="margin-top:8px;"></div>
-  `,
-  `<button class="btn" onclick="closeModal()">Cancelar</button>
-   <button class="btn btn-grn" onclick="confirmarRecepcion('${cpId}','${ref}',${qty},'${actualizaInv}','${proveedor}')">✓ Confirmar recepción</button>`
-  );
-}
-
-async function confirmarRecepcion(cpId, ref, qty, actualizaInv, proveedor){
-  const notifEmail = document.getElementById('rec-notif-email').checked;
-  const emailProv  = document.getElementById('rec-email-prov').value.trim();
-  const notas      = document.getElementById('rec-notas').value.trim();
-  const btn = event.target; btn.disabled=true; btn.textContent='Procesando...';
-  const fecha = new Date().toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric'});
-  const usuario = SESSION.nombre || SESSION.email || 'Sistema';
-
-  const r = await apip({
-    accion:'actualizar', modulo:'compras',
-    buscarCampo:'ID_Compra', buscarValor:cpId,
-    datos:{ Estado:'Recibido', Actualiza_Inventario: actualizaInv, Observaciones_Recepcion: notas }
-  });
-
-  if(r.ok){
-    // Actualizar inventario si aplica
-    if(actualizaInv==='Si' && ref){
-      await apip({
-        accion:'crear', modulo:'compras',
-        ID_Compra: '_inv_'+cpId,
-        Referencia: ref,
-        Descripcion: 'Stock ingresado por '+cpId,
-        Cantidad: qty, Costo_Unit:0, Total:0,
-        Proveedor:'Sistema',
-        Fecha: new Date().toISOString().split('T')[0],
-        Estado:'Recibido', Actualiza_Inventario:'Si'
-      });
-      const di=await apig({accion:'listar',modulo:'inventario'});
-      DB.inv=di.data||[]; updateSB(); renderINV();
-    }
-    // Enviar email al proveedor si se marcó
-    if(notifEmail && emailProv){
-      await apip({
-        accion:'crear', modulo:'email',
-        para: emailProv,
-        asunto: 'Confirmación de recepción - Orden '+cpId,
-        cuerpo: 'Estimado proveedor '+proveedor+',\n\nConfirmamos la recepción del pedido '+cpId+' el '+fecha+'.\nRecibido por: '+usuario+'.\n'+(notas?'Notas: '+notas+'\n':'')+'\nGracias por su atención.\n\nFleetCO — Gestión de Flota'
-      });
-    }
-    closeModal();
-    await loadCP();
-  } else {
-    btn.disabled=false; btn.textContent='✓ Confirmar recepción';
-    const al=document.getElementById('al-rec');
-    if(al) al.innerHTML='<div class="alert a-err">❌ Error al procesar</div>';
-  }
-}
-
-// ✅ RECHAZAR / DEVOLVER COMPRA
-async function rechazarCompra(cpId, ref, qty, proveedor, descripcion){
-  openModal('Rechazar / Devolver: '+cpId, `
-    <div style="background:var(--red-l);border:1px solid var(--red);border-radius:var(--r);padding:12px 14px;margin-bottom:14px;">
-      <div style="font-size:12px;font-weight:700;color:var(--red);">✕ Registrando RECHAZO o DEVOLUCIÓN</div>
-      <div style="font-size:12px;color:var(--t2);margin-top:4px;">${descripcion||cpId}</div>
-    </div>
-    <div class="fg2" style="gap:10px;">
-      <div class="fl">
-        <label>Tipo de novedad</label>
-        <select id="rech-tipo">
-          <option>Producto incorrecto</option>
-          <option>Producto defectuoso</option>
-          <option>Cantidad incorrecta</option>
-          <option>Devolución parcial</option>
-          <option>Devolución total</option>
-          <option>No llegó</option>
-          <option>Otro</option>
-        </select>
-      </div>
-      <div class="fl">
-        <label>Cantidad a devolver</label>
-        <input id="rech-qty" type="number" value="${qty}" min="1" max="${qty}" style="font-family:var(--mono);">
-      </div>
-      <div class="fl s2">
-        <label>Descripción de la novedad <span class="req">*</span></label>
-        <input id="rech-novedad" placeholder="Describa el motivo del rechazo o devolución..." required>
-      </div>
-      <div class="fl s2">
-        <label>Notificar al proveedor por correo</label>
-        <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
-          <input type="checkbox" id="rech-email-chk" checked style="width:15px;height:15px;cursor:pointer;">
-          <label for="rech-email-chk" style="font-size:12px;color:var(--t2);cursor:pointer;">Enviar notificación al proveedor</label>
-        </div>
-      </div>
-      <div class="fl s2">
-        <label>Email del proveedor</label>
-        <input id="rech-email" type="email" placeholder="proveedor@empresa.com">
-      </div>
-    </div>
-    <div id="al-rech" style="margin-top:8px;"></div>
-  `,
-  `<button class="btn" onclick="closeModal()">Cancelar</button>
-   <button class="btn" style="background:var(--red);color:#fff;border-color:var(--red);" onclick="confirmarRechazo('${cpId}','${ref}','${proveedor}')">✕ Confirmar rechazo</button>`
-  );
-}
-
-async function confirmarRechazo(cpId, ref, proveedor){
-  const novedad = document.getElementById('rech-novedad').value.trim();
-  if(!novedad){ document.getElementById('al-rech').innerHTML='<div class="alert a-err">La descripción de la novedad es obligatoria</div>'; return; }
-  const tipo     = document.getElementById('rech-tipo').value;
-  const qtyDev   = Number(document.getElementById('rech-qty').value)||0;
-  const emailChk = document.getElementById('rech-email-chk').checked;
-  const emailProv= document.getElementById('rech-email').value.trim();
-  const btn = event.target; btn.disabled=true; btn.textContent='Procesando...';
-  const fecha = new Date().toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric'});
-  const usuario = SESSION.nombre || SESSION.email || 'Sistema';
-
-  const r = await apip({
-    accion:'actualizar', modulo:'compras',
-    buscarCampo:'ID_Compra', buscarValor:cpId,
-    datos:{ Estado: tipo.includes('Devoluci')? 'Devuelto':'Rechazado', Actualiza_Inventario:'No', Novedad_Rechazo: tipo+': '+novedad }
-  });
-
-  if(r.ok){
-    // Enviar email al proveedor si se marcó
-    if(emailChk && emailProv){
-      await apip({
-        accion:'crear', modulo:'email',
-        para: emailProv,
-        asunto: 'Notificación de rechazo/devolución - Orden '+cpId,
-        cuerpo: 'Estimado proveedor '+proveedor+',\n\nLe informamos que el pedido '+cpId+' ha sido RECHAZADO / DEVUELTO el '+fecha+'.\n\nMotivo: '+tipo+'\nDescripción: '+novedad+'\nCantidad devuelta: '+qtyDev+' unidades\nGestionado por: '+usuario+'\n\nPor favor tome las acciones correspondientes.\n\nFleetCO — Gestión de Flota'
-      });
-    }
-    closeModal();
-    await loadCP();
-  } else {
-    btn.disabled=false; btn.textContent='✕ Confirmar rechazo';
-    const al=document.getElementById('al-rech');
-    if(al) al.innerHTML='<div class="alert a-err">❌ Error al procesar</div>';
-  }
-}
-
 async function crearCP(){
   const desc=document.getElementById('vcp-desc').value.trim();
   const prov=document.getElementById('vcp-prov').value.trim();
   if(!desc||!prov){showAlert('al-cp','Descripción y proveedor son obligatorios','err');return;}
   const qty=Number(document.getElementById('vcp-qty').value)||1;
   const costo=Number(document.getElementById('vcp-costo').value)||0;
-  const estado=document.getElementById('vcp-estado').value;
-  const actualizaInv=document.getElementById('vcp-actualizainv').value;
-  const ref=document.getElementById('vcp-ref').value.trim();
-
   const btn=event.target;btn.disabled=true;btn.textContent='Guardando...';
   const cpId=genID('CP');
-
-  // Actualizar inventario solo si: estado=Recibido + actualizaInv=Si
-  const debeActualizar = (actualizaInv==='Si' && estado==='Recibido') ? 'Si' : 'No';
-
-  const r=await apip({
-    accion:'crear', modulo:'compras',
-    ID_Compra:cpId,
-    Referencia: ref,
-    Descripcion:desc,
-    Cantidad:qty,
-    Costo_Unit:costo,
-    Total:qty*costo,
-    Proveedor:prov,
-    Fecha:document.getElementById('vcp-fecha').value,
-    OT_Asociada:document.getElementById('vcp-ot').value,
-    Placa:document.getElementById('vcp-placa').value,
-    Estado:estado,
-    Factura:document.getElementById('vcp-factura').value,
-    Actualiza_Inventario: debeActualizar
-  });
+  const r=await apip({accion:'crear',modulo:'compras',ID_Compra:cpId,Referencia:document.getElementById('vcp-ref').value,Descripcion:desc,Cantidad:qty,Costo_Unit:costo,Total:qty*costo,Proveedor:prov,Fecha:document.getElementById('vcp-fecha').value,OT_Asociada:document.getElementById('vcp-ot').value,Placa:document.getElementById('vcp-placa').value,Estado:document.getElementById('vcp-estado').value,Factura:document.getElementById('vcp-factura').value});
   btn.disabled=false;btn.textContent='Registrar compra';
-  if(r.ok){
-    let invMsg='';
-    if(debeActualizar==='Si' && ref) invMsg=` · Inventario actualizado (+${qty} de ${ref})`;
-    else if(actualizaInv==='Si' && estado!=='Recibido') invMsg=' · Stock se actualizará al marcar como Recibido';
-    showAlert('al-cp','✅ Compra '+cpId+' registrada'+invMsg,'ok');
-    // Limpiar buscador de repuesto
-    document.getElementById('cp-rep-buscar').value='';
-    document.getElementById('vcp-ref').value='';
-    setTimeout(async()=>{
-      tp('fcp');
-      await loadCP();
-      if(debeActualizar==='Si'){
-        const di=await apig({accion:'listar',modulo:'inventario'});
-        DB.inv=di.data||[];updateSB();
-      }
-    },1800);
-  } else showAlert('al-cp','❌ '+(r.error||'Error'),'err');
+  if(r.ok){showAlert('al-cp','✅ Compra '+cpId+' registrada','ok');setTimeout(()=>{tp('fcp');loadCP();},1500);}
+  else showAlert('al-cp','❌ '+(r.error||'Error'),'err');
 }
 
 // ══════════════════════════════════════════════
@@ -2540,365 +1890,29 @@ function mGoTo(pg, btn){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('drawer-overlay').classList.add('open');}
-function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('drawer-overlay').classList.remove('open');}
-
-// ══════════════════════════════════════════════
-//  REPUESTOS EN OT — con buscador en tiempo real
-// ══════════════════════════════════════════════
-let _otRepuestos = [];
-
-function agregarRepuestoOT(){
-  if(!DB.inv.length){ showAlert('al-m','Carga el inventario primero o espera...','warn'); return; }
-  const id = 'rp-' + Date.now();
-  _otRepuestos.push({ id, ref:'', nombre:'', qty:1, costo:0, busq:'' });
-  renderRepuestosOT();
-  // Enfocar el buscador del nuevo item
-  setTimeout(()=>{
-    const inputs = document.querySelectorAll('.ot-rep-busq');
-    if(inputs.length) inputs[inputs.length-1].focus();
-  },50);
+function openDrawer(){
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawer-overlay').classList.add('open');
+}
+function closeDrawer(){
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawer-overlay').classList.remove('open');
 }
 
-function renderRepuestosOT(){
-  const lista  = document.getElementById('ot-repuestos-lista');
-  const totEl  = document.getElementById('ot-repuestos-total');
-  if(!_otRepuestos.length){
-    lista.innerHTML='<div style="font-size:12px;color:var(--t3);padding:4px 0;">Sin repuestos — la OT no descontará inventario</div>';
-    totEl.textContent=''; return;
-  }
-  lista.innerHTML = _otRepuestos.map((rp,i) => `
-    <div style="background:var(--bg);border-radius:var(--r);padding:8px 10px;border:1px solid var(--bd);">
-      <div style="display:grid;grid-template-columns:1fr 80px 110px 24px;gap:6px;align-items:start;">
-
-        <!-- ✅ Buscador de repuesto en tiempo real -->
-        <div class="rep-search-wrap">
-          <input class="rep-search-input ot-rep-busq"
-            placeholder="Buscar repuesto por nombre o ref..."
-            value="${rp.ref ? rp.nombre+' ('+rp.ref+')' : rp.busq||''}"
-            oninput="filtrarRepOT(${i},this.value)"
-            onfocus="filtrarRepOT(${i},this.value)"
-            autocomplete="off">
-          <div class="rep-dropdown" id="ot-dd-${i}"></div>
-        </div>
-
-        <input type="number" min="1" value="${rp.qty}" placeholder="Cant."
-          style="font-size:12px;padding:6px 8px;border:1px solid var(--bd);border-radius:var(--r);font-family:var(--mono);width:100%;"
-          onchange="_otRepuestos[${i}].qty=Number(this.value)||1;renderRepuestosOT()">
-
-        <span style="font-size:12px;font-family:var(--mono);color:var(--t2);padding:7px 0;display:block;text-align:right;">
-          ${rp.ref?'$'+Math.round(rp.costo*rp.qty).toLocaleString('es-CO'):'—'}
-        </span>
-
-        <button type="button"
-          style="background:none;border:none;cursor:pointer;color:var(--red);font-size:18px;line-height:1;padding:4px 0;"
-          onclick="_otRepuestos.splice(${i},1);renderRepuestosOT()">×</button>
-      </div>
-      ${rp.ref?`<div style="font-size:10px;color:var(--t3);margin-top:4px;">${rp.ref} · Stock disponible: <strong>${(()=>{const item=DB.inv.find(x=>x.Referencia===rp.ref);return item?Number(item.Stock):0;})()}</strong> · $${Number(rp.costo).toLocaleString('es-CO')} c/u</div>`:''}
-    </div>`).join('');
-
-  const sumaTotal = _otRepuestos.reduce((s,r)=>s+(r.costo*r.qty),0);
-  totEl.textContent = sumaTotal>0 ? 'Subtotal repuestos: $'+Math.round(sumaTotal).toLocaleString('es-CO') : '';
-}
-
-function filtrarRepOT(idx, q){
-  const dd = document.getElementById('ot-dd-'+idx);
-  if(!dd) return;
-  _otRepuestos[idx].busq = q;
-  const ql = q.trim().toLowerCase();
-  if(ql.length < 1){ dd.classList.remove('open'); return; }
-
-  const resultados = DB.inv.filter(x=>
-    String(x.Referencia||'').toLowerCase().includes(ql)||
-    String(x.Nombre||'').toLowerCase().includes(ql)
-  ).slice(0,8);
-
-  if(!resultados.length){
-    dd.innerHTML='<div class="rep-empty">Sin resultados</div>';
-    dd.classList.add('open'); return;
-  }
-
-  dd.innerHTML = resultados.map(x=>{
-    const stock=Number(x.Stock||0);
-    const bajo=stock<=(Number(x.Stock_Minimo||0));
-    return `<div class="rep-opt" onclick="selRepOT(${idx},'${x.Referencia}')">
-      <div>
-        <div class="rep-opt-name">${x.Nombre}</div>
-        <div class="rep-opt-meta">${x.Referencia} · ${fmtK(x.Costo_Unitario||0)}</div>
-      </div>
-      <span class="rep-opt-stock ${bajo?'low':'ok'}">Stock: ${stock}</span>
-    </div>`;
-  }).join('');
-  dd.classList.add('open');
-}
-
-function selRepOT(idx, ref){
-  const item = DB.inv.find(x=>x.Referencia===ref);
-  if(!item) return;
-  _otRepuestos[idx].ref    = item.Referencia;
-  _otRepuestos[idx].nombre = item.Nombre;
-  _otRepuestos[idx].costo  = Number(item.Costo_Unitario)||0;
-  _otRepuestos[idx].busq   = '';
-  const dd = document.getElementById('ot-dd-'+idx);
-  if(dd) dd.classList.remove('open');
-  renderRepuestosOT();
-}
-
-// Cerrar dropdowns al hacer click afuera
-document.addEventListener('click', e => {
-  if(!e.target.closest('.rep-search-wrap')){
-    document.querySelectorAll('.rep-dropdown').forEach(d=>d.classList.remove('open'));
-  }
-});
-
-// ══════════════════════════════════════════════
-//  BÚSQUEDA GLOBAL
-// ══════════════════════════════════════════════
-function buscarGlobal(q){
-  const box = document.getElementById('gsearch-results');
-  q = q.trim().toLowerCase();
-  if(q.length < 2){ box.style.display='none'; return; }
-
-  const resultados = [];
-
-  DB.v.filter(r => String(r.Placa||'').toLowerCase().includes(q) || String(r.Marca||'').toLowerCase().includes(q))
-    .slice(0,4).forEach(r => resultados.push({
-      icono:'🚗', titulo: r.Placa + ' — ' + r.Marca + ' ' + (r.Modelo||''),
-      sub: r.Estado + ' · ' + fmt(r.KM||0) + ' km',
-      accion: ()=>{ goTo('vehiculos', document.getElementById('nav-vehiculos')); setTimeout(()=>{ document.getElementById('sv').value=r.Placa; renderV(); },300); }
-    }));
-
-  DB.m.filter(r => String(r.OT_ID||'').toLowerCase().includes(q) || String(r.Placa||'').toLowerCase().includes(q) || String(r.Descripcion||'').toLowerCase().includes(q))
-    .slice(0,4).forEach(r => resultados.push({
-      icono:'🔧', titulo: r.OT_ID + ' — ' + r.Placa,
-      sub: r.Tipo + ' · ' + (r.Descripcion||'').slice(0,40) + ' · ' + r.Estado,
-      accion: ()=>{ goTo('mantenimiento', document.getElementById('nav-mantenimiento')); setTimeout(()=>{ document.getElementById('sm').value=r.Placa; renderM(); },300); }
-    }));
-
-  DB.c.filter(r => String(r.Nombre||'').toLowerCase().includes(q) || String(r.Cedula||'').toLowerCase().includes(q))
-    .slice(0,3).forEach(r => resultados.push({
-      icono:'👤', titulo: r.Nombre,
-      sub: r.Cedula + ' · ' + r.Rol + ' · ' + r.Estado,
-      accion: ()=>{ goTo('conductores', document.getElementById('nav-conductores')); setTimeout(()=>{ document.getElementById('sc').value=r.Nombre; renderC(); },300); }
-    }));
-
-  DB.inv.filter(r => String(r.Referencia||'').toLowerCase().includes(q) || String(r.Nombre||'').toLowerCase().includes(q))
-    .slice(0,3).forEach(r => resultados.push({
-      icono:'📦', titulo: r.Referencia + ' — ' + r.Nombre,
-      sub: 'Stock: ' + r.Stock + ' · ' + fmtK(r.Costo_Unitario||0),
-      accion: ()=>{ goTo('inventario', document.getElementById('nav-inventario')); setTimeout(()=>{ document.getElementById('sinv').value=r.Referencia; renderINV(); },300); }
-    }));
-
-  if(!resultados.length){
-    box.innerHTML='<div style="padding:14px 16px;font-size:12px;color:var(--t3);">Sin resultados para "'+q+'"</div>';
-    box.style.display='block'; return;
-  }
-
-  box.innerHTML = resultados.map((res,i) => `
-    <div onclick="selResultado(${i})" style="display:flex;align-items:center;gap:10px;padding:9px 14px;cursor:pointer;border-bottom:1px solid var(--bg3);" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background=''">
-      <span style="font-size:18px;flex-shrink:0;">${res.icono}</span>
-      <div style="min-width:0;">
-        <div style="font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${res.titulo}</div>
-        <div style="font-size:11px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${res.sub}</div>
-      </div>
-    </div>`).join('');
-  box.style.display='block';
-  window._gsResultados = resultados;
-}
-
-function selResultado(i){
-  window._gsResultados[i].accion();
-  document.getElementById('gsearch').value='';
-  document.getElementById('gsearch-results').style.display='none';
-}
-
-// ══════════════════════════════════════════════
-//  CERRAR VIAJE
-// ══════════════════════════════════════════════
-function abrirCierreVJ(idx){
-  const r = DB.vj[idx];
-  openModal('Cerrar viaje: ' + r.ID_Viaje, `
-    <p style="font-size:12px;color:var(--t2);margin-bottom:14px;">${r.Placa} · ${r.Origen||''} → ${r.Destino||''} · ${r.Cliente||''}</p>
-    <div class="fg2" style="gap:11px;">
-      <div class="fl"><label>KM llegada</label><input id="cvj-km" type="number" placeholder="0" style="font-family:var(--mono);" value="${r.KM_Llegada||''}"></div>
-      <div class="fl"><label>Fecha llegada real</label><input id="cvj-fecha" type="date" value="${today()}"></div>
-      <div class="fl"><label>Ingreso real (COP)</label><input id="cvj-ingreso" type="number" value="${r.Ingreso||0}" style="font-family:var(--mono);" oninput="recalcUtilVJ()"></div>
-      <div class="fl"><label>Gastos reales (COP)</label><input id="cvj-gastos" type="number" value="${r.Gastos||0}" style="font-family:var(--mono);" oninput="recalcUtilVJ()"></div>
-      <div class="fl s2"><label>Observaciones finales</label><input id="cvj-obs" placeholder="Novedades del viaje..." value="${r.Observaciones||''}"></div>
-    </div>
-    <div style="margin-top:12px;padding:10px 14px;background:var(--bg);border-radius:var(--r);border:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;">
-      <span style="font-size:12px;font-weight:600;color:var(--t2);">Utilidad calculada</span>
-      <span id="cvj-util-lbl" style="font-size:16px;font-weight:700;font-family:var(--mono);">$0</span>
-    </div>
-    <div id="al-cvj" style="margin-top:10px;"></div>`,
-    `<button class="btn" onclick="closeModal()">Cancelar</button>
-     <button class="btn btn-grn" onclick="confirmarCierreVJ('${r.ID_Viaje}')">✓ Confirmar llegada</button>`
-  );
-  recalcUtilVJ();
-}
-function recalcUtilVJ(){
-  const ingreso = Number(document.getElementById('cvj-ingreso')?.value)||0;
-  const gastos  = Number(document.getElementById('cvj-gastos')?.value)||0;
-  const util    = ingreso - gastos;
-  const lbl     = document.getElementById('cvj-util-lbl');
-  if(lbl){lbl.textContent=fmtK(util);lbl.style.color=util>=0?'var(--green)':'var(--red)';}
-}
-async function confirmarCierreVJ(vjId){
-  const ingreso = Number(document.getElementById('cvj-ingreso').value)||0;
-  const gastos  = Number(document.getElementById('cvj-gastos').value)||0;
-  const km      = document.getElementById('cvj-km').value;
-  const fecha   = document.getElementById('cvj-fecha').value;
-  const obs     = document.getElementById('cvj-obs').value;
-  const util    = ingreso - gastos;
-  const btn = event.target; btn.disabled=true; btn.textContent='Guardando...';
-  const r = await apip({accion:'actualizar',modulo:'viajes',buscarCampo:'ID_Viaje',buscarValor:vjId,datos:{Estado:'Completado',Ingreso:ingreso,Gastos:gastos,Utilidad:util,KM_Llegada:km,Fecha_Llegada:fecha,Observaciones:obs}});
-  btn.disabled=false; btn.textContent='✓ Confirmar llegada';
-  if(r.ok){ closeModal(); await loadVJ(); }
-  else document.getElementById('al-cvj').innerHTML='<div class="alert a-err">Error al guardar</div>';
-}
-function detalleVJ(idx){
-  const r = DB.vj[idx];
-  const util = Number(r.Utilidad||0);
-  openModal('Viaje: ' + r.ID_Viaje, `
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;">${badge(r.Estado||'')} <span class="badge bgr">${r.Placa||''}</span></div>
-    <div class="dgrid">
-      <div class="dcell"><div class="dk">Conductor</div><div class="dv">${r.Conductor||'—'}</div></div>
-      <div class="dcell"><div class="dk">Cliente</div><div class="dv">${r.Cliente||'—'}</div></div>
-      <div class="dcell"><div class="dk">Origen</div><div class="dv">${r.Origen||'—'}</div></div>
-      <div class="dcell"><div class="dk">Destino</div><div class="dv">${r.Destino||'—'}</div></div>
-      <div class="dcell"><div class="dk">Salida</div><div class="dv">${r.Fecha_Salida||'—'}</div></div>
-      <div class="dcell"><div class="dk">Llegada</div><div class="dv">${r.Fecha_Llegada||'—'}</div></div>
-      <div class="dcell"><div class="dk">KM salida</div><div class="dv tmono">${fmt(r.KM_Salida||0)} km</div></div>
-      <div class="dcell"><div class="dk">KM llegada</div><div class="dv tmono">${fmt(r.KM_Llegada||0)} km</div></div>
-      <div class="dcell"><div class="dk">Anticipo</div><div class="dv tmono">${fmtK(r.Anticipo||0)}</div></div>
-      <div class="dcell"><div class="dk">Ingreso real</div><div class="dv tmono">${fmtK(r.Ingreso||0)}</div></div>
-      <div class="dcell"><div class="dk">Gastos</div><div class="dv tmono">${fmtK(r.Gastos||0)}</div></div>
-      <div class="dcell"><div class="dk">Utilidad</div><div class="dv tmono" style="color:${util>=0?'var(--green)':'var(--red)'};">${fmtK(util)}</div></div>
-    </div>
-    ${r.Carga?`<div style="font-size:12px;color:var(--t2);margin-top:4px;"><strong>Carga:</strong> ${r.Carga}</div>`:''}
-    ${r.Observaciones?`<div style="font-size:12px;color:var(--t2);margin-top:6px;"><strong>Obs:</strong> ${r.Observaciones}</div>`:''}
-  `);
-}
-
-// ══════════════════════════════════════════════
-//  REPORTE POR VEHÍCULO
-// ══════════════════════════════════════════════
-async function reporteV(placa){
-  openModal('Cargando reporte...', '<div class="loader"><span class="spin"></span>Consultando datos...</div>', '', true);
-  const [dm, dcb, dvj] = await Promise.all([
-    apig({accion:'buscar', modulo:'mantenimiento', campo:'Placa', valor:placa}),
-    apig({accion:'buscar', modulo:'combustible',   campo:'Placa', valor:placa}),
-    apig({accion:'buscar', modulo:'viajes',        campo:'Placa', valor:placa}),
-  ]);
-  const veh   = DB.v.find(x => x.Placa === placa) || {};
-  const mants = (dm.data  || []).filter(x => String(x.Placa||'').toUpperCase() === placa.toUpperCase());
-  const comb  = (dcb.data || []).filter(x => String(x.Placa||'').toUpperCase() === placa.toUpperCase());
-  const viajs = (dvj.data || []).filter(x => String(x.Placa||'').toUpperCase() === placa.toUpperCase());
-  const costoMant=mants.reduce((s,x)=>s+(Number(x.Costo_Total)||0),0);
-  const costoComb=comb.reduce((s,x)=>s+(Number(x.Costo_Total)||0),0);
-  const galonesTot=comb.reduce((s,x)=>s+(Number(x.Galones)||0),0);
-  const ingresos=viajs.reduce((s,x)=>s+(Number(x.Ingreso)||0),0);
-  const gastos=viajs.reduce((s,x)=>s+(Number(x.Gastos)||0),0);
-  const utilidad=viajs.reduce((s,x)=>s+(Number(x.Utilidad)||0),0);
-  const costoTotal=costoMant+costoComb;
-  const otAbiertas=mants.filter(x=>x.Estado!=='Cerrada'&&x.Estado!=='Anulada').length;
-  const vjActivos=viajs.filter(x=>x.Estado==='En curso').length;
-
-  document.getElementById('modal-title').textContent = '📊 Reporte: ' + placa;
-  document.getElementById('modal-body').innerHTML = `
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;">
-      <div style="background:var(--bg);border-radius:var(--r);padding:10px 12px;border:1px solid var(--bd);">
-        <div style="font-size:10px;color:var(--t3);font-weight:600;text-transform:uppercase;margin-bottom:3px;">Costo mantenimiento</div>
-        <div style="font-size:16px;font-weight:700;font-family:var(--mono);color:var(--red);">${fmtK(costoMant)}</div>
-        <div style="font-size:10px;color:var(--t3);">${mants.length} OT · ${otAbiertas} abiertas</div>
-      </div>
-      <div style="background:var(--bg);border-radius:var(--r);padding:10px 12px;border:1px solid var(--bd);">
-        <div style="font-size:10px;color:var(--t3);font-weight:600;text-transform:uppercase;margin-bottom:3px;">Costo combustible</div>
-        <div style="font-size:16px;font-weight:700;font-family:var(--mono);color:var(--amber);">${fmtK(costoComb)}</div>
-        <div style="font-size:10px;color:var(--t3);">${galonesTot.toFixed(1)} gal · ${comb.length} cargas</div>
-      </div>
-      <div style="background:var(--bg);border-radius:var(--r);padding:10px 12px;border:1px solid var(--bd);">
-        <div style="font-size:10px;color:var(--t3);font-weight:600;text-transform:uppercase;margin-bottom:3px;">Utilidad viajes</div>
-        <div style="font-size:16px;font-weight:700;font-family:var(--mono);color:${utilidad>=0?'var(--green)':'var(--red)'};">${fmtK(utilidad)}</div>
-        <div style="font-size:10px;color:var(--t3);">${viajs.length} viajes · ${vjActivos} en curso</div>
-      </div>
-    </div>
-    <div style="background:var(--bg);border-radius:var(--r);padding:10px 14px;border:1px solid var(--bd);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;">
-      <span style="font-size:12px;font-weight:600;color:var(--t2);">Costo operativo total</span>
-      <span style="font-size:18px;font-weight:700;font-family:var(--mono);color:var(--red);">${fmtK(costoTotal)}</span>
-    </div>
-    <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Documentos</div>
-    <div class="dgrid" style="margin-bottom:14px;">
-      <div class="dcell"><div class="dk">SOAT</div><div class="dv">${veh.Fecha_SOAT||'—'} ${docBadge(veh.Fecha_SOAT)}</div></div>
-      <div class="dcell"><div class="dk">Tecnomecánica</div><div class="dv">${veh.Fecha_Tecno||'—'} ${docBadge(veh.Fecha_Tecno)}</div></div>
-      <div class="dcell"><div class="dk">Tarjeta operación</div><div class="dv">${veh.Fecha_Tarjeta_Op||'—'} ${docBadge(veh.Fecha_Tarjeta_Op)}</div></div>
-      <div class="dcell"><div class="dk">KM actuales</div><div class="dv tmono">${fmt(veh.KM||0)} km</div></div>
-    </div>
-    <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Últimas OT</div>
-    ${mants.length?`<div style="border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;margin-bottom:14px;">${mants.slice(-5).reverse().map(m=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 11px;border-bottom:1px solid var(--bg3);"><div><span style="font-size:11px;font-family:var(--mono);color:var(--brand);">${m.OT_ID}</span><span style="font-size:11px;color:var(--t2);margin-left:8px;">${m.Tipo} — ${(m.Descripcion||'').slice(0,35)}</span></div><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:11px;font-family:var(--mono);font-weight:600;">${fmtK(m.Costo_Total||0)}</span>${badge(m.Estado)}</div></div>`).join('')}</div>`:'<div style="font-size:12px;color:var(--t3);margin-bottom:14px;">Sin órdenes</div>'}
-    <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Últimas cargas combustible</div>
-    ${comb.length?`<div style="border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;">${comb.slice(-4).reverse().map(c=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 11px;border-bottom:1px solid var(--bg3);"><span style="font-size:11px;color:var(--t2);">${c.Fecha||'—'} · ${Number(c.Galones||0).toFixed(1)} gal · ${c.Estacion||'—'}</span><span style="font-size:11px;font-family:var(--mono);font-weight:600;">${fmtK(c.Costo_Total||0)}</span></div>`).join('')}</div>`:'<div style="font-size:12px;color:var(--t3);">Sin cargas</div>'}
-  `;
-}
-
-
-// ══════════════════════════════════════════════════════════════
-//  PATCH v2.1 — Módulo Rastreo en Vivo (index.html)
-//  
-//  CAMBIOS:
-//  ✅ Rutas reales por calles usando Directions API (no línea recta)
-//  ✅ Panel lateral con vehículos activos y % de avance de ruta
-//  ✅ Indicador en tiempo real de puntos de paso completados
-//  ✅ Colores diferenciados por ruta
-//
-//  INSTRUCCIONES:
-//  1. En index.html, reemplaza TODO el bloque que empieza con:
-//     "// ══════════════════════════════════════════════════════════════
-//      //  MÓDULO RASTREO EN VIVO"
-//     hasta el final del script.
-//  2. Pega este contenido en su lugar.
-//  3. El script de Google Maps ya está incluido en el <head> del index.html.
-// ══════════════════════════════════════════════════════════════
-
-// ──── DEFINICIÓN DE RUTAS (mismos puntos que conductor.html) ────
-const RUTAS_PUNTOS_ADMIN = {
-  1: [
-    {id:'R1-P01', nombre:'Zona Norte A',      lat:6.172979, lng:-75.591563},
-    {id:'R1-P02', nombre:'Sector Central',     lat:6.169650, lng:-75.585345},
-    {id:'R1-P03', nombre:'Cruce Occidental',   lat:6.165685, lng:-75.589418},
-    {id:'R1-P04', nombre:'Zona Sur',           lat:6.163346, lng:-75.596569},
-    {id:'R1-P05', nombre:'Barrio El Poblado',  lat:6.159087, lng:-75.593175},
-    {id:'R1-P06', nombre:'Cruce Sur-Este',     lat:6.158459, lng:-75.595164},
-    {id:'R1-P07', nombre:'Sector Industrial',  lat:6.160412, lng:-75.595223},
-    {id:'R1-P08', nombre:'Puente Principal',   lat:6.162162, lng:-75.594430},
-    {id:'R1-P09', nombre:'Av. Central',        lat:6.164373, lng:-75.596297},
-    {id:'R1-P10', nombre:'Parque Norte',       lat:6.167709, lng:-75.587454},
-    {id:'R1-P11', nombre:'Terminal Bus',       lat:6.165512, lng:-75.579734},
-    {id:'R1-P12', nombre:'Bodega Central',     lat:6.150840, lng:-75.577757},
-    {id:'R1-P13', nombre:'Zona Comercial',     lat:6.162937, lng:-75.602489},
-    {id:'R1-P14', nombre:'Sector Residencial', lat:6.166558, lng:-75.579127},
-    {id:'R1-P15', nombre:'Fin de Ruta',        lat:6.168393, lng:-75.597081},
-  ],
-  2: [
-    {id:'R2-P01', nombre:'Inicio Ruta 2',     lat:6.172519, lng:-75.578995},
-    {id:'R2-P02', nombre:'Sector Norte',       lat:6.178978, lng:-75.583935},
-    {id:'R2-P03', nombre:'Av. Laureles',       lat:6.177895, lng:-75.586640},
-    {id:'R2-P04', nombre:'Cruce Principal',    lat:6.175458, lng:-75.584604},
-    {id:'R2-P05', nombre:'Parque Laureles',    lat:6.175929, lng:-75.584288},
-    {id:'R2-P06', nombre:'Sector Estadio',     lat:6.173650, lng:-75.584935},
-    {id:'R2-P07', nombre:'Calle 70',           lat:6.172182, lng:-75.581150},
-    {id:'R2-P08', nombre:'Cruce Occidental',   lat:6.170791, lng:-75.583157},
-    {id:'R2-P09', nombre:'Barrio Floresta',    lat:6.174947, lng:-75.587551},
-    {id:'R2-P10', nombre:'Sector San Joaquín', lat:6.169833, lng:-75.587755},
-    {id:'R2-P11', nombre:'Av. El Poblado',     lat:6.168613, lng:-75.588836},
-    {id:'R2-P12', nombre:'Terminal Sur',       lat:6.166533, lng:-75.589519},
-    {id:'R2-P13', nombre:'Zona Comercial',     lat:6.175743, lng:-75.580961},
-    {id:'R2-P14', nombre:'Bodega Norte',       lat:6.165785, lng:-75.581015},
-    {id:'R2-P15', nombre:'Fin de Ruta 2',      lat:6.170389, lng:-75.579598},
-  ]
+// Extender goTo para sincronizar bottom-nav
+const _goTo = goTo;
+goTo = function(pg, btn){
+  _goTo(pg, btn);
+  document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('active'));
+  const bid=BNAV[pg];
+  if(bid) document.getElementById(bid).classList.add('active');
+  else document.getElementById('bn-more').classList.add('active');
 };
 
-// ──── ESTADO DEL MÓDULO RASTREO ────
+
+// ══════════════════════════════════════════════
+//  MÓDULO RASTREO EN VIVO
+// ══════════════════════════════════════════════
 let _mapaRastreo = null;
 let _marcadores = {};
 let _infoWindows = {};
@@ -2906,10 +1920,9 @@ let _rastreoInterval = null;
 let _ubicaciones = [];
 let _polylines = {};
 let _rutaActiva = null;
-let _directionsRenderers = {}; // para rutas reales por calles
+let _directionsRenderers = {};
 
 const COLORES_VEHICULO = ['#0066CC','#16A34A','#D97706','#DC2626','#7C3AED','#0891B2','#EA580C','#65A30D'];
-const COLORES_RUTA = { 1: '#0066CC', 2: '#16A34A' };
 
 function _mapsListo(){
   return typeof google !== 'undefined' && google.maps && google.maps.Map;
@@ -2920,83 +1933,13 @@ function _crearMapa(){
   const el = document.getElementById('mapa-rastreo');
   if(!el || !_mapsListo()) return;
   _mapaRastreo = new google.maps.Map(el, {
-    center: { lat: 6.1699, lng: -75.5868 }, // Medellín/Envigado
+    center: { lat: 6.1699, lng: -75.5868 },
     zoom: 13,
     mapTypeId: 'roadmap',
-    styles: [
-      {featureType:'poi',elementType:'labels',stylers:[{visibility:'off'}]},
-      {featureType:'transit',stylers:[{visibility:'off'}]}
-    ],
     mapTypeControl: false,
     streetViewControl: false,
     fullscreenControl: true,
   });
-  // Dibujar puntos de paso de ambas rutas en el mapa
-  dibujarPuntosRuta(1);
-  dibujarPuntosRuta(2);
-}
-
-function dibujarPuntosRuta(numRuta){
-  if(!_mapaRastreo || !window.google) return;
-  const puntos = RUTAS_PUNTOS_ADMIN[numRuta];
-  if(!puntos) return;
-  const color = COLORES_RUTA[numRuta] || '#0066CC';
-
-  puntos.forEach((p, i) => {
-    new google.maps.Marker({
-      position: {lat: p.lat, lng: p.lng},
-      map: _mapaRastreo,
-      icon: {
-        path: google.maps.SymbolPath.CIRCLE,
-        scale: 6,
-        fillColor: color,
-        fillOpacity: 0.5,
-        strokeColor: color,
-        strokeWeight: 1.5,
-      },
-      title: 'R'+numRuta+' · P'+(i+1)+': '+p.nombre,
-      zIndex: 1,
-    });
-  });
-}
-
-// ──── CALCULAR PROGRESO DE RUTA PARA UN VEHÍCULO ────
-// Busca en _ubicaciones los registros con Ruta = "R1-P..." o "R2-P..."
-// y calcula cuántos puntos de esa ruta han sido visitados
-function calcularProgresoRuta(placa){
-  const registros = _ubicaciones.filter(u =>
-    String(u.Placa||'').toUpperCase() === String(placa).toUpperCase() &&
-    String(u.Ruta||'').match(/^R[12]-P\d+/)
-  );
-
-  const visitados1 = new Set();
-  const visitados2 = new Set();
-  registros.forEach(u => {
-    const ruta = String(u.Ruta||'');
-    if(ruta.startsWith('R1-')) visitados1.add(ruta);
-    if(ruta.startsWith('R2-')) visitados2.add(ruta);
-  });
-
-  const total1 = RUTAS_PUNTOS_ADMIN[1].length;
-  const total2 = RUTAS_PUNTOS_ADMIN[2].length;
-
-  return {
-    ruta1: { visitados: visitados1.size, total: total1, pct: Math.round(visitados1.size/total1*100) },
-    ruta2: { visitados: visitados2.size, total: total2, pct: Math.round(visitados2.size/total2*100) },
-    tieneRuta1: visitados1.size > 0,
-    tieneRuta2: visitados2.size > 0,
-    // Detalles de qué puntos visitó con hora
-    puntosVisitados1: registros.filter(u=>String(u.Ruta||'').startsWith('R1-')).map(u=>({
-      id: u.Ruta,
-      hora: u.Punto_Hora || new Date(u.Timestamp).toLocaleTimeString('es-CO'),
-      nombre: u.Punto_Nombre || u.Ruta
-    })),
-    puntosVisitados2: registros.filter(u=>String(u.Ruta||'').startsWith('R2-')).map(u=>({
-      id: u.Ruta,
-      hora: u.Punto_Hora || new Date(u.Timestamp).toLocaleTimeString('es-CO'),
-      nombre: u.Punto_Nombre || u.Ruta
-    })),
-  };
 }
 
 async function loadRastreo(){
@@ -3007,7 +1950,7 @@ async function loadRastreo(){
     const esperar = setInterval(()=>{
       intentos++;
       if(_mapsListo()){ clearInterval(esperar); _iniciarRastreo(); }
-      if(intentos>40){ clearInterval(esperar); mostrarErrorMapa(); }
+      if(intentos>40){ clearInterval(esperar); if(estadoEl){estadoEl.textContent='❌ Error cargando mapa';estadoEl.style.background='var(--red-l)';estadoEl.style.color='var(--red)';} }
     }, 500);
     return;
   }
@@ -3022,11 +1965,6 @@ function _iniciarRastreo(){
   _rastreoInterval = setInterval(actualizarUbicaciones, intervalo);
 }
 
-function mostrarErrorMapa(){
-  const el = document.getElementById('rastreo-estado');
-  if(el){ el.textContent='❌ Error cargando mapa'; el.style.background='var(--red-l)'; el.style.color='var(--red)'; }
-}
-
 function cambiarIntervaloRastreo(){
   if(_rastreoInterval) clearInterval(_rastreoInterval);
   const intervalo = Number(document.getElementById('rastreo-intervalo').value)||20000;
@@ -3039,9 +1977,6 @@ async function actualizarUbicaciones(){
     _ubicaciones = d.data || [];
     renderUbicacionesMapa();
     const ahora = new Date().toLocaleTimeString('es-CO');
-    const activos = _ubicaciones.filter(u=>estaActivo(u)).length;
-
-    // Contar únicos activos por placa
     const placasActivas = new Set(_ubicaciones.filter(u=>estaActivo(u)).map(u=>u.Placa));
     const estadoEl = document.getElementById('rastreo-estado');
     if(estadoEl){
@@ -3072,10 +2007,7 @@ function limpiarCoordGPS(v){
   const puntos = (s.match(/\./g)||[]).length;
   if(puntos>1){
     const partes = s.split('.');
-    const entero = partes[0];
-    const decimales = partes[partes.length-1];
-    const miles = partes.slice(1,partes.length-1).join('');
-    s = entero+miles+'.'+decimales;
+    s = partes[0]+partes.slice(1,partes.length-1).join('')+'.'+partes[partes.length-1];
   }
   return parseFloat(s.replace(',','.'))||0;
 }
@@ -3088,174 +2020,78 @@ function distanciaKm(lat1,lng1,lat2,lng2){
 
 function renderUbicacionesMapa(){
   if(!_mapaRastreo||!window.google) return;
-
   const lista = document.getElementById('rastreo-vehiculos-lista');
-
-  // Agrupar por placa — quedarse con la más reciente (solo posiciones reales, no puntos de paso)
   const porPlaca = {};
   _ubicaciones.forEach(u => {
-    // Ignorar registros de puntos de paso para el marcador principal
     if(String(u.Ruta||'').match(/^R[12]-P/)) return;
     const p = u.Placa;
     if(!p) return;
-    if(!porPlaca[p]||new Date(u.Timestamp)>new Date(porPlaca[p].Timestamp)){
-      porPlaca[p] = u;
-    }
+    if(!porPlaca[p]||new Date(u.Timestamp)>new Date(porPlaca[p].Timestamp)) porPlaca[p] = u;
   });
-
   const placas = Object.keys(porPlaca).filter(p => estaActivo(porPlaca[p]));
-  if(!placas.length){
-    lista.innerHTML='<div style="font-size:12px;color:var(--t3);padding:8px 6px;">Sin vehículos activos</div>';
-    return;
-  }
-
-  Object.keys(_marcadores).forEach(p=>{
-    if(!porPlaca[p]){ _marcadores[p].setMap(null); delete _marcadores[p]; }
-  });
-
+  if(!placas.length){ lista.innerHTML='<div style="font-size:12px;color:var(--t3);padding:8px 6px;">Sin vehículos activos</div>'; return; }
+  Object.keys(_marcadores).forEach(p=>{ if(!porPlaca[p]){ _marcadores[p].setMap(null); delete _marcadores[p]; } });
   const bounds = new google.maps.LatLngBounds();
   let htmlLista = '';
-
   placas.forEach((placa, i) => {
     const u = porPlaca[placa];
     const lat = limpiarCoordGPS(u.Lat);
     const lng = limpiarCoordGPS(u.Lng);
     if(!lat||!lng) return;
-
     const activo = estaActivo(u);
     const color = COLORES_VEHICULO[i%COLORES_VEHICULO.length];
     const pos = {lat,lng};
-
     if(!_marcadores[placa]){
       _marcadores[placa] = new google.maps.Marker({
         position:pos, map:_mapaRastreo,
-        icon:{
-          path:google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-          scale:6,fillColor:activo?color:'#9AA0AC',fillOpacity:1,
-          strokeColor:'#fff',strokeWeight:2,rotation:Number(u.Rumbo)||0,
-        },
-        title:placa, zIndex:10,
-        animation: google.maps.Animation.DROP,
+        icon:{path:google.maps.SymbolPath.FORWARD_CLOSED_ARROW,scale:6,fillColor:activo?color:'#9AA0AC',fillOpacity:1,strokeColor:'#fff',strokeWeight:2,rotation:Number(u.Rumbo)||0},
+        title:placa, zIndex:10, animation: google.maps.Animation.DROP,
       });
       _infoWindows[placa] = new google.maps.InfoWindow();
       _marcadores[placa].addListener('click',()=>mostrarInfoVehiculo(placa,porPlaca[placa]));
     } else {
       _marcadores[placa].setPosition(pos);
-      _marcadores[placa].setIcon({
-        path:google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-        scale:6,fillColor:activo?color:'#9AA0AC',fillOpacity:1,
-        strokeColor:'#fff',strokeWeight:2,rotation:Number(u.Rumbo)||0,
-      });
+      _marcadores[placa].setIcon({path:google.maps.SymbolPath.FORWARD_CLOSED_ARROW,scale:6,fillColor:activo?color:'#9AA0AC',fillOpacity:1,strokeColor:'#fff',strokeWeight:2,rotation:Number(u.Rumbo)||0});
     }
     bounds.extend(pos);
-
-    // Calcular progreso de rutas para este vehículo
-    const prog = calcularProgresoRuta(placa);
     const velocidad = u.Velocidad ? Math.round(Number(u.Velocidad))+' km/h' : '— km/h';
-
-    // HTML de progreso
-    let progHtml = '';
-    if(prog.tieneRuta1){
-      progHtml += `
-        <div style="margin-top:4px;padding:4px 0;">
-          <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:${COLORES_RUTA[1]};margin-bottom:3px;">
-            <span>🗺 Ruta 1</span>
-            <span style="font-family:var(--mono);">${prog.ruta1.visitados}/${prog.ruta1.total} · ${prog.ruta1.pct}%</span>
-          </div>
-          <div style="height:5px;background:var(--bd-sb);border-radius:3px;overflow:hidden;">
-            <div style="height:100%;width:${prog.ruta1.pct}%;background:${COLORES_RUTA[1]};border-radius:3px;transition:width .4s;"></div>
-          </div>
-        </div>`;
-    }
-    if(prog.tieneRuta2){
-      progHtml += `
-        <div style="margin-top:4px;padding:4px 0;">
-          <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:${COLORES_RUTA[2]};margin-bottom:3px;">
-            <span>🗺 Ruta 2</span>
-            <span style="font-family:var(--mono);">${prog.ruta2.visitados}/${prog.ruta2.total} · ${prog.ruta2.pct}%</span>
-          </div>
-          <div style="height:5px;background:var(--bd-sb);border-radius:3px;overflow:hidden;">
-            <div style="height:100%;width:${prog.ruta2.pct}%;background:${COLORES_RUTA[2]};border-radius:3px;transition:width .4s;"></div>
-          </div>
-        </div>`;
-    }
-    if(!prog.tieneRuta1 && !prog.tieneRuta2){
-      progHtml = '<div style="font-size:10px;color:var(--t3);margin-top:4px;">Sin ruta asignada hoy</div>';
-    }
-
-    htmlLista += `
-      <div style="border-radius:var(--r);margin-bottom:6px;
-               border:1px solid ${activo?color+'40':'var(--bd)'};
-               background:${activo?color+'08':'var(--bg3)'};
-               overflow:hidden;">
-        <div onclick="enfocarVehiculo('${placa}')" style="padding:8px 10px;cursor:pointer;">
-          <div style="display:flex;align-items:center;gap:7px;">
-            <div style="width:8px;height:8px;border-radius:50%;background:${activo?color:'#9AA0AC'};flex-shrink:0;${activo?'box-shadow:0 0 6px '+color+';':''}"></div>
-            <span style="font-weight:700;font-size:12px;font-family:'Courier New',monospace;color:${activo?'#E6EDF3':'#8B949E'};">${placa}</span>
-            <span style="margin-left:auto;font-size:10px;font-family:'Courier New',monospace;color:${activo?color:'#8B949E'};">${velocidad}</span>
-          </div>
-          <div style="font-size:10px;color:#8B949E;margin-top:3px;padding-left:15px;">${u.Conductor||'Sin conductor'}</div>
-          <div style="font-size:10px;color:#8B949E;padding-left:15px;">${tiempoDesde(u.Timestamp)}</div>
-          ${progHtml}
+    htmlLista += `<div style="border-radius:var(--r);margin-bottom:6px;border:1px solid ${activo?color+'40':'var(--bd)'};background:${activo?color+'08':'var(--bg3)'};overflow:hidden;">
+      <div onclick="enfocarVehiculo('${placa}')" style="padding:8px 10px;cursor:pointer;">
+        <div style="display:flex;align-items:center;gap:7px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:${activo?color:'#9AA0AC'};flex-shrink:0;"></div>
+          <span style="font-weight:700;font-size:12px;font-family:'Courier New',monospace;color:${activo?'#E6EDF3':'#8B949E'};">${placa}</span>
+          <span style="margin-left:auto;font-size:10px;color:${activo?color:'#8B949E'};">${velocidad}</span>
         </div>
-        <div style="display:flex;gap:1px;border-top:1px solid var(--bd2);">
-          <button onclick="toggleRuta('${placa}','${color}')"
-            id="btn-ruta-${placa}"
-            style="flex:1;padding:5px;font-size:10px;font-weight:600;border:none;cursor:pointer;background:transparent;color:${color};transition:background .12s;"
-            onmouseover="this.style.background='${color}18'" onmouseout="this.style.background='transparent'">
-            📍 Ver ruta
-          </button>
-          <button onclick="verDetallesPuntos('${placa}')"
-            style="flex:1;padding:5px;font-size:10px;font-weight:600;border:none;cursor:pointer;background:transparent;color:#8B949E;border-left:1px solid var(--bd2);transition:background .12s;"
-            onmouseover="this.style.background='var(--sb3)'" onmouseout="this.style.background='transparent'">
-            📋 Puntos
-          </button>
-        </div>
-      </div>`;
+        <div style="font-size:10px;color:#8B949E;margin-top:3px;padding-left:15px;">${u.Conductor||'Sin conductor'}</div>
+        <div style="font-size:10px;color:#8B949E;padding-left:15px;">${tiempoDesde(u.Timestamp)}</div>
+      </div>
+      <div style="display:flex;gap:1px;border-top:1px solid var(--bd2);">
+        <button onclick="toggleRuta('${placa}','${color}')" id="btn-ruta-${placa}" style="flex:1;padding:5px;font-size:10px;font-weight:600;border:none;cursor:pointer;background:transparent;color:${color};">📍 Ver ruta</button>
+      </div>
+    </div>`;
   });
-
   lista.innerHTML = htmlLista;
-
   if(!bounds.isEmpty()&&placas.length>1) _mapaRastreo.fitBounds(bounds);
-  else if(placas.length===1){
-    const u=porPlaca[placas[0]];
-    _mapaRastreo.setCenter({lat:limpiarCoordGPS(u.Lat),lng:limpiarCoordGPS(u.Lng)});
-    _mapaRastreo.setZoom(14);
-  }
+  else if(placas.length===1){ const u=porPlaca[placas[0]]; _mapaRastreo.setCenter({lat:limpiarCoordGPS(u.Lat),lng:limpiarCoordGPS(u.Lng)}); _mapaRastreo.setZoom(14); }
 }
 
 function mostrarInfoVehiculo(placa, u){
   if(!_infoWindows[placa]||!_marcadores[placa]) return;
   const velocidad = u.Velocidad?Math.round(Number(u.Velocidad))+' km/h':'—';
   const activo = estaActivo(u);
-  const prog = calcularProgresoRuta(placa);
-
-  let progInfoHtml = '';
-  if(prog.tieneRuta1) progInfoHtml += `<div style="font-size:11px;color:#5C6370;">🗺 Ruta 1: <strong>${prog.ruta1.pct}%</strong> (${prog.ruta1.visitados}/${prog.ruta1.total} puntos)</div>`;
-  if(prog.tieneRuta2) progInfoHtml += `<div style="font-size:11px;color:#5C6370;">🗺 Ruta 2: <strong>${prog.ruta2.pct}%</strong> (${prog.ruta2.visitados}/${prog.ruta2.total} puntos)</div>`;
-
-  _infoWindows[placa].setContent(`
-    <div style="font-family:'Segoe UI',sans-serif;min-width:180px;padding:4px;">
-      <div style="font-weight:700;font-size:13px;margin-bottom:6px;">🚗 ${placa}</div>
-      <div style="font-size:11px;color:#5C6370;margin-bottom:2px;">👤 ${u.Conductor||'Sin asignar'}</div>
-      <div style="font-size:11px;color:#5C6370;margin-bottom:2px;">⚡ ${velocidad}</div>
-      <div style="font-size:11px;color:#5C6370;margin-bottom:2px;">📍 ${Number(u.Lat).toFixed(5)}, ${Number(u.Lng).toFixed(5)}</div>
-      <div style="font-size:10px;color:${activo?'#16A34A':'#9AA0AC'};margin:4px 0;font-weight:600;">${activo?'● Activo':'○ Sin señal'} · ${tiempoDesde(u.Timestamp)}</div>
-      ${progInfoHtml}
-      <a href="https://www.google.com/maps?q=${u.Lat},${u.Lng}" target="_blank"
-        style="display:block;margin-top:6px;font-size:11px;color:#0066CC;text-decoration:none;">
-        Ver en Google Maps ↗
-      </a>
-    </div>`);
+  _infoWindows[placa].setContent(`<div style="font-family:'Segoe UI',sans-serif;min-width:180px;padding:4px;">
+    <div style="font-weight:700;font-size:13px;margin-bottom:6px;">🚗 ${placa}</div>
+    <div style="font-size:11px;color:#5C6370;">👤 ${u.Conductor||'Sin asignar'}</div>
+    <div style="font-size:11px;color:#5C6370;">⚡ ${velocidad}</div>
+    <div style="font-size:11px;color:#5C6370;">📍 ${Number(u.Lat).toFixed(5)}, ${Number(u.Lng).toFixed(5)}</div>
+    <div style="font-size:10px;color:${activo?'#16A34A':'#9AA0AC'};margin:4px 0;font-weight:600;">${activo?'● Activo':'○ Sin señal'} · ${tiempoDesde(u.Timestamp)}</div>
+    <a href="https://www.google.com/maps?q=${u.Lat},${u.Lng}" target="_blank" style="display:block;margin-top:6px;font-size:11px;color:#0066CC;text-decoration:none;">Ver en Google Maps ↗</a>
+  </div>`);
   _infoWindows[placa].open(_mapaRastreo, _marcadores[placa]);
 }
 
 function enfocarVehiculo(placa){
-  // Buscar última posición real (no punto de paso)
-  const posiciones = _ubicaciones.filter(u =>
-    String(u.Placa||'').toUpperCase()===String(placa).toUpperCase() &&
-    !String(u.Ruta||'').match(/^R[12]-P/)
-  );
+  const posiciones = _ubicaciones.filter(u => String(u.Placa||'').toUpperCase()===String(placa).toUpperCase() && !String(u.Ruta||'').match(/^R[12]-P/));
   if(!posiciones.length||!_marcadores[placa]) return;
   const u = posiciones.sort((a,b)=>new Date(b.Timestamp)-new Date(a.Timestamp))[0];
   _mapaRastreo.setCenter({lat:limpiarCoordGPS(u.Lat),lng:limpiarCoordGPS(u.Lng)});
@@ -3272,29 +2108,15 @@ function centrarMapa(){
   _mapaRastreo.fitBounds(bounds);
 }
 
-function abrirEnlaceConductor(){
-  const url = location.href.replace(/\/[^/]*$/,'')+'/conductor.html';
-  openModal('🔗 Enlace para conductores',`
-    <p style="font-size:12px;color:var(--t2);margin-bottom:12px;">
-      Comparte este enlace con los conductores. Lo abren en Chrome en su celular.
-    </p>
-    <div style="background:var(--bg3);border-radius:var(--r);padding:10px 12px;font-family:var(--mono);font-size:11px;word-break:break-all;color:var(--brand);border:1px solid var(--bd);">${url}</div>
-    <button onclick="navigator.clipboard.writeText('${url}');this.textContent='✅ Copiado!';setTimeout(()=>this.textContent='📋 Copiar enlace',2000);"
-      class="btn btn-pri btn-sm" style="margin-top:10px;">📋 Copiar enlace</button>
-  `,'<button class="btn" onclick="closeModal()">Cerrar</button>');
-}
-
-// ──── RUTAS REALES POR CALLES (Directions API) ────
 function toggleRuta(placa, color){
   if(_rutaActiva===placa){ ocultarRuta(placa); return; }
   if(_rutaActiva) ocultarRuta(_rutaActiva);
-  const hoyStr = new Date().toISOString().split('T')[0];
-  dibujarRuta(placa, color, hoyStr);
+  dibujarRuta(placa, color, new Date().toISOString().split('T')[0]);
 }
 
 function ocultarRuta(placa){
   if(_polylines[placa]){ _polylines[placa].forEach(p=>{ try{ if(p.setMap) p.setMap(null); else if(p.close) p.close(); }catch(e){} }); delete _polylines[placa]; }
-  if(_directionsRenderers[placa]){ _directionsRenderers[placa].setMap(null); delete _directionsRenderers[placa]; }
+  if(_directionsRenderers[placa]){ if(Array.isArray(_directionsRenderers[placa])) _directionsRenderers[placa].forEach(r=>r.setMap(null)); else _directionsRenderers[placa].setMap(null); delete _directionsRenderers[placa]; }
   _rutaActiva = null;
   const btn=document.getElementById('btn-ruta-'+placa);
   if(btn) btn.textContent='📍 Ver ruta';
@@ -3302,207 +2124,35 @@ function ocultarRuta(placa){
 
 async function dibujarRuta(placa, color, fecha){
   if(!_mapaRastreo||!window.google) return;
-
-  const estadoEl=document.getElementById('rastreo-estado');
-  if(estadoEl){ estadoEl.textContent='Cargando ruta...'; estadoEl.style.background='var(--amber-l)'; estadoEl.style.color='var(--amber)'; }
-
-  // Recargar todas las ubicaciones
-  let todos = _ubicaciones;
-  try {
-    const d = await apig({accion:'listar',modulo:'ubicaciones'});
-    todos = d.data||_ubicaciones; _ubicaciones=todos;
-  } catch(e){}
-
-  if(estadoEl){ estadoEl.textContent=''; estadoEl.style.background=''; estadoEl.style.color=''; }
-
-  // Filtrar posiciones reales (no puntos de paso) de esa placa y fecha
-  const puntos = todos
-    .filter(u => {
-      if(String(u.Placa||'').toUpperCase()!==String(placa).toUpperCase()) return false;
-      if(String(u.Ruta||'').match(/^R[12]-P/)) return false; // excluir marcadores de paso
-      if(!u.Timestamp) return false;
-      return new Date(u.Timestamp).toISOString().split('T')[0]===fecha;
-    })
-    .map(u=>({
-      lat:limpiarCoordGPS(u.Lat), lng:limpiarCoordGPS(u.Lng),
-      ts:new Date(u.Timestamp), vel:Number(u.Velocidad)||0
-    }))
-    .filter(p=>p.lat&&p.lng)
-    .sort((a,b)=>a.ts-b.ts);
-
-  if(puntos.length<2){
-    openModal('Sin recorrido — '+placa,`
-      <div style="text-align:center;padding:20px;">
-        <div style="font-size:40px;margin-bottom:12px;">🗺️</div>
-        <p style="font-size:13px;color:var(--t2);">No hay suficientes puntos GPS para el <strong>${fecha}</strong>.</p>
-        <p style="font-size:12px;color:var(--t3);margin-top:8px;">Se necesitan al menos 2 registros.</p>
-      </div>
-    `,'<button class="btn" onclick="closeModal()">Cerrar</button>');
-    return;
-  }
-
+  const puntos = _ubicaciones
+    .filter(u => String(u.Placa||'').toUpperCase()===String(placa).toUpperCase() && !String(u.Ruta||'').match(/^R[12]-P/) && u.Timestamp && new Date(u.Timestamp).toISOString().split('T')[0]===fecha)
+    .map(u=>({lat:limpiarCoordGPS(u.Lat),lng:limpiarCoordGPS(u.Lng),ts:new Date(u.Timestamp),vel:Number(u.Velocidad)||0}))
+    .filter(p=>p.lat&&p.lng).sort((a,b)=>a.ts-b.ts);
+  if(puntos.length<2){ openModal('Sin recorrido — '+placa,'<div class="empty"><div class="ei">🗺️</div><p>No hay suficientes puntos GPS para hoy.</p></div>','<button class="btn" onclick="closeModal()">Cerrar</button>'); return; }
   _rutaActiva = placa;
   _polylines[placa] = [];
-
-  // ── RUTA REAL POR CALLES usando Directions API ──
-  // Dividir en grupos de máximo 25 puntos (límite de waypoints: 23 + origen + destino)
-  const MAX_WP = 23;
-  const grupos = [];
-  for(let i=0; i<puntos.length; i+=MAX_WP+1){
-    grupos.push(puntos.slice(i, i+MAX_WP+2));
-  }
-
-  const directionsService = new google.maps.DirectionsService();
-
-  for(const grupo of grupos){
-    if(grupo.length<2) continue;
-    const origen = {lat:grupo[0].lat, lng:grupo[0].lng};
-    const destino = {lat:grupo[grupo.length-1].lat, lng:grupo[grupo.length-1].lng};
-    const waypoints = grupo.slice(1,-1).map(p=>({
-      location: {lat:p.lat, lng:p.lng},
-      stopover: false
-    }));
-
-    try {
-      const result = await new Promise((resolve,reject)=>{
-        directionsService.route({
-          origin: origen,
-          destination: destino,
-          waypoints: waypoints,
-          travelMode: google.maps.TravelMode.DRIVING,
-          optimizeWaypoints: false,
-        }, (res,status)=>{
-          if(status==='OK') resolve(res);
-          else reject(status);
-        });
-      });
-
-      const renderer = new google.maps.DirectionsRenderer({
-        map: _mapaRastreo,
-        directions: result,
-        suppressMarkers: true,
-        polylineOptions: {
-          strokeColor: color,
-          strokeOpacity: 0.85,
-          strokeWeight: 5,
-        }
-      });
-      if(!_directionsRenderers[placa]) _directionsRenderers[placa] = [];
-      _directionsRenderers[placa].push(renderer);
-      _polylines[placa].push({setMap: m=>renderer.setMap(m)});
-
-    } catch(err){
-      // Si Directions falla (límite de API, etc.), dibujar línea simple como fallback
-      console.warn('Directions API falló, usando línea simple:', err);
-      const linea = new google.maps.Polyline({
-        path: grupo.map(p=>({lat:p.lat,lng:p.lng})),
-        geodesic: true,
-        strokeColor: color,
-        strokeOpacity: 0.7,
-        strokeWeight: 4,
-        map: _mapaRastreo,
-      });
-      _polylines[placa].push(linea);
-    }
-  }
-
-  // Marcadores inicio y fin
-  const mInicio = new google.maps.Marker({
-    position:{lat:puntos[0].lat,lng:puntos[0].lng}, map:_mapaRastreo,
-    icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:'#16A34A',fillOpacity:1,strokeColor:'#fff',strokeWeight:2},
-    title:'Inicio: '+puntos[0].ts.toLocaleTimeString('es-CO'), zIndex:20
-  });
-  const mFin = new google.maps.Marker({
-    position:{lat:puntos[puntos.length-1].lat,lng:puntos[puntos.length-1].lng}, map:_mapaRastreo,
-    icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:'#DC2626',fillOpacity:1,strokeColor:'#fff',strokeWeight:2},
-    title:'Fin: '+puntos[puntos.length-1].ts.toLocaleTimeString('es-CO'), zIndex:20
-  });
-  _polylines[placa].push(mInicio, mFin);
-
-  // Calcular distancia total
-  let distKm=0;
-  for(let i=1;i<puntos.length;i++) distKm+=distanciaKm(puntos[i-1].lat,puntos[i-1].lng,puntos[i].lat,puntos[i].lng);
-  const velMax=Math.max(...puntos.map(p=>p.vel));
-  const durMin=Math.round((puntos[puntos.length-1].ts-puntos[0].ts)/60000);
-
-  // Info window central
-  const prog = calcularProgresoRuta(placa);
-  let rutaProgHtml='';
-  if(prog.tieneRuta1) rutaProgHtml+=`<div style="font-size:11px;color:#5C6370;">🗺 Ruta 1: <strong>${prog.ruta1.pct}%</strong></div>`;
-  if(prog.tieneRuta2) rutaProgHtml+=`<div style="font-size:11px;color:#5C6370;">🗺 Ruta 2: <strong>${prog.ruta2.pct}%</strong></div>`;
-
-  const centro = puntos[Math.floor(puntos.length/2)];
-  const infoRuta = new google.maps.InfoWindow({
-    content:`<div style="font-family:'Segoe UI',sans-serif;padding:4px;">
-      <div style="font-weight:700;font-size:13px;margin-bottom:6px;">🗺️ Recorrido ${placa}</div>
-      <div style="font-size:11px;color:#5C6370;">📅 ${fecha}</div>
-      <div style="font-size:11px;color:#5C6370;">📏 Dist aprox: <strong>${distKm.toFixed(1)} km</strong></div>
-      <div style="font-size:11px;color:#5C6370;">⚡ Vel. máx: <strong>${velMax} km/h</strong></div>
-      <div style="font-size:11px;color:#5C6370;">⏱ Duración: <strong>${durMin} min</strong></div>
-      <div style="font-size:11px;color:#5C6370;">📍 ${puntos.length} puntos GPS</div>
-      ${rutaProgHtml}
-    </div>`,
-    position:{lat:centro.lat,lng:centro.lng}
-  });
-  infoRuta.open(_mapaRastreo);
-  _polylines[placa].push({setMap:()=>{}, close:()=>infoRuta.close()});
-
-  // Ajustar mapa
+  const linea = new google.maps.Polyline({path:puntos.map(p=>({lat:p.lat,lng:p.lng})),geodesic:true,strokeColor:color,strokeOpacity:0.85,strokeWeight:5,map:_mapaRastreo});
+  _polylines[placa].push(linea);
+  const mInicio = new google.maps.Marker({position:{lat:puntos[0].lat,lng:puntos[0].lng},map:_mapaRastreo,icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:'#16A34A',fillOpacity:1,strokeColor:'#fff',strokeWeight:2},zIndex:20});
+  const mFin = new google.maps.Marker({position:{lat:puntos[puntos.length-1].lat,lng:puntos[puntos.length-1].lng},map:_mapaRastreo,icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:'#DC2626',fillOpacity:1,strokeColor:'#fff',strokeWeight:2},zIndex:20});
+  _polylines[placa].push(mInicio,mFin);
   const bounds=new google.maps.LatLngBounds();
   puntos.forEach(p=>bounds.extend({lat:p.lat,lng:p.lng}));
   _mapaRastreo.fitBounds(bounds);
-
   const btn=document.getElementById('btn-ruta-'+placa);
   if(btn) btn.textContent='✕ Ocultar';
 }
 
-// ──── DETALLE DE PUNTOS DE PASO ────
-function verDetallesPuntos(placa){
-  const prog = calcularProgresoRuta(placa);
-
-  const renderPuntosList = (numRuta, puntosVisitados, progresoRuta) => {
-    const todosPuntos = RUTAS_PUNTOS_ADMIN[numRuta];
-    if(!todosPuntos) return '';
-    const visitadosMap = {};
-    puntosVisitados.forEach(p=>{ visitadosMap[p.id]=p; });
-
-    return `
-      <div style="margin-bottom:16px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <span style="font-size:12px;font-weight:700;color:${COLORES_RUTA[numRuta]};">🗺 Ruta ${numRuta}</span>
-          <span style="font-size:12px;font-weight:700;font-family:'Courier New',monospace;color:${COLORES_RUTA[numRuta]};">${progresoRuta.pct}% · ${progresoRuta.visitados}/${progresoRuta.total}</span>
-        </div>
-        <div style="height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;margin-bottom:10px;">
-          <div style="height:100%;width:${progresoRuta.pct}%;background:${COLORES_RUTA[numRuta]};border-radius:3px;"></div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:4px;max-height:240px;overflow-y:auto;">
-          ${todosPuntos.map((p,i)=>{
-            const v = visitadosMap[p.id];
-            return `<div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;background:${v?'rgba(22,163,74,.08)':'var(--bg3)'};border:1px solid ${v?'rgba(22,163,74,.25)':'var(--bd)'};">
-              <span style="font-size:13px;">${v?'✅':'○'}</span>
-              <div style="flex:1;">
-                <div style="font-size:11px;font-weight:600;color:${v?'#E6EDF3':'#8B949E'};">P${i+1} · ${p.nombre}</div>
-                ${v?`<div style="font-size:10px;color:#4ade80;font-family:'Courier New',monospace;">${v.hora}</div>`:''}
-              </div>
-            </div>`;
-          }).join('')}
-        </div>
-      </div>`;
-  };
-
-  const body = `
-    <div>
-      <div style="font-size:12px;color:var(--t2);margin-bottom:14px;">
-        Puntos de paso registrados para <strong style="color:var(--t);font-family:'Courier New',monospace;">${placa}</strong> hoy.
-      </div>
-      ${prog.tieneRuta1 ? renderPuntosList(1, prog.puntosVisitados1, prog.ruta1) : ''}
-      ${prog.tieneRuta2 ? renderPuntosList(2, prog.puntosVisitados2, prog.ruta2) : ''}
-      ${!prog.tieneRuta1 && !prog.tieneRuta2 ? '<div class="empty"><div class="ei">🗺️</div><p>Sin puntos de paso registrados hoy</p></div>' : ''}
-    </div>`;
-
-  openModal('Puntos de paso — '+placa, body, '<button class="btn" onclick="closeModal()">Cerrar</button>', true);
+function abrirEnlaceConductor(){
+  const url = location.href.replace(/\/[^\/]*$/,'')+'/conductor.html';
+  openModal('🔗 Enlace para conductores',`
+    <p style="font-size:12px;color:var(--t2);margin-bottom:12px;">Comparte este enlace con los conductores.</p>
+    <div style="background:var(--bg3);border-radius:var(--r);padding:10px 12px;font-family:var(--mono);font-size:11px;word-break:break-all;color:var(--brand);border:1px solid var(--bd);">${url}</div>
+    <button onclick="navigator.clipboard.writeText('${url}');this.textContent='✅ Copiado!';setTimeout(()=>this.textContent='📋 Copiar enlace',2000);" class="btn btn-pri btn-sm" style="margin-top:10px;">📋 Copiar enlace</button>
+  `,'<button class="btn" onclick="closeModal()">Cerrar</button>');
 }
-  // ══════════════════════════════════════════════
+
+// ══════════════════════════════════════════════
 //  GESTIÓN DE RUTAS
 // ══════════════════════════════════════════════
 const DB_RUTAS = { rutas: [], puntos: [] };
@@ -3514,32 +2164,23 @@ async function loadRUTAS() {
     apig({ accion:'listar', modulo:'rutas' }),
     apig({ accion:'listar', modulo:'puntos_ruta' }),
   ]);
-  DB_RUTAS.rutas  = dr.data || [];
+  DB_RUTAS.rutas = dr.data || [];
   DB_RUTAS.puntos = dp.data || [];
   DB.v = dv.data || [];
   const sel = document.getElementById('vr-vehiculo');
-  if(sel) sel.innerHTML = '<option value="">Sin asignar</option>' + 
-    DB.v.map(v => `<option>${v.Placa}</option>`).join('');
+  if(sel) sel.innerHTML = '<option value="">Sin asignar</option>' + DB.v.map(v => `<option>${v.Placa}</option>`).join('');
   renderRUTAS();
 }
 
 function renderRUTAS() {
   const tb = document.getElementById('tbl-rutas');
-  if(!DB_RUTAS.rutas.length) {
-    tb.innerHTML = '<tr><td colspan="7"><div class="empty"><div class="ei">🗺</div><p>Sin rutas creadas</p></div></td></tr>';
-    return;
-  }
+  if(!DB_RUTAS.rutas.length) { tb.innerHTML = '<tr><td colspan="7"><div class="empty"><div class="ei">🗺</div><p>Sin rutas creadas</p></div></td></tr>'; return; }
   tb.innerHTML = DB_RUTAS.rutas.map(r => {
     const numPuntos = DB_RUTAS.puntos.filter(p => p.ID_Ruta === r.ID_Ruta).length;
-    const colorDot  = r.Color || '#0066CC';
+    const colorDot = r.Color || '#0066CC';
     return `<tr>
       <td class="tmono" style="color:var(--brand);font-weight:700;">${r.ID_Ruta||'—'}</td>
-      <td>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <div style="width:12px;height:12px;border-radius:50%;background:${colorDot};flex-shrink:0;"></div>
-          <span style="font-weight:600;">${r.Nombre||'—'}</span>
-        </div>
-      </td>
+      <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:12px;height:12px;border-radius:50%;background:${colorDot};flex-shrink:0;"></div><span style="font-weight:600;">${r.Nombre||'—'}</span></div></td>
       <td class="tdim">${r.Descripcion||'—'}</td>
       <td><span class="tmono" style="color:var(--brand);">${r.Vehiculo_Asignado||'Sin asignar'}</span></td>
       <td><span style="background:var(--brand-l);color:var(--brand);font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;">${numPuntos} puntos</span></td>
@@ -3548,8 +2189,7 @@ function renderRUTAS() {
         <button class="btn btn-xs btn-pri" onclick="gestionarPuntos('${r.ID_Ruta}')">📍 Puntos</button>
         <button class="btn btn-xs" onclick="editarRUTA('${r.ID_Ruta}')">✏</button>
         <button class="btn btn-xs" onclick="verRutaEnMapa('${r.ID_Ruta}')">🗺</button>
-      </td>
-    </tr>`;
+      </td></tr>`;
   }).join('');
 }
 
@@ -3558,14 +2198,7 @@ async function crearRUTA() {
   if(!nombre) { showAlert('al-ruta','El nombre es obligatorio','err'); return; }
   const btn = event.target; btn.disabled=true; btn.textContent='Guardando...';
   const id = 'RUT-' + Date.now().toString().slice(-6);
-  const r = await apip({
-    accion:'crear', modulo:'rutas',
-    ID_Ruta: id, Nombre: nombre,
-    Descripcion: document.getElementById('vr-desc').value,
-    Vehiculo_Asignado: document.getElementById('vr-vehiculo').value,
-    Color: document.getElementById('vr-color').value,
-    Activa: document.getElementById('vr-activa').value,
-  });
+  const r = await apip({accion:'crear',modulo:'rutas',ID_Ruta:id,Nombre:nombre,Descripcion:document.getElementById('vr-desc').value,Vehiculo_Asignado:document.getElementById('vr-vehiculo').value,Color:document.getElementById('vr-color').value,Activa:document.getElementById('vr-activa').value});
   btn.disabled=false; btn.textContent='Crear ruta';
   if(r.ok) { showAlert('al-ruta','✅ Ruta creada: '+id,'ok'); setTimeout(()=>{ tp('fruta'); loadRUTAS(); },1500); }
   else showAlert('al-ruta','❌ '+(r.error||'Error'),'err');
@@ -3578,39 +2211,17 @@ function editarRUTA(idRuta) {
     <div class="fg" style="gap:11px;">
       <div class="fl"><label>Nombre</label><input id="er-nombre" value="${r.Nombre||''}"></div>
       <div class="fl"><label>Descripción</label><input id="er-desc" value="${r.Descripcion||''}"></div>
-      <div class="fl"><label>Vehículo asignado</label>
-        <select id="er-vehiculo">
-          <option value="">Sin asignar</option>
-          ${DB.v.map(v=>`<option ${r.Vehiculo_Asignado===v.Placa?'selected':''}>${v.Placa}</option>`).join('')}
-        </select>
-      </div>
+      <div class="fl"><label>Vehículo asignado</label><select id="er-vehiculo"><option value="">Sin asignar</option>${DB.v.map(v=>`<option ${r.Vehiculo_Asignado===v.Placa?'selected':''}>${v.Placa}</option>`).join('')}</select></div>
       <div class="fl"><label>Color</label><input id="er-color" type="color" value="${r.Color||'#0066CC'}" style="height:38px;padding:3px;"></div>
-      <div class="fl"><label>Activa</label>
-        <select id="er-activa">
-          <option value="Si" ${r.Activa==='Si'?'selected':''}>Sí</option>
-          <option value="No" ${r.Activa!=='Si'?'selected':''}>No</option>
-        </select>
-      </div>
-    </div>
-    <div id="al-er" style="margin-top:10px;"></div>`,
-    `<button class="btn" onclick="closeModal()">Cancelar</button>
-     <button class="btn btn-pri" onclick="guardarRUTA('${idRuta}')">Guardar</button>`
+      <div class="fl"><label>Activa</label><select id="er-activa"><option value="Si" ${r.Activa==='Si'?'selected':''}>Sí</option><option value="No" ${r.Activa!=='Si'?'selected':''}>No</option></select></div>
+    </div><div id="al-er" style="margin-top:10px;"></div>`,
+    `<button class="btn" onclick="closeModal()">Cancelar</button><button class="btn btn-pri" onclick="guardarRUTA('${idRuta}')">Guardar</button>`
   );
 }
 
 async function guardarRUTA(idRuta) {
   const btn = event.target; btn.disabled=true; btn.textContent='Guardando...';
-  const r = await apip({
-    accion:'actualizar', modulo:'rutas',
-    buscarCampo:'ID_Ruta', buscarValor:idRuta,
-    datos:{
-      Nombre: document.getElementById('er-nombre').value,
-      Descripcion: document.getElementById('er-desc').value,
-      Vehiculo_Asignado: document.getElementById('er-vehiculo').value,
-      Color: document.getElementById('er-color').value,
-      Activa: document.getElementById('er-activa').value,
-    }
-  });
+  const r = await apip({accion:'actualizar',modulo:'rutas',buscarCampo:'ID_Ruta',buscarValor:idRuta,datos:{Nombre:document.getElementById('er-nombre').value,Descripcion:document.getElementById('er-desc').value,Vehiculo_Asignado:document.getElementById('er-vehiculo').value,Color:document.getElementById('er-color').value,Activa:document.getElementById('er-activa').value}});
   btn.disabled=false; btn.textContent='Guardar';
   if(r.ok) { closeModal(); await loadRUTAS(); }
   else document.getElementById('al-er').innerHTML='<div class="alert a-err">Error al guardar</div>';
@@ -3618,19 +2229,13 @@ async function guardarRUTA(idRuta) {
 
 function gestionarPuntos(idRuta) {
   const ruta = DB_RUTAS.rutas.find(x => x.ID_Ruta === idRuta);
-  const puntos = DB_RUTAS.puntos
-    .filter(p => p.ID_Ruta === idRuta)
-    .sort((a,b) => Number(a.Orden) - Number(b.Orden));
+  const puntos = DB_RUTAS.puntos.filter(p => p.ID_Ruta === idRuta).sort((a,b) => Number(a.Orden) - Number(b.Orden));
   const listaPuntos = puntos.length
-    ? puntos.map((p,i) => `
-        <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg);border-radius:var(--r);border:1px solid var(--bd);margin-bottom:6px;">
-          <div style="width:24px;height:24px;border-radius:50%;background:var(--brand);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">${p.Orden||i+1}</div>
-          <div style="flex:1;">
-            <div style="font-size:12px;font-weight:600;">${p.Nombre_Punto||'Punto '+(i+1)}</div>
-            <div style="font-size:10px;color:var(--t3);font-family:'Courier New',monospace;">${p.Lat}, ${p.Lng}</div>
-          </div>
-          <button class="btn btn-xs" style="color:var(--red);" onclick="eliminarPunto('${p.ID_Punto}','${idRuta}')">✕</button>
-        </div>`).join('')
+    ? puntos.map((p,i) => `<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg);border-radius:var(--r);border:1px solid var(--bd);margin-bottom:6px;">
+        <div style="width:24px;height:24px;border-radius:50%;background:var(--brand);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">${p.Orden||i+1}</div>
+        <div style="flex:1;"><div style="font-size:12px;font-weight:600;">${p.Nombre_Punto||'Punto '+(i+1)}</div><div style="font-size:10px;color:var(--t3);font-family:'Courier New',monospace;">${p.Lat}, ${p.Lng}</div></div>
+        <button class="btn btn-xs" style="color:var(--red);" onclick="eliminarPunto('${p.ID_Punto}','${idRuta}')">✕</button>
+      </div>`).join('')
     : '<div style="font-size:12px;color:var(--t3);padding:8px 0;">Sin puntos. Agrega el primero abajo.</div>';
 
   openModal('Puntos de paso — '+(ruta?.Nombre||idRuta), `
@@ -3643,111 +2248,76 @@ function gestionarPuntos(idRuta) {
         <div class="fl"><label>Longitud <span class="req">*</span></label><input id="np-lng" placeholder="-75.591563" style="font-family:var(--mono);" type="number" step="any"></div>
         <div class="fl"><label>Orden</label><input id="np-orden" type="number" value="${puntos.length+1}" min="1"></div>
       </div>
-      <div style="margin-top:10px;padding:10px 12px;background:var(--bg3);border-radius:var(--r);font-size:11px;color:var(--t3);">
-        💡 Abre Google Maps → clic derecho en el punto → copia las coordenadas
-      </div>
+      <div style="margin-top:10px;padding:10px 12px;background:var(--bg3);border-radius:var(--r);font-size:11px;color:var(--t3);">💡 Abre Google Maps → clic derecho en el punto → copia las coordenadas</div>
       <div id="al-np" style="margin-top:8px;"></div>
     </div>`,
     `<button class="btn btn-sm" onclick="closeModal();loadRUTAS()">← Volver</button>
- <button class="btn btn-sm btn-pri" onclick="agregarPunto('${idRuta}',${puntos.length+1})">+ Agregar</button>
- <button class="btn btn-sm" onclick="abrirImp('${idRuta}')">📥 Importar</button>`,
-  true        // ← LA COMA VA DESPUÉS DEL BACKTICK
+     <button class="btn btn-sm btn-pri" onclick="agregarPunto('${idRuta}',${puntos.length+1})">+ Agregar</button>
+     <button class="btn btn-sm" onclick="abrirImp('${idRuta}')">📥 Importar</button>`,
+    true
   );
+}
 
 async function agregarPunto(idRuta, ordenSugerido) {
   const nombre = document.getElementById('np-nombre').value.trim();
-  const lat    = document.getElementById('np-lat').value.trim();
-  const lng    = document.getElementById('np-lng').value.trim();
-  const orden  = document.getElementById('np-orden').value || ordenSugerido;
+  const lat = document.getElementById('np-lat').value.trim();
+  const lng = document.getElementById('np-lng').value.trim();
+  const orden = document.getElementById('np-orden').value || ordenSugerido;
   if(!nombre||!lat||!lng) { document.getElementById('al-np').innerHTML='<div class="alert a-err">Nombre, latitud y longitud son obligatorios</div>'; return; }
-  const latNum = parseFloat(lat);
-  const lngNum = parseFloat(lng);
+  const latNum = parseFloat(lat); const lngNum = parseFloat(lng);
   if(isNaN(latNum)||isNaN(lngNum)||Math.abs(latNum)>90||Math.abs(lngNum)>180) { document.getElementById('al-np').innerHTML='<div class="alert a-err">Coordenadas inválidas</div>'; return; }
   const btn = event.target; btn.disabled=true; btn.textContent='Agregando...';
   const id = 'PTO-'+Date.now().toString().slice(-6);
-  const r = await apip({
-    accion:'crear', modulo:'puntos_ruta',
-    ID_Punto:id, ID_Ruta:idRuta,
-    Nombre_Punto:nombre,
-    Lat:latNum.toFixed(6), Lng:lngNum.toFixed(6),
-    Orden:Number(orden),
-  });
+  const r = await apip({accion:'crear',modulo:'puntos_ruta',ID_Punto:id,ID_Ruta:idRuta,Nombre_Punto:nombre,Lat:latNum.toFixed(6),Lng:lngNum.toFixed(6),Orden:Number(orden)});
   btn.disabled=false; btn.textContent='+ Agregar punto';
-  if(r.ok) {
-    const dp = await apig({accion:'listar',modulo:'puntos_ruta'});
-    DB_RUTAS.puntos = dp.data||[];
-    gestionarPuntos(idRuta);
-  } else {
-    document.getElementById('al-np').innerHTML='<div class="alert a-err">❌ '+(r.error||'Error')+'</div>';
-  }
+  if(r.ok) { const dp = await apig({accion:'listar',modulo:'puntos_ruta'}); DB_RUTAS.puntos = dp.data||[]; gestionarPuntos(idRuta); }
+  else document.getElementById('al-np').innerHTML='<div class="alert a-err">❌ '+(r.error||'Error')+'</div>';
 }
 
 async function eliminarPunto(idPunto, idRuta) {
   if(!confirm('¿Eliminar este punto?')) return;
   const r = await apip({accion:'eliminar',modulo:'puntos_ruta',buscarCampo:'ID_Punto',buscarValor:idPunto});
-  if(r.ok) {
-    const dp = await apig({accion:'listar',modulo:'puntos_ruta'});
-    DB_RUTAS.puntos = dp.data||[];
-    gestionarPuntos(idRuta);
-  } else alert('Error al eliminar');
+  if(r.ok) { const dp = await apig({accion:'listar',modulo:'puntos_ruta'}); DB_RUTAS.puntos = dp.data||[]; gestionarPuntos(idRuta); }
+  else alert('Error al eliminar');
 }
 
 function verRutaEnMapa(idRuta) {
-  const ruta   = DB_RUTAS.rutas.find(x => x.ID_Ruta === idRuta);
-  const puntos = DB_RUTAS.puntos
-    .filter(p => p.ID_Ruta === idRuta)
-    .sort((a,b) => Number(a.Orden) - Number(b.Orden));
+  const ruta = DB_RUTAS.rutas.find(x => x.ID_Ruta === idRuta);
+  const puntos = DB_RUTAS.puntos.filter(p => p.ID_Ruta === idRuta).sort((a,b) => Number(a.Orden) - Number(b.Orden));
   if(!puntos.length) { openModal('Sin puntos','<div class="empty"><div class="ei">📍</div><p>Esta ruta no tiene puntos aún</p></div>'); return; }
   const color = ruta?.Color||'#0066CC';
   const gmUrl = `https://www.google.com/maps/dir/${puntos.map(p=>`${p.Lat},${p.Lng}`).join('/')}`;
   openModal('Vista previa — '+(ruta?.Nombre||idRuta), `
     <div style="margin-bottom:12px;display:flex;gap:6px;flex-wrap:wrap;">
       <span style="background:var(--brand-l);color:var(--brand);font-size:11px;font-weight:700;padding:3px 10px;border-radius:4px;">${puntos.length} puntos</span>
-      ${ruta?.Vehiculo_Asignado?`<span class="tmono" style="color:var(--brand);font-size:12px;padding:3px 8px;border:1px solid var(--bd);border-radius:4px;">${ruta.Vehiculo_Asignado}</span>`:''}
       ${ruta?.Activa==='Si'?'<span class="badge bg">Activa</span>':'<span class="badge bgr">Inactiva</span>'}
     </div>
     <div style="display:flex;flex-direction:column;gap:4px;max-height:320px;overflow-y:auto;margin-bottom:14px;">
-      ${puntos.map((p,i)=>`
-        <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border-radius:var(--r);border:1px solid var(--bd);">
-          <div style="width:26px;height:26px;border-radius:50%;background:${color};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">${p.Orden||i+1}</div>
-          <div style="flex:1;">
-            <div style="font-size:12px;font-weight:600;">${p.Nombre_Punto}</div>
-            <div style="font-size:10px;color:var(--t3);font-family:var(--mono);">${parseFloat(p.Lat).toFixed(5)}, ${parseFloat(p.Lng).toFixed(5)}</div>
-          </div>
-          <a href="https://www.google.com/maps?q=${p.Lat},${p.Lng}" target="_blank" style="font-size:10px;color:var(--brand);text-decoration:none;">Maps ↗</a>
-        </div>`).join('')}
+      ${puntos.map((p,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border-radius:var(--r);border:1px solid var(--bd);">
+        <div style="width:26px;height:26px;border-radius:50%;background:${color};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">${p.Orden||i+1}</div>
+        <div style="flex:1;"><div style="font-size:12px;font-weight:600;">${p.Nombre_Punto}</div><div style="font-size:10px;color:var(--t3);font-family:var(--mono);">${parseFloat(p.Lat).toFixed(5)}, ${parseFloat(p.Lng).toFixed(5)}</div></div>
+        <a href="https://www.google.com/maps?q=${p.Lat},${p.Lng}" target="_blank" style="font-size:10px;color:var(--brand);text-decoration:none;">Maps ↗</a>
+      </div>`).join('')}
     </div>
-    <a href="${gmUrl}" target="_blank" class="btn btn-pri" style="width:100%;justify-content:center;text-decoration:none;">
-      🗺 Ver ruta completa en Google Maps
-    </a>`,
+    <a href="${gmUrl}" target="_blank" class="btn btn-pri" style="width:100%;justify-content:center;text-decoration:none;">🗺 Ver ruta completa en Google Maps</a>`,
     '<button class="btn" onclick="closeModal()">Cerrar</button>', true
   );
 }
-  // ══════════════════════════════════════════════════════════════
-//  IMPORTADOR MASIVO DE PUNTOS — Agregar al index.html
-//  
-//  1. En la función gestionarPuntos(), en el openModal,
-//     agrega el botón "📥 Importar masivo" al footer:
-//     `<button class="btn" onclick="abrirImp('${idRuta}')">📥 Importar masivo</button>
-//      <button class="btn" onclick="closeModal();loadRUTAS()">Cerrar</button>
-//      <button class="btn btn-pri" onclick="agregarPunto('${idRuta}',${puntos.length+1})">+ Agregar punto</button>`
-//
-//  2. Pega las funciones de abajo antes del </script>
-// ══════════════════════════════════════════════════════════════
+
+// ══════════════════════════════════════════════
+//  IMPORTADOR MASIVO — CON FIX CORRECTO
+// ══════════════════════════════════════════════
 function abrirImp(idRuta){
   closeModal();
   setTimeout(()=> abrirImportador(idRuta), 80);
 }
-  
+
 function abrirImportador(idRuta) {
-  // Forzar cierre completo del modal anterior y limpiar clases
   const modalEl = document.getElementById('modal');
   const modalBox = document.getElementById('modal-box');
   modalEl.style.display = 'none';
-  modalBox.className = 'modal modal-lg'; // forzar lg ANTES de abrir
-
+  modalBox.className = 'modal modal-lg';
   const ruta = DB_RUTAS.rutas.find(x => x.ID_Ruta === idRuta);
-
   setTimeout(() => {
     document.getElementById('modal-title').textContent = '📥 Importar puntos — ' + (ruta?.Nombre || idRuta);
     document.getElementById('modal-body').innerHTML = `
@@ -3755,29 +2325,22 @@ function abrirImportador(idRuta) {
         Formato: <strong>Nombre, Latitud, Longitud</strong> — un punto por línea. Usa <strong>punto</strong> como decimal.
       </p>
       <div style="background:var(--bg3);border-radius:var(--r);padding:9px 12px;font-size:11px;color:var(--t3);margin-bottom:12px;font-family:monospace;line-height:1.9;">
-        Entrada La Mina, 6.172979, -75.591563<br>
-        Sector Bocamina, 6.169650, -75.585345<br>
-        Oficinas, 6.165685, -75.589418
+        Entrada La Mina, 6.172979, -75.591563<br>Sector Bocamina, 6.169650, -75.585345<br>Oficinas, 6.165685, -75.589418
       </div>
       <div style="margin-bottom:10px;">
         <label style="font-size:11px;font-weight:700;color:var(--t2);display:block;margin-bottom:4px;">Pega aquí tus puntos <span style="color:var(--red);">*</span></label>
-        <textarea id="imp-texto" rows="8"
-          placeholder="Entrada La Mina, 6.172979, -75.591563&#10;Sector Bocamina, 6.169650, -75.585345"
+        <textarea id="imp-texto" rows="8" placeholder="Entrada La Mina, 6.172979, -75.591563&#10;Sector Bocamina, 6.169650, -75.585345"
           style="width:100%;box-sizing:border-box;padding:8px 10px;font-family:monospace;font-size:12px;line-height:1.6;border:1px solid var(--bd);border-radius:var(--r);background:var(--bg2);color:var(--t);resize:vertical;outline:none;"></textarea>
       </div>
       <div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
         <div style="flex:1;min-width:120px;">
           <label style="font-size:11px;font-weight:700;color:var(--t2);display:block;margin-bottom:4px;">Orden inicial</label>
-          <input id="imp-orden-inicio" type="number" value="1" min="1"
-            style="width:100%;padding:7px 9px;font-size:12px;font-family:monospace;border:1px solid var(--bd);border-radius:var(--r);background:var(--bg2);color:var(--t);outline:none;box-sizing:border-box;">
+          <input id="imp-orden-inicio" type="number" value="1" min="1" style="width:100%;padding:7px 9px;font-size:12px;border:1px solid var(--bd);border-radius:var(--r);background:var(--bg2);color:var(--t);outline:none;box-sizing:border-box;">
         </div>
         <div style="flex:2;min-width:160px;">
           <label style="font-size:11px;font-weight:700;color:var(--t2);display:block;margin-bottom:4px;">Separador</label>
-          <select id="imp-separador"
-            style="width:100%;padding:7px 9px;font-size:12px;font-family:var(--font);border:1px solid var(--bd);border-radius:var(--r);background:var(--bg2);color:var(--t);outline:none;box-sizing:border-box;">
-            <option value=",">Coma ( , )</option>
-            <option value=";">Punto y coma ( ; )</option>
-            <option value="TAB">Tabulación</option>
+          <select id="imp-separador" style="width:100%;padding:7px 9px;font-size:12px;border:1px solid var(--bd);border-radius:var(--r);background:var(--bg2);color:var(--t);outline:none;box-sizing:border-box;">
+            <option value=",">Coma ( , )</option><option value=";">Punto y coma ( ; )</option><option value="TAB">Tabulación</option>
           </select>
         </div>
       </div>
@@ -3798,122 +2361,56 @@ function abrirImportador(idRuta) {
 let _puntosParaImportar = [];
 
 function previewImportador(idRuta) {
-  const texto     = document.getElementById('imp-texto').value.trim();
-  const separador = document.getElementById('imp-separador').value === 'TAB' ? '\t' : document.getElementById('imp-separador').value;
+  const texto = document.getElementById('imp-texto').value.trim();
+  const sep = document.getElementById('imp-separador').value === 'TAB' ? '\t' : document.getElementById('imp-separador').value;
   const ordenInicio = Number(document.getElementById('imp-orden-inicio').value) || 1;
-  const alEl      = document.getElementById('al-imp');
+  const alEl = document.getElementById('al-imp');
   const previewEl = document.getElementById('imp-preview');
-  const tablaEl   = document.getElementById('imp-preview-tabla');
-  const btnConf   = document.getElementById('btn-imp-confirmar');
-
-  if(!texto) {
-    alEl.innerHTML = '<div class="alert a-err">Pega al menos un punto</div>';
-    return;
-  }
-
+  const tablaEl = document.getElementById('imp-preview-tabla');
+  const btnConf = document.getElementById('btn-imp-confirmar');
+  if(!texto) { alEl.innerHTML = '<div class="alert a-err">Pega al menos un punto</div>'; return; }
   const lineas = texto.split('\n').map(l => l.trim()).filter(l => l.length > 0);
   const errores = [];
   _puntosParaImportar = [];
-
   lineas.forEach((linea, i) => {
-    const partes = linea.split(separador).map(p => p.trim());
-    if(partes.length < 3) {
-      errores.push('Línea '+(i+1)+': faltan columnas — "'+linea+'"');
-      return;
-    }
+    const partes = linea.split(sep).map(p => p.trim());
+    if(partes.length < 3) { errores.push('Línea '+(i+1)+': faltan columnas'); return; }
     const nombre = partes[0];
-    const lat    = parseFloat(partes[1].replace(',','.'));
-    const lng    = parseFloat(partes[2].replace(',','.'));
-
+    const lat = parseFloat(partes[1].replace(',','.'));
+    const lng = parseFloat(partes[2].replace(',','.'));
     if(!nombre) { errores.push('Línea '+(i+1)+': nombre vacío'); return; }
-    if(isNaN(lat)||Math.abs(lat)>90) { errores.push('Línea '+(i+1)+': latitud inválida "'+partes[1]+'"'); return; }
-    if(isNaN(lng)||Math.abs(lng)>180) { errores.push('Línea '+(i+1)+': longitud inválida "'+partes[2]+'"'); return; }
-
-    _puntosParaImportar.push({
-      nombre, lat: lat.toFixed(6), lng: lng.toFixed(6),
-      orden: ordenInicio + i
-    });
+    if(isNaN(lat)||Math.abs(lat)>90) { errores.push('Línea '+(i+1)+': latitud inválida'); return; }
+    if(isNaN(lng)||Math.abs(lng)>180) { errores.push('Línea '+(i+1)+': longitud inválida'); return; }
+    _puntosParaImportar.push({nombre, lat:lat.toFixed(6), lng:lng.toFixed(6), orden:ordenInicio+i});
   });
-
-  if(errores.length) {
-    alEl.innerHTML = '<div class="alert a-err">⚠ '+errores.join('<br>')+'</div>';
-    previewEl.style.display = 'none';
-    btnConf.style.display = 'none';
-    return;
-  }
-
-  alEl.innerHTML = '';
-  previewEl.style.display = 'block';
-  btnConf.style.display = 'inline-flex';
-
-  tablaEl.innerHTML = `
-    <table style="width:100%;border-collapse:collapse;">
-      <thead>
-        <tr>
-          <th style="padding:6px 10px;font-size:10px;font-weight:700;color:var(--t2);text-align:left;background:var(--bg3);border-bottom:1px solid var(--bd);">#</th>
-          <th style="padding:6px 10px;font-size:10px;font-weight:700;color:var(--t2);text-align:left;background:var(--bg3);border-bottom:1px solid var(--bd);">Nombre</th>
-          <th style="padding:6px 10px;font-size:10px;font-weight:700;color:var(--t2);text-align:left;background:var(--bg3);border-bottom:1px solid var(--bd);">Latitud</th>
-          <th style="padding:6px 10px;font-size:10px;font-weight:700;color:var(--t2);text-align:left;background:var(--bg3);border-bottom:1px solid var(--bd);">Longitud</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${_puntosParaImportar.map(p => `
-          <tr>
-            <td style="padding:6px 10px;font-size:11px;font-family:'Courier New',monospace;border-bottom:1px solid var(--bg3);color:var(--brand);">${p.orden}</td>
-            <td style="padding:6px 10px;font-size:12px;font-weight:600;border-bottom:1px solid var(--bg3);">${p.nombre}</td>
-            <td style="padding:6px 10px;font-size:11px;font-family:'Courier New',monospace;border-bottom:1px solid var(--bg3);color:var(--green);">${p.lat}</td>
-            <td style="padding:6px 10px;font-size:11px;font-family:'Courier New',monospace;border-bottom:1px solid var(--bg3);color:var(--green);">${p.lng}</td>
-          </tr>`).join('')}
-      </tbody>
-    </table>
-    <div style="padding:8px 10px;font-size:12px;font-weight:700;color:var(--green);background:var(--green-l);">
-      ✅ ${_puntosParaImportar.length} punto(s) listos para importar
-    </div>`;
+  if(errores.length) { alEl.innerHTML='<div class="alert a-err">⚠ '+errores.join('<br>')+'</div>'; previewEl.style.display='none'; btnConf.style.display='none'; return; }
+  alEl.innerHTML='';
+  previewEl.style.display='block';
+  btnConf.style.display='inline-flex';
+  tablaEl.innerHTML=`<table style="width:100%;border-collapse:collapse;"><thead><tr><th style="padding:6px 10px;font-size:10px;font-weight:700;color:var(--t2);text-align:left;background:var(--bg3);border-bottom:1px solid var(--bd);">#</th><th style="padding:6px 10px;font-size:10px;font-weight:700;color:var(--t2);text-align:left;background:var(--bg3);border-bottom:1px solid var(--bd);">Nombre</th><th style="padding:6px 10px;font-size:10px;font-weight:700;color:var(--t2);text-align:left;background:var(--bg3);border-bottom:1px solid var(--bd);">Lat</th><th style="padding:6px 10px;font-size:10px;font-weight:700;color:var(--t2);text-align:left;background:var(--bg3);border-bottom:1px solid var(--bd);">Lng</th></tr></thead><tbody>${_puntosParaImportar.map(p=>`<tr><td style="padding:6px 10px;font-size:11px;color:var(--brand);border-bottom:1px solid var(--bg3);">${p.orden}</td><td style="padding:6px 10px;font-size:12px;font-weight:600;border-bottom:1px solid var(--bg3);">${p.nombre}</td><td style="padding:6px 10px;font-size:11px;font-family:monospace;color:var(--green);border-bottom:1px solid var(--bg3);">${p.lat}</td><td style="padding:6px 10px;font-size:11px;font-family:monospace;color:var(--green);border-bottom:1px solid var(--bg3);">${p.lng}</td></tr>`).join('')}</tbody></table><div style="padding:8px 10px;font-size:12px;font-weight:700;color:var(--green);background:var(--green-l);">✅ ${_puntosParaImportar.length} punto(s) listos para importar</div>`;
 }
 
 async function confirmarImportador(idRuta) {
   if(!_puntosParaImportar.length) return;
-  
   const btn = document.getElementById('btn-imp-confirmar');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spin"></span>Importando...';
-  
+  btn.disabled=true; btn.innerHTML='<span class="spin"></span>Importando...';
   const alEl = document.getElementById('al-imp');
-  let exitosos = 0;
-  let fallidos  = 0;
-
+  let exitosos=0, fallidos=0;
   for(const p of _puntosParaImportar) {
-    const id = 'PTO-' + Date.now().toString().slice(-6) + '-' + p.orden;
-    const r = await apip({
-      accion: 'crear', modulo: 'puntos_ruta',
-      ID_Punto:    id,
-      ID_Ruta:     idRuta,
-      Nombre_Punto: p.nombre,
-      Lat:         p.lat,
-      Lng:         p.lng,
-      Orden:       p.orden,
-    });
-    if(r.ok) exitosos++;
-    else fallidos++;
-    // Pequeña pausa para no saturar el servidor
+    const id = 'PTO-'+Date.now().toString().slice(-6)+'-'+p.orden;
+    const r = await apip({accion:'crear',modulo:'puntos_ruta',ID_Punto:id,ID_Ruta:idRuta,Nombre_Punto:p.nombre,Lat:p.lat,Lng:p.lng,Orden:p.orden});
+    if(r.ok) exitosos++; else fallidos++;
     await new Promise(res => setTimeout(res, 300));
   }
-
-  btn.disabled = false;
-  btn.innerHTML = '✅ Importar todos';
-
-  if(fallidos === 0) {
-    alEl.innerHTML = `<div class="alert a-ok">✅ ${exitosos} punto(s) importados correctamente</div>`;
-    // Recargar y volver a gestionar puntos
-    setTimeout(async () => {
-      const dp = await apig({ accion:'listar', modulo:'puntos_ruta' });
-      DB_RUTAS.puntos = dp.data || [];
-      gestionarPuntos(idRuta);
-    }, 1500);
+  btn.disabled=false; btn.innerHTML='✅ Importar todos';
+  if(fallidos===0) {
+    alEl.innerHTML=`<div class="alert a-ok">✅ ${exitosos} punto(s) importados correctamente</div>`;
+    setTimeout(async()=>{ const dp=await apig({accion:'listar',modulo:'puntos_ruta'}); DB_RUTAS.puntos=dp.data||[]; gestionarPuntos(idRuta); },1500);
   } else {
-    alEl.innerHTML = `<div class="alert a-warn">⚠ ${exitosos} importados, ${fallidos} fallaron. Intenta de nuevo.</div>`;
+    alEl.innerHTML=`<div class="alert a-warn">⚠ ${exitosos} importados, ${fallidos} fallaron.</div>`;
   }
 }
+
 </script>
 </body>
 </html>
