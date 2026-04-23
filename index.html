@@ -420,6 +420,10 @@ tr:hover td{background:#FAFBFC;}
   <button class="sb-item" id="nav-compras" onclick="goTo('compras',this)"><span class="sb-icon">🛒</span>Compras</button>
   <button class="sb-item" id="nav-rutas" onclick="goTo('rutas',this)"><span class="sb-icon">🗺</span>Rutas</button>
   <button class="sb-item" id="nav-proveedores" onclick="goTo('proveedores',this)"><span class="sb-icon">🏢</span>Proveedores</button>
+  <div class="sb-divider"></div>
+<div class="sb-sec">Inteligencia</div>
+<button class="sb-item" id="nav-ia_admin" onclick="goTo('ia_admin',this)"><span class="sb-icon">🤖</span>IA Diagnóstico<span class="sb-badge" style="background:#7C3AED;">IA</span></button>
+<button class="sb-item" id="nav-gastos_viaje" onclick="goTo('gastos_viaje',this)"><span class="sb-icon">🧾</span>Gastos en ruta<span class="sb-badge amber" id="sb-gastos">0</span></button>
 
   <div class="sb-user">
     <div class="sb-avatar" id="sb-ava">?</div>
@@ -919,6 +923,67 @@ tr:hover td{background:#FAFBFC;}
     </div>
   </div>
 
+    <!-- IA DIAGNÓSTICO ADMIN -->
+<div class="page page-ia" id="pg-ia_admin" style="overflow:hidden!important;padding:0!important;gap:0!important;height:calc(100vh - var(--top-h));">
+  <div style="background:var(--bg2);border-bottom:1px solid var(--bd);padding:12px 20px;display:flex;align-items:center;gap:12px;flex-shrink:0;">
+    <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#0066CC,#7C3AED);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🤖</div>
+    <div><div style="font-size:14px;font-weight:700;">Asistente IA FleetCO</div><div style="font-size:11px;color:var(--t3);">Diagnóstico inteligente · Análisis de flota · Recomendaciones</div></div>
+    <div style="margin-left:auto;display:flex;gap:6px;">
+      <button class="btn btn-sm" onclick="limpiarChatAdmin()">Limpiar chat</button>
+      <button class="btn btn-sm btn-pri" onclick="analizarFlotaIA()">🔍 Analizar flota completa</button>
+    </div>
+  </div>
+  <div style="padding:10px 16px;border-bottom:1px solid var(--bd);background:#FAFBFC;display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;">
+    <button class="btn btn-xs" onclick="iaAdminSugerencia('Analiza el estado general de mi flota y dame las 3 alertas más críticas')">🔍 Análisis general</button>
+    <button class="btn btn-xs" onclick="iaAdminSugerencia('Cuáles vehículos tienen el mayor costo de mantenimiento acumulado?')">💰 Costos altos</button>
+    <button class="btn btn-xs" onclick="iaAdminSugerencia('Qué vehículos tienen SOAT o tecnomecánica por vencer en 30 días?')">📋 Docs por vencer</button>
+    <button class="btn btn-xs" onclick="iaAdminSugerencia('Dame un análisis de rendimiento de combustible por vehículo')">⛽ Rendimiento comb.</button>
+    <button class="btn btn-xs" onclick="iaAdminSugerencia('Cuáles conductores tienen más checklists rechazados?')">✅ Checklists</button>
+    <button class="btn btn-xs" onclick="iaAdminSugerencia('Cuál es la rentabilidad por viaje y qué vehículos generan más utilidad?')">📊 Rentabilidad</button>
+    <button class="btn btn-xs" onclick="iaAdminSugerencia('Qué repuestos están con stock bajo y cuáles debería comprar urgente?')">📦 Inventario crítico</button>
+    <button class="btn btn-xs" onclick="iaAdminSugerencia('Cuáles vehículos tienen más fallas recurrentes según las OT?')">🔧 Fallas recurrentes</button>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:12px;" id="ia-admin-chat">
+    <div style="display:flex;gap:10px;align-items:flex-start;">
+      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#0066CC,#7C3AED);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🤖</div>
+      <div style="max-width:75%;background:var(--bg2);border:1px solid var(--bd);border-radius:4px 12px 12px 12px;padding:12px 14px;font-size:13px;line-height:1.7;">
+        ¡Hola! Soy el asistente IA de FleetCO con acceso a los datos reales de tu flota. Puedo:<br><br>
+        • <strong>Analizar</strong> el estado actual de todos tus vehículos<br>
+        • <strong>Detectar</strong> patrones de fallas y costos anormales<br>
+        • <strong>Alertar</strong> sobre documentos por vencer y stock crítico<br>
+        • <strong>Calcular</strong> rentabilidad y rendimiento de combustible<br>
+        • <strong>Recomendar</strong> mantenimientos preventivos según los datos<br><br>
+        Haz clic en <strong>"🔍 Analizar flota completa"</strong> para empezar, o hazme una pregunta específica.
+      </div>
+    </div>
+  </div>
+  <div style="background:var(--bg2);border-top:1px solid var(--bd);padding:12px 16px;display:flex;gap:8px;flex-shrink:0;">
+    <input style="flex:1;background:var(--bg);border:1px solid var(--bd);border-radius:20px;padding:10px 16px;font-size:13px;font-family:var(--font);color:var(--t);outline:none;" id="ia-admin-input" placeholder="Pregunta sobre tu flota... ej: ¿Qué vehículo me cuesta más mantener?" onkeydown="if(event.key==='Enter')enviarMsgIAAdmin()">
+    <button class="btn btn-pri" onclick="enviarMsgIAAdmin()" style="padding:10px 16px;">Enviar ↗</button>
+  </div>
+</div>
+
+<!-- GASTOS EN RUTA -->
+<div class="page" id="pg-gastos_viaje">
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-head"><div class="kpi-icon amber">⛽</div></div><div class="kpi-val" id="gv-total-comb" style="font-size:20px;">$0</div><div class="kpi-lbl">Combustible en ruta</div></div>
+    <div class="kpi"><div class="kpi-head"><div class="kpi-icon purple">💸</div></div><div class="kpi-val" id="gv-total-gastos" style="font-size:20px;">$0</div><div class="kpi-lbl">Otros gastos</div></div>
+    <div class="kpi"><div class="kpi-head"><div class="kpi-icon red">💰</div></div><div class="kpi-val" id="gv-total-todos" style="font-size:20px;">$0</div><div class="kpi-lbl">Total gastos en ruta</div></div>
+    <div class="kpi"><div class="kpi-head"><div class="kpi-icon green">📊</div></div><div class="kpi-val" id="gv-rend-prom" style="font-size:20px;">—</div><div class="kpi-lbl">Km/galón promedio</div></div>
+  </div>
+  <div class="card">
+    <div class="card-hd">
+      <div><div class="card-title">Combustible registrado en ruta</div><div class="card-sub">Cargas realizadas por conductores durante los turnos desde la app</div></div>
+      <div class="card-actions"><input class="sbox" placeholder="Buscar placa..." id="sgv-comb" oninput="renderGV()"><button class="btn btn-sm" onclick="loadGV()">↻ Actualizar</button></div>
+    </div>
+    <div class="tw"><table><thead><tr><th>Placa</th><th>Conductor</th><th>Fecha</th><th>Galones</th><th>Costo</th><th>$/Galón</th><th>KM</th><th>Km/gal</th><th>Estación</th><th>Tipo</th></tr></thead><tbody id="tbl-gv-comb"><tr><td colspan="10" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
+  </div>
+  <div class="card">
+    <div class="card-hd"><div><div class="card-title">Gastos en ruta — alimentación, peajes y otros</div><div class="card-sub">Gastos registrados por conductores desde la app</div></div></div>
+    <div class="tw"><table><thead><tr><th>Placa</th><th>Conductor</th><th>Tipo</th><th>Fecha / Hora</th><th>Descripción</th><th>Valor</th><th>Con soporte</th></tr></thead><tbody id="tbl-gv-gastos"><tr><td colspan="7" class="loader"><span class="spin"></span></td></tr></tbody></table></div>
+  </div>
+</div>
+
   </div><!-- /content -->
 </div><!-- /main -->
 
@@ -980,13 +1045,15 @@ let SESSION = null;
 const ROL_CONFIG = {
   admin: {
     modulos: ['dashboard','vehiculos','conductores','mantenimiento','combustible',
-              'neumaticos','checklist','viajes','inventario','compras','proveedores','rastreo','rutas'],
+              'neumaticos','checklist','viajes','inventario','compras','proveedores','rastreo','rutas',
+              'ia_admin','gastos_viaje'],
     puedeEscribir: true,
     esAdmin: true,
   },
   tecnico: {
     modulos: ['dashboard','vehiculos','mantenimiento','neumaticos','inventario',
-              'compras','combustible','checklist','conductores','viajes','proveedores','rastreo','rutas'],
+              'compras','combustible','checklist','conductores','viajes','proveedores','rastreo','rutas',
+              'ia_admin','gastos_viaje'],
     puedeEscribir: true,
     esAdmin: false,
   },
@@ -1237,7 +1304,8 @@ const PAGE_META = {
   rastreo:      {title:'Rastreo en vivo', sub:'Ubicación GPS de la flota en tiempo real', load:loadRastreo},
   rutas: {title:'Gestión de Rutas', sub:'Rutas y puntos de paso por vehículo', load:loadRUTAS},
 };
-
+ia_admin:{title:'IA Diagnóstico',sub:'Asistente inteligente de análisis de flota',load:loadIAAdmin},
+gastos_viaje:{title:'Gastos en ruta',sub:'Combustible y gastos registrados por conductores',load:loadGV},
 function goTo(pg, btn){
   if(SESSION){
     const cfg = ROL_CONFIG[SESSION.rol] || ROL_CONFIG.conductor;
@@ -3919,6 +3987,159 @@ async function confirmarImportador(idRuta) {
     alEl.innerHTML = `<div class="alert a-warn">⚠ ${exitosos} importados, ${fallidos} fallaron. Intenta de nuevo.</div>`;
   }
 }
+  // ══ IA ADMIN ══
+const IA_SYSTEM_ADMIN=`Eres el asistente IA de FleetCO, sistema de gestión de flota en Colombia.
+Analiza los datos reales de la flota del usuario y da diagnósticos ejecutivos.
+Usa 🔴 para problemas críticos, 🟡 para alertas moderadas, 🟢 para situaciones normales.
+Sé directo, usa bullet points y resalta números con **negritas**.
+Responde siempre en español colombiano.`;
+
+let _iaMsgsAdmin=[],_iaThinkingAdmin=false;
+
+function loadIAAdmin(){}
+
+function iaAdminSugerencia(texto){
+  document.getElementById('ia-admin-input').value=texto;
+  enviarMsgIAAdmin();
+}
+
+async function analizarFlotaIA(){
+  const contexto=generarResumenFlota();
+  await _enviarIAAdmin('Analiza el estado completo de mi flota con estos datos y dame un diagnóstico ejecutivo con alertas, oportunidades de ahorro y recomendaciones prioritarias.',contexto);
+}
+
+function generarResumenFlota(){
+  const vehActivos=DB.v.filter(x=>x.Estado==='Activo').length;
+  const vehMant=DB.v.filter(x=>x.Estado==='Mantenimiento').length;
+  const otAbiertas=DB.m.filter(x=>x.Estado!=='Cerrada'&&x.Estado!=='Anulada').length;
+  const costoMant=DB.m.reduce((s,x)=>s+(Number(x.Costo_Total)||0),0);
+  const costoComb=DB.cb.reduce((s,x)=>s+(Number(x.Costo_Total)||0),0);
+  const galones=DB.cb.reduce((s,x)=>s+(Number(x.Galones)||0),0);
+  const stockBajo=DB.inv.filter(x=>Number(x.Stock)<=Number(x.Stock_Minimo)).length;
+  const checRech=DB.ch.filter(x=>x.Estado_General==='Rechazado').length;
+  const utilidad=DB.vj.reduce((s,x)=>s+(Number(x.Utilidad)||0),0);
+  const _dR=(str)=>{if(!str)return null;const p=String(str).split('/');const d=p.length===3?new Date(p[2],p[1]-1,p[0]):new Date(str);if(isNaN(d))return null;return Math.round((d-new Date())/86400000);};
+  const soatVenc=DB.v.filter(x=>{const d=_dR(x.Fecha_SOAT);return d!==null&&d<30;}).map(x=>x.Placa).join(', ')||'ninguno';
+  const tecnoVenc=DB.v.filter(x=>{const d=_dR(x.Fecha_Tecno);return d!==null&&d<30;}).map(x=>x.Placa).join(', ')||'ninguno';
+  const costoPorVeh={};
+  DB.m.forEach(m=>{if(!m.Placa)return;costoPorVeh[m.Placa]=(costoPorVeh[m.Placa]||0)+(Number(m.Costo_Total)||0);});
+  const top3=Object.entries(costoPorVeh).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([p,c],i)=>`${i+1}. ${p}: $${Math.round(c).toLocaleString('es-CO')} COP`).join('\n')||'Sin datos';
+  const rendPorVeh={};
+  DB.cb.filter(x=>Number(x.Rendimiento_KmGal)>0).forEach(x=>{if(!rendPorVeh[x.Placa])rendPorVeh[x.Placa]=[];rendPorVeh[x.Placa].push(Number(x.Rendimiento_KmGal));});
+  const rendList=Object.entries(rendPorVeh).map(([p,vals])=>({placa:p,rend:(vals.reduce((s,v)=>s+v,0)/vals.length).toFixed(2)})).sort((a,b)=>a.rend-b.rend).map(x=>`${x.placa}: ${x.rend} km/gal`).join('\n')||'Sin datos';
+  const ultOTs=DB.m.slice(-5).reverse().map(m=>`- ${m.OT_ID||'?'} ${m.Placa}: ${m.Tipo} — ${(m.Descripcion||'').slice(0,40)} [${m.Estado}]`).join('\n')||'Sin OT';
+  return`DATOS ACTUALES DE LA FLOTA:
+- Vehículos: ${DB.v.length} total (${vehActivos} activos, ${vehMant} en mant., ${DB.v.filter(x=>x.Estado==='Inactivo').length} inactivos)
+- OT abiertas: ${otAbiertas} de ${DB.m.length} totales
+- Costo total mantenimiento: $${Math.round(costoMant).toLocaleString('es-CO')} COP
+- Costo total combustible: $${Math.round(costoComb).toLocaleString('es-CO')} COP (${galones.toFixed(1)} galones)
+- Ítems con stock bajo: ${stockBajo}
+- Checklists rechazados: ${checRech}
+- Utilidad total viajes: $${Math.round(utilidad).toLocaleString('es-CO')} COP
+- SOAT por vencer (<30 días): ${soatVenc}
+- Tecnomecánica por vencer (<30 días): ${tecnoVenc}
+
+TOP 3 VEHÍCULOS MÁS COSTOSOS:
+${top3}
+
+RENDIMIENTO COMBUSTIBLE (km/galón):
+${rendList}
+
+ÚLTIMAS 5 OT:
+${ultOTs}`;
+}
+
+async function enviarMsgIAAdmin(){
+  const input=document.getElementById('ia-admin-input');
+  const texto=input.value.trim();
+  if(!texto||_iaThinkingAdmin)return;
+  input.value='';
+  await _enviarIAAdmin(texto);
+}
+
+async function _enviarIAAdmin(texto,contextoExtra=''){
+  if(_iaThinkingAdmin)return;
+  _iaThinkingAdmin=true;
+  const chat=document.getElementById('ia-admin-chat');
+  // Burbuja usuario
+  const msgUser=document.createElement('div');
+  msgUser.style.cssText='display:flex;gap:10px;align-items:flex-start;flex-direction:row-reverse;';
+  const iniciales=SESSION?SESSION.nombre.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase():'U';
+  msgUser.innerHTML=`<div style="width:32px;height:32px;border-radius:50%;background:var(--brand);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;">${iniciales}</div><div style="max-width:75%;background:var(--brand);color:#fff;border-radius:12px 4px 12px 12px;padding:10px 14px;font-size:13px;line-height:1.5;">${texto}</div>`;
+  chat.appendChild(msgUser);
+  // Typing
+  const typingDiv=document.createElement('div');
+  typingDiv.id='ia-admin-typing';
+  typingDiv.style.cssText='display:flex;gap:10px;align-items:flex-start;';
+  typingDiv.innerHTML=`<div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#0066CC,#7C3AED);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🤖</div><div style="background:var(--bg2);border:1px solid var(--bd);border-radius:4px 12px 12px 12px;padding:12px 14px;"><div style="display:flex;gap:5px;"><div style="width:8px;height:8px;border-radius:50%;background:var(--t3);animation:iabounce .9s ease-in-out infinite;"></div><div style="width:8px;height:8px;border-radius:50%;background:var(--t3);animation:iabounce .9s ease-in-out infinite;animation-delay:.15s;"></div><div style="width:8px;height:8px;border-radius:50%;background:var(--t3);animation:iabounce .9s ease-in-out infinite;animation-delay:.3s;"></div></div></div>`;
+  chat.appendChild(typingDiv);
+  chat.scrollTop=chat.scrollHeight;
+  _iaMsgsAdmin.push({role:'user',content:texto+(contextoExtra?'\n\n'+contextoExtra:'')});
+  try{
+    const historial=_iaMsgsAdmin.slice(-8);
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:IA_SYSTEM_ADMIN+(contextoExtra||generarResumenFlota()),messages:historial})});
+    const data=await resp.json();
+    const typing=document.getElementById('ia-admin-typing');
+    if(typing)typing.remove();
+    const respuesta=data.content&&data.content[0]?data.content[0].text:'No pude procesar tu consulta.';
+    _iaMsgsAdmin.push({role:'assistant',content:respuesta});
+    const msgBot=document.createElement('div');
+    msgBot.style.cssText='display:flex;gap:10px;align-items:flex-start;';
+    const htmlResp=respuesta.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n\n/g,'<br><br>').replace(/\n•/g,'<br>•').replace(/\n-/g,'<br>-').replace(/\n(\d+\.)/g,'<br>$1').replace(/\n/g,'<br>');
+    msgBot.innerHTML=`<div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#0066CC,#7C3AED);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🤖</div><div style="max-width:75%;background:var(--bg2);border:1px solid var(--bd);border-radius:4px 12px 12px 12px;padding:12px 14px;font-size:13px;line-height:1.7;">${htmlResp}</div>`;
+    chat.appendChild(msgBot);
+    chat.scrollTop=chat.scrollHeight;
+  }catch(e){
+    const typing=document.getElementById('ia-admin-typing');
+    if(typing)typing.remove();
+    const msgBot=document.createElement('div');
+    msgBot.style.cssText='display:flex;gap:10px;align-items:flex-start;';
+    msgBot.innerHTML=`<div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#0066CC,#7C3AED);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🤖</div><div style="max-width:75%;background:var(--bg2);border:1px solid var(--bd);border-radius:4px 12px 12px 12px;padding:12px 14px;font-size:13px;">❌ Error de conexión. Verifica tu internet e intenta de nuevo.</div>`;
+    chat.appendChild(msgBot);
+    chat.scrollTop=chat.scrollHeight;
+  }
+  _iaThinkingAdmin=false;
+}
+
+function limpiarChatAdmin(){
+  _iaMsgsAdmin=[];
+  const chat=document.getElementById('ia-admin-chat');
+  chat.innerHTML=`<div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#0066CC,#7C3AED);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🤖</div><div style="max-width:75%;background:var(--bg2);border:1px solid var(--bd);border-radius:4px 12px 12px 12px;padding:12px 14px;font-size:13px;line-height:1.7;">Chat limpiado. ¿En qué te puedo ayudar con tu flota?</div></div>`;
+}
+
+// ══ GASTOS EN RUTA ══
+async function loadGV(){
+  document.getElementById('tbl-gv-comb').innerHTML='<tr><td colspan="10" class="loader"><span class="spin"></span></td></tr>';
+  document.getElementById('tbl-gv-gastos').innerHTML='<tr><td colspan="7" class="loader"><span class="spin"></span></td></tr>';
+  const[dcb,dch]=await Promise.all([apig({accion:'listar',modulo:'combustible'}),apig({accion:'listar',modulo:'checklist'})]);
+  DB.cb=dcb.data||[];
+  const gastosRuta=(dch.data||[]).filter(x=>x.Tipo==='Gasto_Ruta');
+  renderGV(DB.cb,gastosRuta);
+}
+
+function renderGV(combustibles,gastosRuta){
+  const q=(document.getElementById('sgv-comb')||{}).value||'';
+  const cb=(combustibles||DB.cb).filter(r=>!q||String(r.Placa||'').toLowerCase().includes(q.toLowerCase()));
+  const gr=gastosRuta||[];
+  const totalComb=cb.reduce((s,x)=>s+(Number(x.Costo_Total)||0),0);
+  const totalGastos=gr.reduce((s,x)=>{const m=String(x.Observaciones||'').match(/\$([0-9.,]+)/);return s+(m?parseFloat(m[1].replace(/\./g,'').replace(',','.'))||0:0);},0);
+  const rendimientos=cb.filter(x=>Number(x.Rendimiento_KmGal)>0).map(x=>Number(x.Rendimiento_KmGal));
+  const rendProm=rendimientos.length?(rendimientos.reduce((s,v)=>s+v,0)/rendimientos.length).toFixed(2):'—';
+  document.getElementById('gv-total-comb').textContent='$'+Math.round(totalComb).toLocaleString('es-CO');
+  document.getElementById('gv-total-gastos').textContent='$'+Math.round(totalGastos).toLocaleString('es-CO');
+  document.getElementById('gv-total-todos').textContent='$'+Math.round(totalComb+totalGastos).toLocaleString('es-CO');
+  document.getElementById('gv-rend-prom').textContent=rendProm+' km/gal';
+  const tbComb=document.getElementById('tbl-gv-comb');
+  if(!cb.length){tbComb.innerHTML='<tr><td colspan="10"><div class="empty"><div class="ei">⛽</div><p>Sin registros de combustible en ruta</p></div></td></tr>';}
+  else{tbComb.innerHTML=cb.slice().reverse().map(r=>`<tr><td class="tmono" style="font-weight:700;">${r.Placa||''}</td><td>${r.Conductor||'—'}</td><td class="tdim">${r.Fecha||''}</td><td class="tmono">${Number(r.Galones||0).toFixed(2)} Gal</td><td class="tmono" style="font-weight:700;color:var(--amber);">$${Math.round(Number(r.Costo_Total||0)).toLocaleString('es-CO')}</td><td class="tmono">${r.Galones&&r.Costo_Total?'$'+Math.round(r.Costo_Total/r.Galones).toLocaleString('es-CO'):'-'}</td><td class="tmono">${fmt(r.KM_Momento||0)} km</td><td class="tmono" style="color:${Number(r.Rendimiento_KmGal)>6?'var(--green)':Number(r.Rendimiento_KmGal)>4?'var(--amber)':'var(--red)'};">${Number(r.Rendimiento_KmGal||0).toFixed(2)}</td><td class="tdim">${r.Estacion||'—'}</td><td><span class="badge bgr">${r.Tipo_Combustible||''}</span></td></tr>`).join('');}
+  const tbGastos=document.getElementById('tbl-gv-gastos');
+  if(!gr.length){tbGastos.innerHTML='<tr><td colspan="7"><div class="empty"><div class="ei">🧾</div><p>Sin gastos registrados en ruta por conductores</p></div></td></tr>';return;}
+  tbGastos.innerHTML=gr.slice().reverse().map(r=>{const obs=String(r.Observaciones||'');const tipoMatch=obs.match(/^([^:]+):/);const tipo=tipoMatch?tipoMatch[1].trim():'Gasto';const valorMatch=obs.match(/\$([0-9.,]+)/);const valor=valorMatch?'$'+valorMatch[1]:'—';const desc=obs.replace(/^[^:]+:\s*/,'').replace(/\$[0-9.,]+\s*—?\s*/,'').trim();const icons={comida:'🍽',peaje:'🛣',parqueadero:'🅿',mantenimiento:'🔧',otro:'💸'};const tk=icons[tipo.toLowerCase()]||'💸';return`<tr><td class="tmono" style="font-weight:700;">${r.Placa||'—'}</td><td>${r.Conductor||'—'}</td><td><span class="badge bgr">${tk} ${tipo}</span></td><td class="tdim">${r.Fecha||''} ${r.Hora||''}</td><td class="tdim" style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${desc||'—'}</td><td class="tmono" style="font-weight:700;color:var(--purple);">${valor}</td><td><span class="badge bg">Registrado</span></td></tr>`;}).join('');}
+
+// Animación typing IA
+const _iaStyle=document.createElement('style');
+_iaStyle.textContent='@keyframes iabounce{0%,80%,100%{transform:translateY(0);}40%{transform:translateY(-7px);}}';
+document.head.appendChild(_iaStyle);
 </script>
 </body>
 </html>
