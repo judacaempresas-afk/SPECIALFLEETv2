@@ -4077,7 +4077,7 @@ async function _enviarIAAdmin(texto,contextoExtra=''){
   _iaMsgsAdmin.push({role:'user',content:texto+(contextoExtra?'\n\n'+contextoExtra:'')});
   try{
     const historial=_iaMsgsAdmin.slice(-8);
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:IA_SYSTEM_ADMIN+(contextoExtra||generarResumenFlota()),messages:historial})});
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POSTconst resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':'TU_API_KEY_AQUI','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5-20251001',max_tokens:1000,system:IA_SYSTEM_ADMIN+(contextoExtra||generarResumenFlota()),messages:historial})});
     const data=await resp.json();
     const typing=document.getElementById('ia-admin-typing');
     if(typing)typing.remove();
