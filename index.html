@@ -1302,10 +1302,10 @@ const PAGE_META = {
   compras:      {title:'Compras', sub:'Órdenes de compra y proveedores', load:loadCP},
   proveedores:  {title:'Proveedores', sub:'Talleres, suministros y servicios', load:loadPROV},
   rastreo:      {title:'Rastreo en vivo', sub:'Ubicación GPS de la flota en tiempo real', load:loadRastreo},
-  rutas: {title:'Gestión de Rutas', sub:'Rutas y puntos de paso por vehículo', load:loadRUTAS},
+rutas: {title:'Gestión de Rutas', sub:'Rutas y puntos de paso por vehículo', load:loadRUTAS},
+  ia_admin: {title:'IA Diagnóstico', sub:'Asistente inteligente de análisis de flota', load:loadIAAdmin},
+  gastos_viaje: {title:'Gastos en ruta', sub:'Combustible y gastos registrados por conductores', load:loadGV},
 };
-ia_admin:{title:'IA Diagnóstico',sub:'Asistente inteligente de análisis de flota',load:loadIAAdmin},
-gastos_viaje:{title:'Gastos en ruta',sub:'Combustible y gastos registrados por conductores',load:loadGV},
 function goTo(pg, btn){
   if(SESSION){
     const cfg = ROL_CONFIG[SESSION.rol] || ROL_CONFIG.conductor;
