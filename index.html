@@ -4077,21 +4077,21 @@ async function _enviarIAAdmin(texto,contextoExtra=''){
   _iaMsgsAdmin.push({role:'user',content:texto+(contextoExtra?'\n\n'+contextoExtra:'')});
   try{
     const historial=_iaMsgsAdmin.slice(-8);
-    const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'Authorization':'Bearer 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'
-      },
-      body:JSON.stringify({
-        model:'llama3-8b-8192',
-        max_tokens:1000,
-        messages:[
-          {role:'system',content:IA_SYSTEM_ADMIN+(contextoExtra||generarResumenFlota())},
-          ...historial
-        ]
-      })
-    });
+const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+  method:'POST',
+  headers:{
+    'Content-Type':'application/json',
+    'Authorization':'Bearer '+GROQ_KEY
+  },
+  body:JSON.stringify({
+    model:'llama3-8b-8192',
+    max_tokens:1000,
+    messages:[
+      {role:'system',content:IA_SYSTEM_ADMIN+(contextoExtra||generarResumenFlota())},
+      ...historial.filter(m=>m.role==='user'||m.role==='assistant').map(m=>({role:m.role,content:String(m.content||'')}))
+    ]
+  })
+});
     const data=await resp.json();
     const typing=document.getElementById('ia-admin-typing');
     if(typing)typing.remove();
