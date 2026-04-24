@@ -1488,7 +1488,28 @@ async function pedirRespuestaIA(texto){
   const historial=_iaMessages.slice(-6).map(m=>({role:m.role,content:m.content}));
   historial.push({role:'user',content:texto+contexto});
   try {
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':'TU_API_KEY_AQUI','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1000,system:IA_SYSTEM+contexto,messages:historial.slice(0,-1).concat([{role:'user',content:texto}])})});
+    const GROQ_KEY = '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';
+const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+  method:'POST',
+  headers:{
+    'Content-Type':'application/json',
+    'Authorization':'Bearer '+GROQ_KEY
+  },
+  body:JSON.stringify({
+    model:'llama3-8b-8192',
+    max_tokens:1000,
+    messages:[
+      {role:'system',content:IA_SYSTEM+contexto},
+      ...historial.slice(0,-1),
+      {role:'user',content:texto}
+    ]
+  })
+});
+const data=await resp.json();
+quitarThinking();
+_iaThinking=false;
+const respuesta=data.choices?.[0]?.message?.content||'No pude procesar tu consulta.';
+agregarMsgIA('bot',respuesta);
     const data=await resp.json();
     quitarThinking();
     _iaThinking=false;
