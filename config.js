@@ -1,0 +1,1 @@
+const GROQ_KEY = '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';
