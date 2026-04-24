@@ -1498,11 +1498,11 @@ const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{
   body:JSON.stringify({
     model:'llama3-8b-8192',
     max_tokens:1000,
-    messages:[
-      {role:'system',content:IA_SYSTEM+contexto},
-      ...historial.slice(0,-1),
-      {role:'user',content:texto}
-    ]
+   messages:[
+  {role:'system',content:IA_SYSTEM+contexto},
+  ..._iaMessages.slice(-6).filter(m=>m.role==='user'||m.role==='assistant').map(m=>({role:m.role,content:String(m.content||'')})),
+  {role:'user',content:texto}
+]
   })
 });
 const data=await resp.json();
