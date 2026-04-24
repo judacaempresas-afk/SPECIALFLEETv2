@@ -1480,9 +1480,10 @@ async function pedirRespuestaIA(texto){
   try{
     const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{
       method:'POST',
-      headers:{
+     headers:{
         'Content-Type':'application/json',
         'Authorization':'Bearer '+GROQ_KEY
+      },
       body:JSON.stringify({
         model:'llama3-8b-8192',
         max_tokens:1000,
