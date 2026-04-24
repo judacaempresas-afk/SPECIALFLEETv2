@@ -1435,14 +1435,12 @@ async function enviarMensajeIA(){
   agregarMsgIA('user',texto);
   const suggestions=document.getElementById('ia-suggestions');
   if(suggestions) suggestions.style.display='none';
-  await pedirRespuestaIA(texto);
+await pedirRespuestaIA(texto);
 }
-
 function enviarSugerencia(texto){
   document.getElementById('ia-input').value=texto;
   enviarMensajeIA();
 }
-
 function agregarMsgIA(rol,texto){
   const chat=document.getElementById('ia-chat');
   const div=document.createElement('div');
@@ -1456,7 +1454,6 @@ function agregarMsgIA(rol,texto){
   chat.scrollTop=chat.scrollHeight;
   _iaMessages.push({role:rol==='user'?'user':'assistant',content:texto});
 }
-
 function mostrarThinking(){
   const chat=document.getElementById('ia-chat');
   const div=document.createElement('div');
@@ -1466,62 +1463,48 @@ function mostrarThinking(){
   chat.appendChild(div);
   chat.scrollTop=chat.scrollHeight;
 }
-
 function quitarThinking(){
   const el=document.getElementById('ia-thinking-bubble');
   if(el) el.remove();
 }
-
 async function pedirRespuestaIA(texto){
   if(_iaThinking) return;
   _iaThinking=true;
   mostrarThinking();
-  // Añadir contexto del conductor si está logueado
   let contexto='';
   if(SESSION){
     contexto=`\n\nContexto actual:\n- Conductor: ${SESSION.nombre}\n- Placa: ${SESSION.placa}\n- Tipo de vehículo: ${SESSION.tipoVeh||'no especificado'}`;
     if(_combustiblesTurno.length>0){const ult=_combustiblesTurno[_combustiblesTurno.length-1];contexto+=`\n- Última carga de combustible: ${ult.galones} gal a $${ult.precio}/gal en ${ult.estacion||'estación desconocida'}`;}
     if(_gastosTurno.length>0){contexto+=`\n- Gastos del turno: ${_gastosTurno.length} registros`;}
   }
-  const mensajes=[{role:'user',content:IA_SYSTEM+contexto},{..._iaMessages[0]||{}},{role:'user',content:texto}].filter(m=>m.role);
-  // Construir historial limpio
-  const historial=_iaMessages.slice(-6).map(m=>({role:m.role,content:m.content}));
-  historial.push({role:'user',content:texto+contexto});
-  try {
-    const GROQ_KEY = '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';
-const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{
-  method:'POST',
-  headers:{
-    'Content-Type':'application/json',
-    'Authorization':'Bearer '+GROQ_KEY
-  },
-  body:JSON.stringify({
-    model:'llama3-8b-8192',
-    max_tokens:1000,
-   messages:[
-  {role:'system',content:IA_SYSTEM+contexto},
-  ..._iaMessages.slice(-6).filter(m=>m.role==='user'||m.role==='assistant').map(m=>({role:m.role,content:String(m.content||'')})),
-  {role:'user',content:texto}
-]
-  })
-});
-const data=await resp.json();
-quitarThinking();
-_iaThinking=false;
-const respuesta=data.choices?.[0]?.message?.content||'No pude procesar tu consulta.';
-agregarMsgIA('bot',respuesta);
+  try{
+    const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':'Bearer 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'
+      },
+      body:JSON.stringify({
+        model:'llama3-8b-8192',
+        max_tokens:1000,
+        messages:[
+          {role:'system',content:IA_SYSTEM+contexto},
+          ..._iaMessages.slice(-6).filter(m=>m.role==='user'||m.role==='assistant').map(m=>({role:m.role,content:String(m.content||'')})),
+          {role:'user',content:texto}
+        ]
+      })
+    });
     const data=await resp.json();
     quitarThinking();
     _iaThinking=false;
-    const respuesta=data.content&&data.content[0]?data.content[0].text:'No pude procesar tu consulta. Intenta de nuevo.';
+    const respuesta=data.choices?.[0]?.message?.content||'No pude procesar tu consulta.';
     agregarMsgIA('bot',respuesta);
-  } catch(e) {
+  }catch(e){
     quitarThinking();
     _iaThinking=false;
-    agregarMsgIA('bot','Error de conexión. Verifica tu internet e intenta de nuevo.');
+    agregarMsgIA('bot','❌ Error de conexión. Verifica tu internet e intenta de nuevo.');
   }
 }
-
 // ══════════════════════════════════════════════
 //  UTILIDADES
 // ══════════════════════════════════════════════
